@@ -2,12 +2,10 @@
 import { useEffect } from "react";
 
 const Home = () => {
-
   useEffect(() => {
     fetch("/api/hello")
       .then((res) => res.json())
       .then((data) => console.log(data));
-
   }, []);
 
   return (
