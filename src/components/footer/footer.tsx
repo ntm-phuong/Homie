@@ -1,52 +1,58 @@
 // src/components/footer.tsx
 const Footer = () => {
+  const _renderItemsFooter = () => {
+    return(
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-100">
+      {/* Support Column */}
+      <div>
+        <h3 className="text-base font-semibold text-black-900 mb-4 pb-4">Support</h3>
+        <ul className="flex flex-col gap-y-4">
+          {['Help Center', 'AirCover', 'Anti-discrimination', 'Disability support', 'Cancellation options', 'Report neighborhood concern'].map((item) => (
+            <li key={item}>
+              <a href="#" className="text-base text-black-600 gap-y-16 hover:text-black-900 hover:underline">
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Hosting Column */}
+      <div>
+        <h3 className="text-base font-semibold text-black-900 mb-4 pb-4">Hosting</h3>
+        <ul className="flex flex-col gap-y-4">
+          {['Airbnb your home', 'AirCover for Hosts', 'Hosting resources', 'Community forum', 'Hosting responsibly', 'Airbnb-friendly apartments', 'Join a free Hosting class', 'Find a co-host'].map((item) => (
+            <li key={item}>
+              <a href="#" className="text-base text-black-600 hover:text-black-900 hover:underline">
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Airbnb Column */}
+      <div>
+        <h3 className="text-base font-semibold text-black-900 mb-4 pb-4">Airbnb</h3>
+        <ul className="flex flex-col gap-y-4">
+          {['Newsroom', 'New features', 'Careers', 'Investors', 'Gift cards', 'Airbnb.org emergency stays'].map((item) => (
+            <li key={item}>
+              <a href="#" className="text-base text-black-600 hover:text-black-900 hover:underline">
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    );
+  }
+
   return (
     <footer className="bg-black-100 border-t border-gray-200">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10">
-          {/* Support Column */}
-          <div>
-            <h3 className="text-base font-semibold text-black-900 mb-4 pb-4">Support</h3>
-            <ul className="flex flex-col gap-y-4">
-              {['Help Center', 'AirCover', 'Anti-discrimination', 'Disability support', 'Cancellation options', 'Report neighborhood concern'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-base text-black-600 gap-y-16 hover:text-black-900 hover:underline">
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Hosting Column */}
-          <div>
-            <h3 className="text-base font-semibold text-black-900 mb-4 pb-4">Hosting</h3>
-            <ul className="flex flex-col gap-y-4">
-              {['Airbnb your home', 'AirCover for Hosts', 'Hosting resources', 'Community forum', 'Hosting responsibly', 'Airbnb-friendly apartments', 'Join a free Hosting class', 'Find a co-host'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-base text-black-600 hover:text-black-900 hover:underline">
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Airbnb Column */}
-          <div>
-            <h3 className="text-base font-semibold text-black-900 mb-4 pb-4">Airbnb</h3>
-            <ul className="flex flex-col gap-y-4">
-              {['Newsroom', 'New features', 'Careers', 'Investors', 'Gift cards', 'Airbnb.org emergency stays'].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-base text-black-600 hover:text-black-900 hover:underline">
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        {_renderItemsFooter()}
 
         {/* Bottom Section */}
         <div className="mt-12 border-t border-gray-200 pt-8">
