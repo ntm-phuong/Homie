@@ -1,4 +1,5 @@
 'use client'
+import { IMAGE_URL } from "@/public";
 import { useEffect } from "react";
 
 const Home = () => {
@@ -9,7 +10,9 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="bg-red-500">Đi đi em , do dự tới hạn mất</div>
+    <div className="bg-red-500">Đi đi em , do dự tới hạn mất
+      <img src={IMAGE_URL.TEST} alt="" />
+    </div>
   );
 }
 
