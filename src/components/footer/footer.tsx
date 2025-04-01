@@ -84,7 +84,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4 md:mb-0">
             <span className="text-base text-black-600">
-              © 2025 Airbnb, Inc.
+              © 2025 Homie, Inc.
             </span>
             <span className="text-base text-black-600">·</span>
             {FOOTER_LINKS.map((item, index) => (

@@ -1,0 +1,157 @@
+"use client";
+
+import React from "react";
+import { Modal, Form, Input, Button, Checkbox } from "antd";
+
+interface ModalRegisterProps {
+  isShowRegister: boolean;
+  setIsShowRegister: (isShowRegister: boolean) => void;
+  setIsShowLogin: (isShowLogin: boolean) => void;
+}
+
+const ModalRegister: React.FC<ModalRegisterProps> = ({
+  isShowRegister,
+  setIsShowRegister,
+  setIsShowLogin,
+}) => {
+  const handleCancel = () => {
+    setIsShowRegister(false);
+  };
+
+  const handleRegister = (values: any) => {
+    console.log("Register values:", values);
+    setIsShowRegister(false);
+  };
+
+  const switchToLogin = () => {
+    setIsShowRegister(false);
+    setIsShowLogin(true);
+  };
+
+  return (
+    <Modal open={isShowRegister} onCancel={handleCancel} footer={null}>
+      <div className="text-center pb-4">
+        <h2 className="text-2xl font-bold">Register an account</h2>
+        <p className="text-gray-500 text-lg">
+          Create an account to start the experience
+        </p>
+      </div>
+      <Form layout="vertical" onFinish={handleRegister} className="py-4">
+        <div className="flex gap-4">
+          <Form.Item
+            label={<span className="font-bold text-lg">Your last name</span>}
+            name="lastName"
+            className="flex-1"
+          >
+            <Input
+              placeholder="Enter your last name"
+              className="h-[50px] text-md"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="font-bold text-lg">Your first name</span>}
+            name="firstName"
+            className="flex-1"
+          >
+            <Input
+              placeholder="Enter your first name"
+              className="h-[50px] text-md"
+            />
+          </Form.Item>
+        </div>
+
+        <Form.Item
+          label={
+            <span className="font-bold text-lg">
+              Email <span className="text-red-500">*</span>
+            </span>
+          }
+          name="email"
+          rules={[{ required: true, message: "Please enter your email!" }]}
+        >
+          <Input placeholder="Enter your email" className="h-[50px] text-md" />
+        </Form.Item>
+
+        <Form.Item
+          label={
+            <span className="font-bold text-lg">
+              Password<span className="text-red-500">*</span>
+            </span>
+          }
+          name="password"
+          rules={[{ required: true, message: "Please enter the password!" }]}
+        >
+          <Input.Password
+            placeholder="Enter your password"
+            className="h-[50px] text-md"
+          />
+        </Form.Item>
+
+        <Form.Item
+          label={
+            <span className="font-bold text-lg">
+              Confirm Password<span className="text-red-500">*</span>
+            </span>
+          }
+          name="confirmPassword"
+          dependencies={["password"]}
+          rules={[
+            { required: true, message: "Please confirm the password!" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error("Password does not match!"));
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            placeholder="Re-enter your password"
+            className="h-[50px] text-md"
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="agreement"
+          valuePropName="checked"
+          rules={[
+            {
+              validator: (_, value) =>
+                value
+                  ? Promise.resolve()
+                  : Promise.reject(
+                      new Error("You need to agree with the terms!")
+                    ),
+            },
+          ]}
+        >
+          <Checkbox>I agree to the terms and conditions</Checkbox>
+        </Form.Item>
+
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="!text-white !h-[50px] !w-full !text-lg !font-medium"
+        >
+          Register
+        </Button>
+
+        <div className="text-center mt-4 text-lg">
+          Already have an account?{" "}
+          <Button
+            type="link"
+            onClick={switchToLogin}
+            className="!p-0 !h-auto !text-lg"
+          >
+            Sign in
+          </Button>
+        </div>
+      </Form>
+    </Modal>
+  );
+};
+
+export default ModalRegister;
