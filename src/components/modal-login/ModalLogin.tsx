@@ -20,40 +20,40 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin }) 
 
   return (
     <Modal
-      visible={isShowLogin}
+      open={isShowLogin}
       onCancel={handleCancel}
       footer={null}
     >
-      <div className="text-center mb-4">
-        <h2 className="text-xl font-bold">Chào mừng bạn đến với Homie</h2>
-        <p className="text-gray-500">Vui lòng đăng nhập để tiếp tục</p>
+      <div className="text-center pb-4">
+        <h2 className="text-2xl font-bold">Chào mừng bạn đến với Homie</h2>
+        <p className="text-gray-500 text-lg">Vui lòng đăng nhập để tiếp tục</p>
       </div>
       <Form
         layout="vertical"
         onFinish={handleLogin}
+        className="py-4"
       >
         <Form.Item
-          label="Email"
+          label={<span className="font-bold text-lg">Email <span className="text-red-500">*</span></span>}
           name="email"
-          rules={[{ required: true, message: "Vui lòng nhập email!" }]}
         >
-          <Input placeholder="Nhập email của bạn" />
+          <Input placeholder="Nhập email của bạn" className="h-[50px] text-md" />
         </Form.Item>
+
         <Form.Item
-          label="Mật khẩu"
+          label={<span className="font-bold text-lg">Mật khẩu <span className="text-red-500">*</span></span>}
           name="password"
-          rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
         >
-          <Input.Password placeholder="Nhập mật khẩu của bạn" />
+          <Input.Password placeholder="Nhập mật khẩu của bạn" className="h-[50px] text-md" />
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="w-full color-r
-          ed-500">
-            Login
-          </Button>
-        </Form.Item>
+        <Button
+          type="primary"
+          className="!text-white !h-[50px] !w-full !text-lg !font-medium"
+        >
+          Đăng nhập
+        </Button>
       </Form>
-    </Modal>
+    </Modal >
   );
 };
 

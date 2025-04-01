@@ -1,16 +1,10 @@
 'use client'
 import ModalLogin from "@/src/components/modal-login/ModalLogin";
 import { Button } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Home = () => {
   const [isShowLogin, setIsShowLogin] = useState(false);
-  console.log(isShowLogin, 'chinht');
-  useEffect(() => {
-    fetch("/api/hello")
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  }, []);
 
   return (
     <div className="bg-red-500">Đi đi em , do dự tới hạn mất
@@ -23,9 +17,8 @@ const Home = () => {
         Click Login Modal
       </Button>
       {isShowLogin && (
-  <ModalLogin isShowLogin={isShowLogin} setIsShowLogin={setIsShowLogin} />
-)}
-
+        <ModalLogin isShowLogin={isShowLogin} setIsShowLogin={setIsShowLogin} />
+      )}
     </div>
   );
 }
