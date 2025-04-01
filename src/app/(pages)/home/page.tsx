@@ -2,6 +2,7 @@
 import ModalLogin from "@/src/components/modal-login/ModalLogin";
 import { Button } from "antd";
 import { useState } from "react";
+import { IMAGE_URL } from "@/public";
 
 const Home = () => {
   const [isShowLogin, setIsShowLogin] = useState(false);
@@ -19,6 +20,7 @@ const Home = () => {
       {isShowLogin && (
         <ModalLogin isShowLogin={isShowLogin} setIsShowLogin={setIsShowLogin} />
       )}
+      <img src={IMAGE_URL.TEST} alt="" />
     </div>
   );
 }
