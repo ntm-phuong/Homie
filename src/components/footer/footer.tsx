@@ -80,7 +80,7 @@ const Footer = () => {
 
   const _renderBottomSection = () => {
     return (
-      <div className="border-t border-gray-200 pt-8 md:px-20 bg-red-500">
+      <div className="border-t border-gray-200 pt-8 md:px-20">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4 md:mb-0">
             <span className="text-base text-black-600">
