@@ -9,29 +9,50 @@ interface ModalLoginProps {
 }
 
 const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin }) => {
-  const [loginError, setLoginError] = useState<string>("");
+ const [email, setEmail] = useState("");
+ const [password, setPassword] = useState("");
+ const [emailError, setEmailError] = useState("");
+ const [passwordError, setPasswordError] = useState("");
 
   const handleCancel = () => {
     setIsShowLogin(false);
-    setLoginError(""); 
   };
 
   const handleLogin = (values: { email: string; password: string }) => {
-    console.log("Login values:", values);
-
-    if (!values.email.includes("@")) {
-      setLoginError("Email không hợp lệ! Vui lòng nhập đúng định dạng email.");
-      message.error("Email không hợp lệ!");
+    console.log(values, 'test1');
+  };
+  
+  const onChangeEmail = (value: string) => {
+    setEmail(value);
+    if(value.trim() === "") {
+      setEmailError("Please enter Email!");
       return;
     }
 
-    if (values.email === "ntmphuonglao@gmail.com" && values.password === "123456") {
-      message.success("Đăng nhập thành công!");
-      setIsShowLogin(false); // Chỉ đóng modal khi đăng nhập thành công
-      setLoginError(""); // Xóa thông báo lỗi nếu đăng nhập thành công
-    } else {
-      setLoginError("Email hoặc mật khẩu không đúng!");
-      message.error("Email hoặc mật khẩu không đúng!");
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if(!emailPattern.test(value)) {
+      setEmailError("Invalid email!");
+    }else {
+      setEmailError("");
+    }
+  };
+
+  const onChangePassword = (value:string) => {
+    setPassword(value);
+    if(value.trim() === "") {
+      setPasswordError("Please enter the password!");
+      return;
+    }
+    if(value.length < 8) {
+      setPasswordError("The password must be longer than 8 characters!");
+    }else {
+      setPasswordError("");
+    }
+  };
+
+  const onFinish = () => {
+    if(!emailError && !passwordError && email.trim() && password.trim()) {
+      handleLogin({ email, password });
     }
   };
 
@@ -42,52 +63,45 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin }) 
       footer={null}
     >
       <div className="text-center pb-4">
-        <h2 className="text-2xl font-bold">Chào mừng bạn đến với Homie</h2>
-        <p className="text-gray-500 text-lg">Vui lòng đăng nhập để tiếp tục</p>
+        <h2 className="text-2xl font-bold">Welcome to Homie</h2>
+        <p className="text-gray-500 text-lg">Please login to continue</p>
       </div>
 
       <Form
         layout="vertical"
-        onFinish={handleLogin}
-        className="py-4 !space-y-50"
+        onFinish={onFinish}
+        className="py-4"
       >
         
         <Form.Item
           label={<span className="font-bold text-lg">Email <span className="text-red-500">*</span></span>}
-          name="email"
-          rules={[
-            { required: true, message: "Vui lòng nhập email!" },
-            { type: "email", message: "Email không hợp lệ!" },
-          ]}
+          name="email"        
         >
-          <Input placeholder="Nhập email của bạn" className="h-[50px] text-md" />
+          <Input placeholder="Enter your email" className="h-[50px] text-md" 
+          value={email}
+          onChange={(e) => onChangeEmail(e.target.value)}
+          />
+          {emailError && (<span className="text-red-500 text-sm">{emailError}</span>)}
         </Form.Item>
-
         
         <Form.Item
-          label={<span className="font-bold text-lg">Mật khẩu <span className="text-red-500">*</span></span>}
-          name="password"
-          rules={[
-            { required: true, message: "Vui lòng nhập mật khẩu!" },
-            { min: 6, message: "Mật khẩu phải dài hơn 6 ký tự!" },
-          ]}
+          label={<span className="font-bold text-lg">Password <span className="text-red-500">*</span></span>}
+          name="password"        
         >
-          <Input.Password placeholder="Nhập mật khẩu của bạn" className="h-[50px] text-md" />
+          <Input.Password placeholder="Enter your password" className="h-[50px] text-md" 
+          value={password}
+          onChange={(e) => onChangePassword(e.target.value)}
+          />
+          {passwordError && (<span className="text-red-500 text-sm">{passwordError}</span>)}
         </Form.Item>
-
-        {loginError && (
-          <div className="text-red-500 text-center mb-4">
-            {loginError}
-          </div>
-        )}
-
+      
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
             className="!text-white !h-[40px] !w-full !text-lg !font-medium !bg-red-500  focus:bg-red-700"
           >
-            Đăng nhập
+            Login
           </Button>
         </Form.Item>
       </Form>
