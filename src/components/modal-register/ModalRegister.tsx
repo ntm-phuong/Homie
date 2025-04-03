@@ -36,31 +36,12 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
           Create an account to start the experience
         </p>
       </div>
-      <Form layout="vertical" onFinish={handleRegister} className="py-4">
-        <div className="flex gap-4">
-          <Form.Item
-            label={<span className="font-bold text-lg">Your last name</span>}
-            name="lastName"
-            className="flex-1"
-          >
-            <Input
-              placeholder="Enter your last name"
-              className="h-[50px] text-md"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={<span className="font-bold text-lg">Your first name</span>}
-            name="firstName"
-            className="flex-1"
-          >
-            <Input
-              placeholder="Enter your first name"
-              className="h-[50px] text-md"
-            />
-          </Form.Item>
-        </div>
-
+      <Form
+        layout="vertical"
+        onFinish={handleRegister}
+        className="py-4"
+        requiredMark="optional"
+      >
         <Form.Item
           label={
             <span className="font-bold text-lg">
@@ -76,7 +57,7 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
         <Form.Item
           label={
             <span className="font-bold text-lg">
-              Password<span className="text-red-500">*</span>
+              Password <span className="text-red-500">*</span>
             </span>
           }
           name="password"
@@ -89,11 +70,11 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
         </Form.Item>
 
         <Form.Item
-          label={
-            <span className="font-bold text-lg">
-              Confirm Password<span className="text-red-500">*</span>
-            </span>
-          }
+         label={
+          <span className="font-bold text-lg">
+            Confirm Password <span className="text-red-500">*</span>
+          </span>
+        }
           name="confirmPassword"
           dependencies={["password"]}
           rules={[
@@ -123,8 +104,8 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
                 value
                   ? Promise.resolve()
                   : Promise.reject(
-                      new Error("You need to agree with the terms!")
-                    ),
+                    new Error("You need to agree with the terms!")
+                  ),
             },
           ]}
         >
