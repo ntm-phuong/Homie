@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from "react";
-import { Modal, Form, Input, Button, message } from "antd";
+import React from "react";
+import { Modal, Form, Input, Button } from "antd";
 
 interface ModalLoginProps {
   isShowLogin: boolean;
@@ -9,11 +9,6 @@ interface ModalLoginProps {
 }
 
 const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin }) => {
- const [email, setEmail] = useState("");
- const [password, setPassword] = useState("");
- const [emailError, setEmailError] = useState("");
- const [passwordError, setPasswordError] = useState("");
-
   const handleCancel = () => {
     setIsShowLogin(false);
   };
@@ -21,40 +16,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin }) 
   const handleLogin = (values: { email: string; password: string }) => {
     console.log(values, 'test1');
   };
-  
-  const onChangeEmail = (value: string) => {
-    setEmail(value);
-    if(value.trim() === "") {
-      setEmailError("Please enter Email!");
-      return;
-    }
 
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    if(!emailPattern.test(value)) {
-      setEmailError("Invalid email!");
-    }else {
-      setEmailError("");
-    }
-  };
-
-  const onChangePassword = (value:string) => {
-    setPassword(value);
-    if(value.trim() === "") {
-      setPasswordError("Please enter the password!");
-      return;
-    }
-    if(value.length < 8) {
-      setPasswordError("The password must be longer than 8 characters!");
-    }else {
-      setPasswordError("");
-    }
-  };
-
-  const onFinish = () => {
-    if(!emailError && !passwordError && email.trim() && password.trim()) {
-      handleLogin({ email, password });
-    }
-  };
 
   return (
     <Modal
@@ -69,37 +31,49 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin }) 
 
       <Form
         layout="vertical"
-        onFinish={onFinish}
+        onFinish={handleLogin}
         className="py-4"
+        requiredMark="optional"
       >
-        
         <Form.Item
           label={<span className="font-bold text-lg">Email <span className="text-red-500">*</span></span>}
           name="email"        
+          rules={[
+            { 
+              required: true, 
+              message: "Please enter your email!" 
+            },
+            { 
+              type: 'email', 
+              message: "Invalid email format!" 
+            }
+          ]}
         >
-          <Input placeholder="Enter your email" className="h-[50px] text-md" 
-          value={email}
-          onChange={(e) => onChangeEmail(e.target.value)}
-          />
-          {emailError && (<span className="text-red-500 text-sm">{emailError}</span>)}
+          <Input placeholder="Enter your email" className="h-[50px] text-md" />
         </Form.Item>
         
         <Form.Item
           label={<span className="font-bold text-lg">Password <span className="text-red-500">*</span></span>}
           name="password"        
+          rules={[
+            { 
+              required: true, 
+              message: "Please enter your password!" 
+            },
+            { 
+              min: 8, 
+              message: "Password must be at least 8 characters!" 
+            }
+          ]}
         >
-          <Input.Password placeholder="Enter your password" className="h-[50px] text-md" 
-          value={password}
-          onChange={(e) => onChangePassword(e.target.value)}
-          />
-          {passwordError && (<span className="text-red-500 text-sm">{passwordError}</span>)}
+          <Input.Password placeholder="Enter your password" className="h-[50px] text-md" />
         </Form.Item>
       
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
-            className="!text-white !h-[40px] !w-full !text-lg !font-medium !bg-red-500  focus:bg-red-700"
+            className="!text-white !h-[40px] !w-full !text-lg !font-medium"
           >
             Login
           </Button>
