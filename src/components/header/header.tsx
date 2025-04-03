@@ -205,6 +205,6 @@ const Header = () => {
       </div>
     </div>
   );
-};
+}; //end 
 
 export default Header;
