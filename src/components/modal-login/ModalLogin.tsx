@@ -14,9 +14,9 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin }) 
   };
 
   const handleLogin = (values: { email: string; password: string }) => {
-    console.log("Login values:", values);
-    setIsShowLogin(false);
+    console.log(values, 'test1');
   };
+
 
   return (
     <Modal
@@ -25,35 +25,61 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin }) 
       footer={null}
     >
       <div className="text-center pb-4">
-        <h2 className="text-2xl font-bold">Chào mừng bạn đến với Homie</h2>
-        <p className="text-gray-500 text-lg">Vui lòng đăng nhập để tiếp tục</p>
+        <h2 className="text-2xl font-bold">Welcome to Homie</h2>
+        <p className="text-gray-500 text-lg">Please login to continue</p>
       </div>
+
       <Form
         layout="vertical"
         onFinish={handleLogin}
         className="py-4"
+        requiredMark="optional"
       >
         <Form.Item
           label={<span className="font-bold text-lg">Email <span className="text-red-500">*</span></span>}
-          name="email"
+          name="email"        
+          rules={[
+            { 
+              required: true, 
+              message: "Please enter your email!" 
+            },
+            { 
+              type: 'email', 
+              message: "Invalid email format!" 
+            }
+          ]}
         >
-          <Input placeholder="Nhập email của bạn" className="h-[50px] text-md" />
+          <Input placeholder="Enter your email" className="h-[50px] text-md" />
         </Form.Item>
-
+        
         <Form.Item
-          label={<span className="font-bold text-lg">Mật khẩu <span className="text-red-500">*</span></span>}
-          name="password"
+          label={<span className="font-bold text-lg">Password <span className="text-red-500">*</span></span>}
+          name="password"        
+          rules={[
+            { 
+              required: true, 
+              message: "Please enter your password!" 
+            },
+            { 
+              min: 8, 
+              message: "Password must be at least 8 characters!" 
+            }
+          ]}
         >
-          <Input.Password placeholder="Nhập mật khẩu của bạn" className="h-[50px] text-md" />
+          <Input.Password placeholder="Enter your password" className="h-[50px] text-md" />
         </Form.Item>
-        <Button
-          type="primary"
-          className="!text-white !h-[50px] !w-full !text-lg !font-medium"
-        >
-          Đăng nhập
-        </Button>
+      
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="!text-white !h-[40px] !w-full !text-lg !font-medium"
+          >
+            Login
+          </Button>
+        </Form.Item>
       </Form>
-    </Modal >
+    </Modal>
   );
 };
 
