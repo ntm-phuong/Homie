@@ -1,10 +1,12 @@
 "use client"
 
+import { IMAGE_URL } from "@/public";
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { Dropdown, DatePicker } from "antd";
 import type { MenuProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
+import Image from 'next/image';
 
 const { RangePicker } = DatePicker;
 
@@ -66,7 +68,7 @@ const Header = () => {
   );
 
   const _renderNavigation = () => (
-    <div className="flex space-x-4 ">
+    <div className="flex space-x-4">
       <Link href="#" className="font-semibold px-2">Home</Link>
       <Link href="#" className="font-semibold px-2">Experiences</Link>
     </div>
@@ -75,20 +77,13 @@ const Header = () => {
   const _renderLanguageDropdown = () => (
     <Dropdown menu={languageItems} placement="bottomRight">
       <button className="rounded-full p-2 cursor-pointer">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Image 
+          src="/img/language.png" 
+          alt="Language selector" 
+          width={20} 
+          height={20}
           className="w-5 h-5"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="2" y1="12" x2="22" y2="12"></line>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-        </svg>
+        />
       </button>
     </Dropdown>
   );
@@ -96,34 +91,21 @@ const Header = () => {
   const _renderUserDropdown = () => (
     <Dropdown menu={userItems} placement="bottomRight">
       <button className="rounded-full border border-gray-300 pl-3 pr-1 py-1 flex gap-2 items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Image 
+          src="/img/menu.png" 
+          alt="Menu" 
+          width={20} 
+          height={20}
           className="w-5 h-5"
-        >
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
+        />
         <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          <Image 
+            src="/img/user.png" 
+            alt="User profile" 
+            width={16} 
+            height={16}
             className="w-4 h-4"
-          >
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
+          />
         </div>
       </button>
     </Dropdown>
@@ -164,19 +146,13 @@ const Header = () => {
 
   const _renderSearchButton = () => (
     <div className="p-2 rounded-full bg-rose-500 text-white cursor-pointer flex items-center justify-center ml-auto">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      <Image 
+        src="/img/search.png" 
+        alt="Search" 
+        width={16} 
+        height={16}
         className="w-4 h-4"
-      >
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
+      />
     </div>
   );
 
