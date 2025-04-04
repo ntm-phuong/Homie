@@ -46,7 +46,6 @@ const Home = () => {
           setIsShowLogin={setIsShowLogin}
         />
       )}
-      <img src={IMAGE_URL.TEST} alt="" />
     </div>
   );
 };

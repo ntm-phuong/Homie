@@ -68,53 +68,46 @@ const Header = () => {
   );
 
   const _renderNavigation = () => (
-    <div className="flex space-x-4">
+    <div className="flex space-x-4 text-[24px]">
       <Link href="#" className="font-semibold px-2">Home</Link>
       <Link href="#" className="font-semibold px-2">Experiences</Link>
     </div>
   );
 
-  const _renderLanguageDropdown = () => (
-    <Dropdown menu={languageItems} placement="bottomRight">
-      <button className="rounded-full p-2 cursor-pointer">
-        <Image 
-          src={IMAGE_URL.LANGUAGE}
-          alt="Language selector" 
-          width={20} 
-          height={20}
-          className="w-5 h-5"
-        />
-      </button>
-    </Dropdown>
-  );
-
-  const _renderUserDropdown = () => (
-    <Dropdown menu={userItems} placement="bottomRight">
-      <button className="rounded-full border border-gray-300 pl-3 pr-1 py-1 flex gap-2 items-center">
-        <Image 
-          src={IMAGE_URL.MENU}
-          alt="Menu" 
-          width={20} 
-          height={20}
-          className="w-5 h-5"
-        />
-        <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
-          <Image 
-            src={IMAGE_URL.USER}
-            alt="User profile" 
-            width={16} 
-            height={16}
-            className="w-4 h-4"
-          />
-        </div>
-      </button>
-    </Dropdown>
-  );
-
   const _renderUserControls = () => (
     <div className="flex items-center gap-4">
-      {_renderLanguageDropdown()}
-      {_renderUserDropdown()}
+      <Dropdown menu={languageItems} placement="bottomRight">
+        <button className="rounded-full p-2 cursor-pointer">
+          <Image
+            src={IMAGE_URL.LANGUAGE}
+            alt="Language selector"
+            width={25}
+            height={25}
+          />
+        </button>
+      </Dropdown>
+
+      <Dropdown
+        menu={userItems}
+        placement="bottomRight"
+        >
+        <button className="rounded-full border border-gray-300 flex gap-2 items-center px-4 py-2 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+          <Image
+            src={IMAGE_URL.MENU}
+            alt="Menu"
+            width={20}
+            height={20}
+          />
+          <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
+            <Image
+              src={IMAGE_URL.USER}
+              alt="User profile"
+              width={45}
+              height={45}
+            />
+          </div>
+        </button>
+      </Dropdown>
     </div>
   );
 
@@ -139,20 +132,14 @@ const Header = () => {
           {formatSelectedDates()}
         </div>
       </div>
-      {_renderSearchButton()}
-      {showDatePicker && _renderDatePickerPopup()}
-    </div>
-  );
-
-  const _renderSearchButton = () => (
-    <div className="p-2 rounded-full text-white cursor-pointer flex items-center justify-center ml-auto">
-      <Image 
+      <Image
         src={IMAGE_URL.SEARCH}
-        alt="Search" 
-        width={16} 
-        height={16}
-        className="w-4 h-4"
+        alt="Search"
+        width={45}
+        height={45}
+        className="cursor-pointer"
       />
+      {showDatePicker && _renderDatePickerPopup()}
     </div>
   );
 
@@ -194,15 +181,13 @@ const Header = () => {
   );
 
   return (
-    <div className="max-w-full mx-auto px-10 b8 lg:px-28 py-4">
-      <div className="flex flex-col items-center w-full">
-        <div className="flex items-center justify-between w-full mb-4">
-          {_renderLogo()}
-          {_renderNavigation()}
-          {_renderUserControls()}
-        </div>
-       {_renderSearchBar()}
+    <div className="flex flex-col gap-4 items-center w-full lg:px-38 py-6">
+      <div className="flex items-center justify-between w-full">
+        {_renderLogo()}
+        {_renderNavigation()}
+        {_renderUserControls()}
       </div>
+      {_renderSearchBar()}
     </div>
   );
 }; //end 
