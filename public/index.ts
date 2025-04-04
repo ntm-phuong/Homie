@@ -3,5 +3,10 @@ export const IMAGE_URL = {
     FACEBOOK: "./img/facebook.jpg",
     TWITTER: "./img/twitter.jpg",
     INSTAGRAM: "./img/instagram.jpg",
+    LANGUAGE: "/img/language.png",
+    MENU: "/img/menu.png",
+    USER: "/img/user.png",
+    SEARCH: "/img/search.png" ,
+    
   }
   

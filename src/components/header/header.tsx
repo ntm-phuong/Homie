@@ -78,7 +78,7 @@ const Header = () => {
     <Dropdown menu={languageItems} placement="bottomRight">
       <button className="rounded-full p-2 cursor-pointer">
         <Image 
-          src="/img/language.png" 
+          src={IMAGE_URL.LANGUAGE}
           alt="Language selector" 
           width={20} 
           height={20}
@@ -92,7 +92,7 @@ const Header = () => {
     <Dropdown menu={userItems} placement="bottomRight">
       <button className="rounded-full border border-gray-300 pl-3 pr-1 py-1 flex gap-2 items-center">
         <Image 
-          src="/img/menu.png" 
+          src={IMAGE_URL.MENU}
           alt="Menu" 
           width={20} 
           height={20}
@@ -100,7 +100,7 @@ const Header = () => {
         />
         <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
           <Image 
-            src="/img/user.png" 
+            src={IMAGE_URL.USER}
             alt="User profile" 
             width={16} 
             height={16}
@@ -145,9 +145,9 @@ const Header = () => {
   );
 
   const _renderSearchButton = () => (
-    <div className="p-2 rounded-full bg-rose-500 text-white cursor-pointer flex items-center justify-center ml-auto">
+    <div className="p-2 rounded-full text-white cursor-pointer flex items-center justify-center ml-auto">
       <Image 
-        src="/img/search.png" 
+        src={IMAGE_URL.SEARCH}
         alt="Search" 
         width={16} 
         height={16}
