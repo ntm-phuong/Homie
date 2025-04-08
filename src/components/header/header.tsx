@@ -7,6 +7,8 @@ import { Dropdown, DatePicker } from "antd";
 import type { MenuProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import Image from 'next/image';
+import ModalLogin from "../modal-login/ModalLogin";
+import ModalRegister from "../modal-register/ModalRegister";
 
 const { RangePicker } = DatePicker;
 
@@ -14,7 +16,9 @@ const Header = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const datePickerRef = useRef<HTMLDivElement>(null);
-
+  const [isShowLogin, setIsShowLogin] = useState(false);
+  const [isShowRegister, setIsShowRegister] = useState(false);
+  
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
     if (dates) {
       setSelectedDates(dates);
@@ -48,16 +52,32 @@ const Header = () => {
     ]
   };
 
+  const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === '1') {
+      setIsShowRegister(true);
+    } else if (key === '2') {
+      setIsShowLogin(true);
+    }
+  };
+  
   const userItems: MenuProps = {
     items: [
-      { key: '1', label: 'Sign up' },
-      { key: '2', label: 'Log in' },
+      {
+        key: '1',
+        label: <span className="font-semibold w-full block">Sign Up</span>,
+      },
+      {
+        key: '2',
+        label: <span className="font-semibold w-full block">Log in</span>,
+      },
       { type: 'divider' },
       { key: '3', label: 'Host your home' },
       { key: '4', label: 'Host an experience' },
       { key: '5', label: 'Help' },
-    ]
+    ],
+    onClick: handleMenuClick,
   };
+  
 
   const _renderLogo = () => (
     <Link href="/" className="flex items-center no-underline">
@@ -90,7 +110,8 @@ const Header = () => {
       <Dropdown
         menu={userItems}
         placement="bottomRight"
-        >
+        trigger={['click']}
+      >
         <button className="rounded-full border border-gray-300 flex gap-2 items-center px-4 py-2 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
           <Image
             src={IMAGE_URL.MENU}
@@ -188,6 +209,20 @@ const Header = () => {
         {_renderUserControls()}
       </div>
       {_renderSearchBar()}
+      {isShowLogin && (
+        <ModalLogin
+          isShowLogin={isShowLogin}
+          setIsShowLogin={setIsShowLogin}
+          setIsShowRegister={setIsShowRegister}
+        />
+      )}
+      {isShowRegister && (
+        <ModalRegister
+          isShowRegister={isShowRegister}
+          setIsShowRegister={setIsShowRegister}
+          setIsShowLogin={setIsShowLogin}
+        />
+      )}
     </div>
   );
 }; //end 
