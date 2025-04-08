@@ -18,34 +18,8 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="bg-red-500">
+    <div className="bg-red-500 lg:px-38">
       Đi đi em , do dự tới hạn mất
-      <Button
-        onClick={() => {
-          setIsShowLogin(true);
-        }}
-        className="bg-blue-500 text-white hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800"
-      >
-        Click Login Modal dfvvfvv df
-      </Button>
-      {isShowLogin && (
-        <ModalLogin isShowLogin={isShowLogin} setIsShowLogin={setIsShowLogin} />
-      )}
-      <Button
-        onClick={() => {
-          setIsShowRegister(true);
-        }}
-        className="bg-blue-500 text-white hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800"
-      >
-        Click Register Modal
-      </Button>
-      {isShowRegister && (
-        <ModalRegister
-          isShowRegister={isShowRegister}
-          setIsShowRegister={setIsShowRegister}
-          setIsShowLogin={setIsShowLogin}
-        />
-      )}
     </div>
   );
 };

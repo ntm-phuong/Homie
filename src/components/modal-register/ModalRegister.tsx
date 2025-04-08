@@ -39,7 +39,7 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
       <Form
         layout="vertical"
         onFinish={handleRegister}
-        className="py-4"
+        className="py-4 !px-2"
         requiredMark="optional"
       >
         <Form.Item
@@ -70,11 +70,11 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
         </Form.Item>
 
         <Form.Item
-         label={
-          <span className="font-bold text-lg">
-            Confirm Password <span className="text-red-500">*</span>
-          </span>
-        }
+          label={
+            <span className="font-bold text-lg">
+              Confirm Password <span className="text-red-500">*</span>
+            </span>
+          }
           name="confirmPassword"
           dependencies={["password"]}
           rules={[
@@ -111,24 +111,15 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
         >
           <Checkbox>I agree to the terms and conditions</Checkbox>
         </Form.Item>
-
-        <Button
-          type="primary"
-          htmlType="submit"
-          className="!text-white !h-[50px] !w-full !text-lg !font-medium"
-        >
-          Register
-        </Button>
-
-        <div className="text-center mt-4 text-lg">
-          Already have an account?{" "}
-          <Button
-            type="link"
-            onClick={switchToLogin}
-            className="!p-0 !h-auto !text-lg"
+        <Form.Item>
+          <button
+            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer"
           >
-            Sign in
-          </Button>
+            Register
+          </button>
+        </Form.Item>
+        <div className="text-center text-[16px]">
+          Already have an account? <span onClick={switchToLogin} className="font-semibold cursor-pointer">Sign In</span>
         </div>
       </Form>
     </Modal>
