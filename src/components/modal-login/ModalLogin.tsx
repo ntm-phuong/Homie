@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Modal, Form, Input, Button } from "antd";
+import { signIn } from "next-auth/react"; // Import NextAuth.js signIn function
 
 interface ModalLoginProps {
   isShowLogin: boolean;
@@ -23,7 +24,9 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
     setIsShowRegister(true);
   }
 
-
+  const handleSocialLogin = (provider: string) => {
+    signIn(provider); // Trigger NextAuth.js signIn with the specified provider
+  };
 
   return (
     <Modal
@@ -83,6 +86,23 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
             Login
           </button>
         </Form.Item>
+        <div className="text-center text-[16px]">
+          Or login with:
+        </div>
+        <div className="flex justify-center gap-4 py-4">
+          <button
+            onClick={() => handleSocialLogin("google")}
+            className="!text-white !h-[50px] !w-[150px] !text-lg !font-medium bg-red-500 rounded-xl text-center cursor-pointer"
+          >
+            Google
+          </button>
+          <button
+            onClick={() => handleSocialLogin("facebook")}
+            className="!text-white !h-[50px] !w-[150px] !text-lg !font-medium bg-blue-600 rounded-xl text-center cursor-pointer"
+          >
+            Facebook
+          </button>
+        </div>
         <div className="text-center text-[16px]">
           Don't have an account? <span className="font-semibold cursor-pointer" onClick={switchToRegister}>Sign Up</span>
         </div>
