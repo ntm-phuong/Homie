@@ -1,3 +1,4 @@
 export const RouterUrl = {
-    HOME: ""
+    HOME: "/home",
+    PROFILE: "/profile",
 }

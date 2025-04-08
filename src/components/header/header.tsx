@@ -9,6 +9,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import Image from 'next/image';
 import ModalLogin from "../modal-login/ModalLogin";
 import ModalRegister from "../modal-register/ModalRegister";
+import { useRouter } from "next/navigation";
+import { RouterUrl } from "@/src/constants/path";
 
 const { RangePicker } = DatePicker;
 
@@ -18,7 +20,8 @@ const Header = () => {
   const datePickerRef = useRef<HTMLDivElement>(null);
   const [isShowLogin, setIsShowLogin] = useState(false);
   const [isShowRegister, setIsShowRegister] = useState(false);
-  
+  const router = useRouter();
+
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
     if (dates) {
       setSelectedDates(dates);
@@ -58,6 +61,9 @@ const Header = () => {
     } else if (key === '2') {
       setIsShowLogin(true);
     }
+    else if (key === '3') {
+      router.push(RouterUrl.PROFILE);
+    }
   };
   
   const userItems: MenuProps = {
@@ -70,8 +76,10 @@ const Header = () => {
         key: '2',
         label: <span className="font-semibold w-full block">Log in</span>,
       },
-      { type: 'divider' },
-      { key: '3', label: 'Host your home' },
+      {
+        key: '3',
+        label: <span className="font-semibold w-full block">Profile</span>,
+      },    
       { key: '4', label: 'Host an experience' },
       { key: '5', label: 'Help' },
     ],
