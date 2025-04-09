@@ -7,6 +7,11 @@ export const IMAGE_URL = {
     MENU: "/img/menu.png",
     USER: "/img/user.png",
     SEARCH: "/img/search.png" ,
-    
+    HEART: "/img/heart.png" ,
+
+    //img room
+    ROOM1: "/img/room1.png" ,
+
+
   }
   

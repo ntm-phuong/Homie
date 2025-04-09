@@ -96,7 +96,7 @@ const Header = () => {
   );
 
   const _renderNavigation = () => (
-    <div className="flex space-x-4 text-[24px]">
+    <div className="hidden md:flex space-x-4 text-[24px]">
       <Link href="#" className="font-semibold px-2">Home</Link>
       <Link href="#" className="font-semibold px-2">Experiences</Link>
     </div>
@@ -210,7 +210,7 @@ const Header = () => {
   );
 
   return (
-    <div className="flex flex-col gap-4 items-center w-full lg:px-38 py-6">
+    <div className="flex flex-col gap-4 items-center w-full lg:px-38 py-6 px-4">
       <div className="flex items-center justify-between w-full">
         {_renderLogo()}
         {_renderNavigation()}
