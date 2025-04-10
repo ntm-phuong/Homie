@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "antd": "^5.22.3",
-    "mongoose": "^8.13.1",
+    "mongoose": "^8.13.2",
     "next": "15.2.3",
     "next-auth": "^4.24.11",
     "react": "^18",
