@@ -9,7 +9,15 @@ const AddRoom = () => {
     address: '',
     rentalDate: '',
     price: '',
+    description_room: '',
+    check_in: '',
+    check_out: '',
+    status: '',
+    bed_rooms: '',
+    bath_room: '',
+    occupancy_limit: '',
   });
+
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,40 +29,45 @@ const AddRoom = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setFormData({ ...formData, image: file });
-      setPreviewImage(URL.createObjectURL(file));
+      setPreviewImage(URL.createObjectURL(file)); // Generate a preview URL for the image
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const formDataToSend = new FormData();
-    formDataToSend.append('image', formData.image as File);
-    formDataToSend.append('name', formData.name);
-    formDataToSend.append('address', formData.address);
-    formDataToSend.append('rentalDate', formData.rentalDate);
-    formDataToSend.append('price', formData.price);
-
+  
+    if (!formData.image) {
+      alert('Please upload an image.');
+      return;
+    }
+  
+    const data = new FormData();
+    data.append('image', formData.image);
+    data.append('name', formData.name);
+    data.append('address', formData.address);
+    data.append('rentalDate', formData.rentalDate);
+    data.append('price', formData.price);
+    data.append('description_room', formData.description_room);
+    data.append('check_in', formData.check_in);
+    data.append('check_out', formData.check_out);
+    data.append('status', formData.status);
+    data.append('bed_rooms', formData.bed_rooms);
+    data.append('bath_room', formData.bath_room);
+    data.append('occupancy_limit', formData.occupancy_limit);
+  
     try {
-      const response = await fetch('/api/rooms', {
+      const response = await fetch('/api/add-rooms', {
         method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        body: data,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Room created successfully:', data);
-        // Reset form or show success message
-      } else {
-        console.error('Failed to create room:', await response.json());
-      }
+  
+      const result = await response.json();
+      console.log('Server response:', result);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Upload failed:', error);
     }
   };
+  
 
   const _renderInput = (label: string, name: keyof typeof formData, type: string) => {
     return (
@@ -114,6 +127,14 @@ const AddRoom = () => {
         {_renderInput("Address:", "address", "text")}
         {_renderInput("Rental Date:", "rentalDate", "date")}
         {_renderInput("Price:", "price", "number")}
+        {_renderInput("Description:", "description_room", "text")}
+        {_renderInput("Check In:", "check_in", "time")}
+        {_renderInput("Check Out:", "check_out", "time")}
+        {_renderInput("Status:", "status", "text")}
+        {_renderInput("Bedrooms:", "bed_rooms", "number")}
+        {_renderInput("Bathrooms:", "bath_room", "number")}
+        {_renderInput("Occupancy Limit:", "occupancy_limit", "number")}
+
         <button
           type="submit"
           className="w-full py-2 px-4 bg-main text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
