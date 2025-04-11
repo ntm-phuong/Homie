@@ -82,7 +82,7 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
           Didn't receive a code?{' '}
           <span 
             onClick={handleResendCode} 
-            className="text-main hover:text-main-dark ml-1"
+            className="text-main text-rose-500 hover:text-rose-700 hover:text-main-dark ml-1"
           >
             Resend
           </span>
