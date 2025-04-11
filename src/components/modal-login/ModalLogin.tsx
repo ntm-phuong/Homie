@@ -15,10 +15,35 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
     setIsShowLogin(false);
   };
 
-  const handleLogin = (values: { email: string; password: string }) => {
-    console.log(values, 'test1');
+  const handleLogin = async (values: { email: string; password: string }) => {
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+  
+      let data: any = {};
+  
+      try {
+        data = await response.json(); // Có thể throw lỗi nếu body trống
+      } catch (jsonError) {
+        console.error("Failed to parse JSON:", jsonError);
+      }
+  
+      if (response.ok) {
+        console.log("Login successful:", data);
+        localStorage.setItem("token", data.token);
+      } else {
+        console.error("Login failed:", data.message || "Unknown error");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
   };
-
+  
   const switchToRegister = () => {  
     setIsShowLogin(false);
     setIsShowRegister(true);
