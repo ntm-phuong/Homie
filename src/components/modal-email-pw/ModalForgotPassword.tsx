@@ -17,6 +17,7 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
 }) => {
   const handleCancel = () => {
     setIsShowForgotPassword(false);
+    setIsShowLogin(true);
   };
 
   const handleSubmit = (values: { email: string }) => {

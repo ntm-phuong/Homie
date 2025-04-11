@@ -8,7 +8,7 @@ interface SetPasswordProps {
   setIsShowLogin: (isShow: boolean) => void;
 }
 
-const SetPassword: React.FC<SetPasswordProps> = ({
+const ModalSetPassword: React.FC<SetPasswordProps> = ({
   isShowSetPassword,
   setIsShowSetPassword,
   setIsShowLogin
@@ -34,7 +34,7 @@ const SetPassword: React.FC<SetPasswordProps> = ({
       <p className="text-gray-600 text-sm mb-8 leading-5">
         Your previous password has been reseted. Please set a new password for your account.
       </p>
-      
+
       <Form
         layout="vertical"
         onFinish={handleSubmit}
@@ -48,8 +48,8 @@ const SetPassword: React.FC<SetPasswordProps> = ({
             { min: 8, message: 'Password must be at least 8 characters!' }
           ]}
         >
-          <Input.Password 
-            placeholder="Enter your password" 
+          <Input.Password
+            placeholder="Enter your password"
             className="h-[50px] text-md hover:!border-rose-300 focus:!border-rose-500 focus:!shadow-[0_0_0_2px_rgba(244,63,94,0.1)]"
           />
         </Form.Item>
@@ -70,8 +70,8 @@ const SetPassword: React.FC<SetPasswordProps> = ({
             }),
           ]}
         >
-          <Input.Password 
-            placeholder="Confirm your password" 
+          <Input.Password
+            placeholder="Confirm your password"
             className="h-[50px] text-md hover:!border-rose-300 focus:!border-rose-500 focus:!shadow-[0_0_0_2px_rgba(244,63,94,0.1)]"
           />
         </Form.Item>
@@ -92,4 +92,4 @@ const SetPassword: React.FC<SetPasswordProps> = ({
   );
 };
 
-export default SetPassword;
+export default ModalSetPassword;

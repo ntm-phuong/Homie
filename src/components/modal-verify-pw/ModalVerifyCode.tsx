@@ -9,7 +9,7 @@ interface VerifyCodeProps {
   setIsShowLogin: (isShow: boolean) => void;
 }
 
-const VerifyCode: React.FC<VerifyCodeProps> = ({ 
+const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
   isShowVerifyCode,
   setIsShowVerifyCode,
   setIsShowSetPassword,
@@ -50,12 +50,12 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
       >
         <span className="mr-1">←</span> Back to login
       </button>
-      
+
       <h1 className="text-2xl font-bold text-gray-900 mb-3">Verify code</h1>
       <p className="text-gray-600 text-sm mb-8 leading-5">
         An authentication code has been sent to your email.
       </p>
-      
+
       <Form form={form} layout="vertical" onFinish={handleSubmit} className="w-full">
         <Form.Item
           label={<span className="font-bold text-xl">Enter Code</span>}
@@ -66,15 +66,15 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
             { max: 6, message: 'Code must be 6 characters!' }
           ]}
         >
-          <Input 
-            placeholder="Enter code here" 
+          <Input
+            placeholder="Enter code here"
             className="h-[50px] text-lg hover:!border-rose-300 focus:!border-rose-500 focus:!shadow-[0_0_0_2px_rgba(244,63,94,0.1)] text-left font-mono"
           />
         </Form.Item>
 
         <div className="text-left mb-12">
           <span className="text-gray-800 text-sm mr-1">Didn't receive a code?</span>
-          <button 
+          <button
             type="button"
             onClick={handleResendCode}
             className="text-rose-500 hover:text-rose-700 text-sm font-medium"
@@ -97,4 +97,4 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
   );
 };
 
-export default VerifyCode;
+export default ModalVerifyCode;
