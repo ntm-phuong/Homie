@@ -46,7 +46,7 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
     >
       <button
         onClick={switchToLogin}
-        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2"
+        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2 cursor-pointer"
       >
         <span className="mr-1"><ArrowLeftOutlined /></span> Back to login
       </button>
