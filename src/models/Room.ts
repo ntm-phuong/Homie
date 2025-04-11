@@ -17,4 +17,4 @@ const RoomSchema = new mongoose.Schema({
   occupancy_limit: String,
 }, { timestamps: true });
 
-export default mongoose.models.Room || mongoose.model('Test_Rooms', RoomSchema);
+export default mongoose.models.Room || mongoose.model('Room', RoomSchema);
