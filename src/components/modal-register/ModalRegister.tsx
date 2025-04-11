@@ -18,10 +18,33 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
     setIsShowRegister(false);
   };
 
-  const handleRegister = (values: any) => {
-    console.log("Register values:", values);
-    setIsShowRegister(false);
+  const handleRegister = async (values: any) => {
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log("Register success:", data);
+        setIsShowRegister(false);
+        setIsShowLogin(true); // mở form login nếu cần
+      } else {
+        console.error("Register failed:", data.message);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
   };
+  
 
   const switchToLogin = () => {
     setIsShowRegister(false);
