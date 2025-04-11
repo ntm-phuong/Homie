@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input } from "antd";
 
 interface SetPasswordProps {
   isShowSetPassword: boolean;
@@ -30,18 +30,19 @@ const ModalSetPassword: React.FC<SetPasswordProps> = ({
       footer={null}
       width={500}
     >
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">Set a password</h1>
-      <p className="text-gray-600 text-sm mb-8 leading-5">
-        Your previous password has been reseted. Please set a new password for your account.
-      </p>
+      <div className="text-center pb-4">
+        <h2 className="text-2xl font-bold">Set a password</h2>
+        <p className="text-gray-500 text-lg">Your previous password has been reset. Please set a new password</p>
+      </div>
 
       <Form
         layout="vertical"
         onFinish={handleSubmit}
-        className="w-full"
+        className="py-4 !px-2"
+        requiredMark="optional"
       >
         <Form.Item
-          label={<span className="font-bold text-lg">Create Password</span>}
+          label={<span className="font-bold text-lg">Create Password <span className="text-red-500">*</span></span>}
           name="password"
           rules={[
             { required: true, message: 'Please create a password!' },
@@ -50,12 +51,12 @@ const ModalSetPassword: React.FC<SetPasswordProps> = ({
         >
           <Input.Password
             placeholder="Enter your password"
-            className="h-[50px] text-md hover:!border-rose-300 focus:!border-rose-500 focus:!shadow-[0_0_0_2px_rgba(244,63,94,0.1)]"
+            className="h-[50px] text-md"
           />
         </Form.Item>
 
         <Form.Item
-          label={<span className="font-bold text-lg">Confirm Password</span>}
+          label={<span className="font-bold text-lg">Confirm Password <span className="text-red-500">*</span></span>}
           name="confirmPassword"
           dependencies={['password']}
           rules={[
@@ -72,20 +73,17 @@ const ModalSetPassword: React.FC<SetPasswordProps> = ({
         >
           <Input.Password
             placeholder="Confirm your password"
-            className="h-[50px] text-md hover:!border-rose-300 focus:!border-rose-500 focus:!shadow-[0_0_0_2px_rgba(244,63,94,0.1)]"
+            className="h-[50px] text-md"
           />
         </Form.Item>
 
-        <div className="border-t border-gray-200 my-6"></div>
-
         <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="!bg-rose-500 hover:!bg-rose-600 !text-white !h-[50px] !w-full !text-lg !font-medium !border-transparent"
+          <button
+            type="submit"
+            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main hover:bg-main-dark rounded-xl text-center cursor-pointer transition-colors"
           >
             Set Password
-          </Button>
+          </button>
         </Form.Item>
       </Form>
     </Modal>

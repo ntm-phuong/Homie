@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input } from "antd";
 
 interface ModalForgotPasswordProps {
   isShowForgotPassword: boolean;
@@ -37,30 +37,27 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
       onCancel={handleCancel}
       footer={null}
     >
-      <button
+       <button
         onClick={switchToLogin}
         className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors"
       >
         <span className="mr-1">←</span> Back to login
       </button>
 
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">Forgot your password?</h2>
-      <p className="text-gray-600 text-sm mb-8 leading-5">
-        Don't worry! Enter your email below to reset your password:
-      </p>
+
+      <div className="text-center pb-4">
+        <h2 className="text-2xl font-bold">Forgot your password?</h2>
+        <p className="text-gray-500 text-lg">Enter your email below to reset your password</p>
+      </div>
 
       <Form
         layout="vertical"
         onFinish={handleSubmit}
+        className="py-4 !px-2"
         requiredMark="optional"
-        className="w-full"
       >
         <Form.Item
-          label={
-            <span className="font-bold text-lg">
-              Email <span className="text-red-500">*</span>
-            </span>
-          }
+          label={<span className="font-bold text-lg">Email <span className="text-red-500">*</span></span>}
           name="email"
           rules={[
             { required: true, message: 'Please input your email!' },
@@ -69,18 +66,17 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
         >
           <Input
             placeholder="Enter your email"
-            className="h-[50px] text-md hover:!border-rose-300 focus:!border-rose-500 focus:!shadow-[0_0_0_2px_rgba(244,63,94,0.1)]"
+            className="h-[50px] text-md"
           />
         </Form.Item>
 
-        <Form.Item className="mb-6">
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="!bg-rose-500 hover:!bg-rose-600 !text-white !h-[50px] !w-full !text-lg !font-medium !border-transparent"
+        <Form.Item>
+          <button
+            type="submit"
+            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main hover:bg-main-dark rounded-xl text-center cursor-pointer transition-colors"
           >
             Submit
-          </Button>
+          </button>
         </Form.Item>
       </Form>
     </Modal>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input } from "antd";
 
 interface VerifyCodeProps {
   isShowVerifyCode: boolean;
@@ -46,19 +46,25 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
     >
       <button
         onClick={switchToLogin}
-        className="text-rose-500 hover:text-rose-700 text-lg mb-8 inline-flex items-center font-medium transition-colors"
+        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors"
       >
         <span className="mr-1">←</span> Back to login
       </button>
 
-      <h1 className="text-2xl font-bold text-gray-900 mb-3">Verify code</h1>
-      <p className="text-gray-600 text-sm mb-8 leading-5">
-        An authentication code has been sent to your email.
-      </p>
+      <div className="text-center pb-4">
+        <h2 className="text-2xl font-bold">Verify code</h2>
+        <p className="text-gray-500 text-lg">An authentication code has been sent to your email</p>
+      </div>
 
-      <Form form={form} layout="vertical" onFinish={handleSubmit} className="w-full">
+      <Form 
+        form={form} 
+        layout="vertical" 
+        onFinish={handleSubmit} 
+        className="py-4 !px-2"
+        requiredMark="optional"
+      >
         <Form.Item
-          label={<span className="font-bold text-xl">Enter Code</span>}
+          label={<span className="font-bold text-lg">Enter Code <span className="text-red-500">*</span></span>}
           name="code"
           rules={[
             { required: true, message: 'Please input the verification code!' },
@@ -68,29 +74,27 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
         >
           <Input
             placeholder="Enter code here"
-            className="h-[50px] text-lg hover:!border-rose-300 focus:!border-rose-500 focus:!shadow-[0_0_0_2px_rgba(244,63,94,0.1)] text-left font-mono"
+            className="h-[50px] text-lg text-left font-mono"
           />
         </Form.Item>
 
-        <div className="text-left mb-12">
-          <span className="text-gray-800 text-sm mr-1">Didn't receive a code?</span>
-          <button
-            type="button"
-            onClick={handleResendCode}
-            className="text-rose-500 hover:text-rose-700 text-sm font-medium"
+        <div className="pb-3 flex flex-row justify-center font-semibold cursor-pointer text-[16px]">
+          Didn't receive a code?{' '}
+          <span 
+            onClick={handleResendCode} 
+            className="text-main hover:text-main-dark ml-1"
           >
             Resend
-          </button>
+          </span>
         </div>
 
         <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="!bg-rose-500 hover:!bg-rose-600 !text-white !h-[50px] !w-full !text-lg !font-medium !border-transparent"
+          <button
+            type="submit"
+            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main hover:bg-main-dark rounded-xl text-center cursor-pointer transition-colors"
           >
             Verify
-          </Button>
+          </button>
         </Form.Item>
       </Form>
     </Modal>
