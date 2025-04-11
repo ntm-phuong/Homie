@@ -1,6 +1,7 @@
 'use client';
 
 import { Modal, Form, Input } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons"; 
 
 interface ModalForgotPasswordProps {
   isShowForgotPassword: boolean;
@@ -39,13 +40,13 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
     >
        <button
         onClick={switchToLogin}
-        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors"
+        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2"
       >
-        <span className="mr-1">←</span> Back to login
+        <span className="mr-1"><ArrowLeftOutlined /></span> Back to login
       </button>
 
 
-      <div className="text-center pb-4">
+      <div className="text-center py-4">
         <h2 className="text-2xl font-bold">Forgot your password?</h2>
         <p className="text-gray-500 text-lg">Enter your email below to reset your password</p>
       </div>

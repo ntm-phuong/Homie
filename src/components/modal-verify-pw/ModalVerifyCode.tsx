@@ -1,6 +1,7 @@
 'use client';
 
 import { Modal, Form, Input } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons"; 
 
 interface VerifyCodeProps {
   isShowVerifyCode: boolean;
@@ -29,7 +30,6 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
 
   const handleResendCode = () => {
     console.log("Resending verification code");
-    // Add resend logic here
   };
 
   const switchToLogin = () => {
@@ -46,20 +46,20 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
     >
       <button
         onClick={switchToLogin}
-        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors"
+        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2"
       >
-        <span className="mr-1">←</span> Back to login
+        <span className="mr-1"><ArrowLeftOutlined /></span> Back to login
       </button>
 
-      <div className="text-center pb-4">
+      <div className="text-center py-4">
         <h2 className="text-2xl font-bold">Verify code</h2>
         <p className="text-gray-500 text-lg">An authentication code has been sent to your email</p>
       </div>
 
-      <Form 
-        form={form} 
-        layout="vertical" 
-        onFinish={handleSubmit} 
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
         className="py-4 !px-2"
         requiredMark="optional"
       >
@@ -80,8 +80,8 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
 
         <div className="pb-3 flex flex-row justify-center font-semibold cursor-pointer text-[16px]">
           Didn't receive a code?{' '}
-          <span 
-            onClick={handleResendCode} 
+          <span
+            onClick={handleResendCode}
             className="text-main text-rose-500 hover:text-rose-700 hover:text-main-dark ml-1"
           >
             Resend
