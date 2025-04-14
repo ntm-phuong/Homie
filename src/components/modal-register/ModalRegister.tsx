@@ -2,6 +2,8 @@
 
 import React from "react";
 import { Modal, Form, Input, Button, Checkbox } from "antd";
+import { message } from 'antd';
+
 
 interface ModalRegisterProps {
   isShowRegister: boolean;
@@ -19,6 +21,18 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
   };
 
   const handleRegister = async (values: any) => {
+    const { email, password, confirmPassword, agreement } = values;
+  
+    if (!email || !password || !confirmPassword || !agreement) {
+      message.error("Please fill in all required fields.");
+      return;
+    }
+  
+    if (password !== confirmPassword) {
+      message.error("Passwords do not match.");
+      return;
+    }
+  
     try {
       const response = await fetch("/api/register", {
         method: "POST",
@@ -26,24 +40,29 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: values.email,
-          password: values.password,
+          email,
+          password,
         }),
       });
   
       const data = await response.json();
   
       if (response.ok) {
-        console.log("Register success:", data);
+        message.success("Registration successful!");
         setIsShowRegister(false);
-        setIsShowLogin(true); // mở form login nếu cần
+        setIsShowLogin(true); // Open login modal after success
       } else {
-        console.error("Register failed:", data.message);
+        message.error(`Registration failed: ${data.message || "An error occurred."}`);
+        console.warn("Server responded with:", response.status, data);
       }
     } catch (error) {
       console.error("Error during registration:", error);
+      message.error("Server connection error.");
     }
   };
+  
+  
+  
   
 
   const switchToLogin = () => {
