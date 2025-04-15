@@ -9,9 +9,9 @@ interface VerifyCodeProps {
   setIsShowVerifyCode: (isShow: boolean) => void;
   setIsShowSetPassword: (isShow: boolean) => void;
   setIsShowLogin: (isShow: boolean) => void;
-  email: string; // Nhận email từ ModalForgotPassword
-  resetToken: string; // Nhận resetToken từ ModalForgotPassword
-  setResetToken: (token: string) => void; // Cập nhật resetToken nếu cần
+  email: string;
+  resetToken: string;
+  setResetToken: (token: string) => void;
 }
 
 const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
@@ -32,26 +32,35 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
 
   const handleSubmit = async (values: { code: string }) => {
     try {
-      const response = await axios.post('/api/verify-code', {
+      const response = await axios.post('/api/verifycode', {
         email,
         code: values.code,
       });
-      message.success(response.data.message);
-      setResetToken(response.data.resetToken); // Cập nhật resetToken nếu cần
+
+      message.success('Verification successful');
+      
+      // Save the resetToken from the response
+      setResetToken(response.data.resetToken);
+      
+      // Close current modal and open the set password modal
       setIsShowVerifyCode(false);
-      setIsShowSetPassword(true); // Mở ModalSetPassword
+      setIsShowSetPassword(true);
     } catch (error: any) {
-      message.error(error.response?.data?.message || 'Đã có lỗi xảy ra');
+      message.error(error.response?.data?.message || 'Verification failed');
     }
   };
 
   const handleResendCode = async () => {
     try {
-      const response = await axios.post('/api/forgot-password', { email });
+      const response = await axios.post('/api/forgotpassword', { email });
       message.success('Verification code resent');
-      setResetToken(response.data.resetToken); // Cập nhật resetToken mới
+      
+      // Update the resetToken with the new one
+      if (response.data.resetToken) {
+        setResetToken(response.data.resetToken);
+      }
     } catch (error: any) {
-      message.error(error.response?.data?.message || 'Đã có lỗi xảy ra');
+      message.error(error.response?.data?.message || 'Failed to resend code');
     }
   };
 
@@ -71,10 +80,12 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
         </span>{' '}
         Back to login
       </button>
+
       <div className="text-center py-4">
         <h2 className="text-2xl font-bold">Verify code</h2>
         <p className="text-gray-500 text-lg">An authentication code has been sent to your email</p>
       </div>
+
       <Form
         form={form}
         layout="vertical"
@@ -99,6 +110,7 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
             className="h-[50px] text-lg text-left font-mono"
           />
         </Form.Item>
+
         <div className="pb-3 flex flex-row justify-center font-semibold cursor-pointer text-[16px]">
           Didn't receive a code?{' '}
           <span
@@ -108,6 +120,7 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
             Resend
           </span>
         </div>
+
         <Form.Item>
           <button
             type="submit"

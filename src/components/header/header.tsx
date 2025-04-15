@@ -26,6 +26,8 @@ const Header = () => {
   const [isShowForgotPassword, setIsShowForgotPassword] = useState(false);
   const [isShowVerifyCode, setIsShowVerifyCode] = useState(false);
   const [isShowSetPassword, setIsShowSetPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [resetToken, setResetToken] = useState('');
   const router = useRouter();
 
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
@@ -248,18 +250,22 @@ const Header = () => {
       )}
       {isShowVerifyCode && (
         <ModalVerifyCode
-          isShowVerifyCode={isShowVerifyCode}
-          setIsShowVerifyCode={setIsShowVerifyCode}
-          setIsShowLogin={setIsShowLogin}
-          setIsShowSetPassword={setIsShowSetPassword}
-        />
+        isShowVerifyCode={isShowVerifyCode}
+        setIsShowVerifyCode={setIsShowVerifyCode}
+        setIsShowSetPassword={setIsShowSetPassword}
+        setIsShowLogin={setIsShowLogin}
+        email={email}
+        resetToken={resetToken}
+        setResetToken={setResetToken}
+      />
       )}
       {isShowSetPassword && (
         <ModalSetPassword
-          isShowSetPassword={isShowSetPassword}
-          setIsShowSetPassword={setIsShowSetPassword}
-          setIsShowLogin={setIsShowLogin}
-        />
+        isShowSetPassword={isShowSetPassword}
+        setIsShowSetPassword={setIsShowSetPassword}
+        setIsShowLogin={setIsShowLogin}
+        resetToken={resetToken}
+      />
         )}
     </div>
   );

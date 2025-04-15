@@ -29,7 +29,7 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
 
   const handleSubmit = async (values: { email: string }) => {
     try {
-      const response = await axios.post('/api/forgot-password', { email: values.email });
+      const response = await axios.post('/api/forgotpassword', { email: values.email });
       message.success(response.data.message);
       setEmail(values.email); // Lưu email
       setResetToken(response.data.resetToken); // Lưu resetToken
