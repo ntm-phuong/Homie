@@ -9,6 +9,7 @@ const AddRoom = () => {
     address: '',
     rentalDate: '',
     price: '',
+    rating: '',
     description_room: '',
     check_in: '',
     check_out: '',
@@ -29,7 +30,7 @@ const AddRoom = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setFormData({ ...formData, image: file });
-      setPreviewImage(URL.createObjectURL(file)); // Generate a preview URL for the image
+      setPreviewImage(URL.createObjectURL(file)); 
     }
   };
 
@@ -47,6 +48,7 @@ const AddRoom = () => {
     data.append('address', formData.address);
     data.append('rentalDate', formData.rentalDate);
     data.append('price', formData.price);
+    data.append('rating', formData.rating);
     data.append('description_room', formData.description_room);
     data.append('check_in', formData.check_in);
     data.append('check_out', formData.check_out);
@@ -78,7 +80,7 @@ const AddRoom = () => {
           name={name}
           value={formData[name] as string}
           onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 h-[50px]"
         />
       </div>
     );
@@ -120,24 +122,24 @@ const AddRoom = () => {
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-20 p-6 bg-gray-100 rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Create a Room</h1>
-      <form onSubmit={handleSubmit} className="max-w-[600px] flex flex-col gap-4">
+      <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">Create a Room</h1>
+      <form onSubmit={handleSubmit} className="max-w-[800px] grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-center">
         {_renderInputImage()}
         {_renderInput("Name Room:", "name", "text")}
         {_renderInput("Address:", "address", "text")}
         {_renderInput("Rental Date:", "rentalDate", "date")}
         {_renderInput("Price:", "price", "number")}
+        {_renderInput("Rating:", "rating", "string")}
         {_renderInput("Description:", "description_room", "text")}
-        {_renderInput("Check In:", "check_in", "time")}
-        {_renderInput("Check Out:", "check_out", "time")}
+        {_renderInput("Check In:", "check_in", "date")}
+        {_renderInput("Check Out:", "check_out", "date")}
         {_renderInput("Status:", "status", "text")}
         {_renderInput("Bedrooms:", "bed_rooms", "number")}
         {_renderInput("Bathrooms:", "bath_room", "number")}
         {_renderInput("Occupancy Limit:", "occupancy_limit", "number")}
-
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-main text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full h-[50px] px-4 bg-main text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Create Room
         </button>

@@ -1,45 +1,3 @@
-// // app/api/rooms/route.ts
-// import cloudinary from '@/src/lib/cloudinary';
-// import { connectDB } from '@/src/lib/mongoose';
-// import Room from '@/src/models/Room';
-// import { NextRequest, NextResponse } from 'next/server';
-
-// export const POST = async (req: NextRequest) => {
-//   await connectDB();
-
-//   const formData = await req.formData();
-
-//   const file: File | null = formData.get('image') as unknown as File;
-//   const name = formData.get('name') as string;
-//   const address = formData.get('address') as string;
-//   const rentalDate = formData.get('rentalDate') as string;
-//   const price = formData.get('price') as string;
-
-//   try {
-//     // Convert file → buffer → base64
-//     const bytes = await file.arrayBuffer();
-//     const buffer = Buffer.from(bytes);
-
-//     // Upload to Cloudinary
-//     const uploadRes = await cloudinary.uploader.upload(`data:${file.type};base64,${buffer.toString('base64')}`, {
-//       folder: 'rooms',
-//     });
-
-//     // Save to MongoDB
-//     const room = await Room.create({
-//       name,
-//       address,
-//       rentalDate,
-//       price,
-//       imageUrl: uploadRes.secure_url,
-//     });
-
-//     return NextResponse.json({ success: true, room });
-//   } catch (err) {
-//     return NextResponse.json({ success: false, message: 'Upload failed', error: err }, { status: 500 });
-//   }
-// };
-
 import cloudinary from '@/src/lib/cloudinary';
 import { connectDB } from '@/src/lib/mongoose';
 import Room from '@/src/models/Room';
@@ -67,7 +25,7 @@ export const POST = async (req: NextRequest) => {
   const occupancy_limit = formData.get('occupancy_limit') as string;
 
   try {
-    // Convert file to base64
+   
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`;
@@ -77,7 +35,6 @@ export const POST = async (req: NextRequest) => {
       folder: 'rooms',
     });
 
-    // Auto-increment room_id
     const counter = await Counter.findOneAndUpdate(
       { _id: 'room_id' },
       { $inc: { sequence_value: 1 } },
