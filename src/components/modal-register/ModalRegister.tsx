@@ -2,8 +2,7 @@
 
 import React from "react";
 import { Modal, Form, Input, Button, Checkbox } from "antd";
-import { message } from 'antd';
-
+import { message } from "antd";
 
 interface ModalRegisterProps {
   isShowRegister: boolean;
@@ -22,17 +21,17 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
 
   const handleRegister = async (values: any) => {
     const { email, password, confirmPassword, agreement } = values;
-  
+
     if (!email || !password || !confirmPassword || !agreement) {
       message.error("Please fill in all required fields.");
       return;
     }
-  
+
     if (password !== confirmPassword) {
       message.error("Passwords do not match.");
       return;
     }
-  
+
     try {
       const response = await fetch("/api/register", {
         method: "POST",
@@ -44,15 +43,17 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
           password,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         message.success("Registration successful!");
         setIsShowRegister(false);
-        setIsShowLogin(true); // Open login modal after success
+        setIsShowLogin(true);
       } else {
-        message.error(`Registration failed: ${data.message || "An error occurred."}`);
+        message.error(
+          `Registration failed: ${data.message || "An error occurred."}`
+        );
         console.warn("Server responded with:", response.status, data);
       }
     } catch (error) {
@@ -60,10 +61,6 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
       message.error("Server connection error.");
     }
   };
-  
-  
-  
-  
 
   const switchToLogin = () => {
     setIsShowRegister(false);
@@ -146,22 +143,26 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
                 value
                   ? Promise.resolve()
                   : Promise.reject(
-                    new Error("You need to agree with the terms!")
-                  ),
+                      new Error("You need to agree with the terms!")
+                    ),
             },
           ]}
         >
           <Checkbox>I agree to the terms and conditions</Checkbox>
         </Form.Item>
         <Form.Item>
-          <button
-            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer"
-          >
+          <button className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer">
             Register
           </button>
         </Form.Item>
         <div className="text-center text-[16px]">
-          Already have an account? <span onClick={switchToLogin} className="font-semibold cursor-pointer">Sign In</span>
+          Already have an account?{" "}
+          <span
+            onClick={switchToLogin}
+            className="font-semibold cursor-pointer"
+          >
+            Sign In
+          </span>
         </div>
       </Form>
     </Modal>
