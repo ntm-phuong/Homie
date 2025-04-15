@@ -14,7 +14,7 @@ export const sendEmail = async (options: {
   html: string;
 }) => {
   await transporter.sendMail({
-    from: `"Your App" <${process.env.EMAIL_USER}>`,
+    from: `"Homie" <${process.env.EMAIL_USER}>`,
     ...options
   });
 };

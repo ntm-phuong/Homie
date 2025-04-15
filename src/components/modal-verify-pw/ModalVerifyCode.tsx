@@ -3,6 +3,7 @@
 import { Modal, Form, Input, message } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 interface VerifyCodeProps {
   isShowVerifyCode: boolean;
@@ -24,6 +25,13 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
   setResetToken,
 }) => {
   const [form] = Form.useForm();
+  const [resending, setResending] = useState(false);
+
+  useEffect(() => {
+    if (!isShowVerifyCode) {
+      form.resetFields();
+    }
+  }, [isShowVerifyCode, form]);
 
   const handleCancel = () => {
     setIsShowVerifyCode(false);
@@ -34,63 +42,59 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
     try {
       const response = await axios.post('/api/verifycode', {
         email,
-        code: values.code,
+        code: values.code.trim(),
       });
 
-      message.success('Verification successful');
-      
-      // Save the resetToken from the response
+      message.success(response.data.message);
       setResetToken(response.data.resetToken);
-      
-      // Close current modal and open the set password modal
       setIsShowVerifyCode(false);
       setIsShowSetPassword(true);
     } catch (error: any) {
-      message.error(error.response?.data?.message || 'Verification failed');
+      message.error(error.response?.data?.message || 'An error occurred');
     }
   };
 
   const handleResendCode = async () => {
+    if (resending) return;
+    setResending(true);
+
     try {
       const response = await axios.post('/api/forgotpassword', { email });
       message.success('Verification code resent');
-      
-      // Update the resetToken with the new one
-      if (response.data.resetToken) {
-        setResetToken(response.data.resetToken);
-      }
+      setResetToken(response.data.resetToken);
     } catch (error: any) {
-      message.error(error.response?.data?.message || 'Failed to resend code');
+      message.error(error.response?.data?.message || 'An error occurred');
+    } finally {
+      setResending(false);
     }
   };
 
-  const switchToLogin = () => {
-    setIsShowVerifyCode(false);
-    setIsShowLogin(true);
-  };
-
   return (
-    <Modal open={isShowVerifyCode} onCancel={handleCancel} footer={null} width={500}>
+    <Modal
+      open={isShowVerifyCode}
+      onCancel={handleCancel}
+      footer={null}
+      width={500}
+      destroyOnClose
+    >
       <button
-        onClick={switchToLogin}
-        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2 cursor-pointer"
+        onClick={handleCancel}
+        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2"
       >
-        <span className="mr-1">
-          <ArrowLeftOutlined />
-        </span>{' '}
+        <ArrowLeftOutlined />
         Back to login
       </button>
-
       <div className="text-center py-4">
-        <h2 className="text-2xl font-bold">Verify code</h2>
-        <p className="text-gray-500 text-lg">An authentication code has been sent to your email</p>
+        <h2 className="text-2xl font-bold">Verify Code</h2>
+        <p className="text-gray-500 text-lg">
+          An authentication code has been sent to {email}
+        </p>
       </div>
-
       <Form
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        className="py-4 !px-2"
+        className="py-4 px-2"
         requiredMark="optional"
       >
         <Form.Item
@@ -102,29 +106,32 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
           name="code"
           rules={[
             { required: true, message: 'Please input the verification code!' },
-            { len: 6, message: 'Code must be 6 characters!' },
+            { pattern: /^\d{6}$/, message: 'Code must be exactly 6 digits!' },
           ]}
         >
           <Input
-            placeholder="Enter code here"
-            className="h-[50px] text-lg text-left font-mono"
+            placeholder="Enter 6-digit code"
+            className="h-[50px] text-lg font-mono"
+            maxLength={6}
+            autoFocus
+            inputMode="numeric"
           />
         </Form.Item>
-
-        <div className="pb-3 flex flex-row justify-center font-semibold cursor-pointer text-[16px]">
-          Didn't receive a code?{' '}
+        <div className="pb-3 flex justify-center font-semibold text-[16px]">
+          Didn’t receive a code?
           <span
             onClick={handleResendCode}
-            className="text-rose-500 hover:text-rose-700 ml-1"
+            className={`ml-1 text-rose-500 hover:text-rose-700 cursor-pointer ${
+              resending ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
-            Resend
+            {resending ? 'Resending...' : 'Resend'}
           </span>
         </div>
-
         <Form.Item>
           <button
             type="submit"
-            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main hover:bg-main-dark rounded-xl text-center cursor-pointer transition-colors"
+            className="text-white h-[50px] w-full text-xl font-medium bg-main hover:bg-main-dark rounded-xl"
           >
             Verify
           </button>

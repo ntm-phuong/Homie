@@ -20,7 +20,6 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
 }) => {
   const [form] = Form.useForm();
   const [email, setEmail] = useState(''); // Lưu email để truyền sang ModalVerifyCode
-  const [resetToken, setResetToken] = useState(''); // Lưu resetToken
 
   const handleCancel = () => {
     setIsShowForgotPassword(false);
@@ -32,7 +31,6 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
       const response = await axios.post('/api/forgotpassword', { email: values.email });
       message.success(response.data.message);
       setEmail(values.email); // Lưu email
-      setResetToken(response.data.resetToken); // Lưu resetToken
       setIsShowForgotPassword(false);
       setIsShowVerifyCode(true); // Mở ModalVerifyCode
     } catch (error: any) {
@@ -40,16 +38,11 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
     }
   };
 
-  const switchToLogin = () => {
-    setIsShowForgotPassword(false);
-    setIsShowLogin(true);
-  };
-
   return (
     <Modal open={isShowForgotPassword} onCancel={handleCancel} footer={null}>
       <button
-        onClick={switchToLogin}
-        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2 cursor-pointer"
+        onClick={() => setIsShowLogin(true)}
+        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2"
       >
         <span className="mr-1">
           <ArrowLeftOutlined />
@@ -68,11 +61,7 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
         requiredMark="optional"
       >
         <Form.Item
-          label={
-            <span className="font-bold text-lg">
-              Email <span className="text-red-500">*</span>
-            </span>
-          }
+          label={<span className="font-bold text-lg">Email <span className="text-red-500">*</span></span>}
           name="email"
           rules={[
             { required: true, message: 'Please input your email!' },

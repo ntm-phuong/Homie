@@ -25,7 +25,7 @@ const ModalSetPassword: React.FC<SetPasswordProps> = ({
 
   const handleSubmit = async (values: { password: string; confirmPassword: string }) => {
     try {
-      const response = await axios.post('/api/reset-password', {
+      const response = await axios.post('/api/resetpw', {
         token: resetToken,
         newPassword: values.password,
       });
