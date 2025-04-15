@@ -1,8 +1,8 @@
 'use client';
 
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Form, Input, Button } from "antd";
-import { signIn } from "next-auth/react"; // Import NextAuth.js signIn function
+import { signIn } from "next-auth/react"; 
 
 interface ModalLoginProps {
   isShowLogin: boolean;
@@ -11,11 +11,14 @@ interface ModalLoginProps {
 }
 
 const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, setIsShowRegister }) => {
+  const [loading, setLoading] = useState(false);
+
   const handleCancel = () => {
     setIsShowLogin(false);
   };
 
   const handleLogin = async (values: { email: string; password: string }) => {
+    setLoading(true);
     try {
       const response = await fetch("/api/login", {
         method: "POST",
@@ -28,7 +31,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
       let data: any = {};
   
       try {
-        data = await response.json(); // Có thể throw lỗi nếu body trống
+        data = await response.json(); 
       } catch (jsonError) {
         console.error("Failed to parse JSON:", jsonError);
       }
@@ -41,6 +44,8 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
       }
     } catch (error) {
       console.error("Error during login:", error);
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -50,7 +55,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
   }
 
   const handleSocialLogin = (provider: string) => {
-    signIn(provider); // Trigger NextAuth.js signIn with the specified provider
+    signIn(provider); 
   };
 
   return (
@@ -106,9 +111,10 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
         <div className="pb-3 flex flex-row justify-end font-semibold cursor-pointer text-[16px]">Forgot Password</div>
         <Form.Item>
           <button
-            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer"
+            className={`!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            disabled={loading}
           >
-            Login
+            {loading ? "Loading..." : "Login"}
           </button>
         </Form.Item>
         <div className="text-center text-[16px]">

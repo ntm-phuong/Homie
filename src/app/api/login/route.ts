@@ -1,16 +1,14 @@
-// app/api/login/route.ts
 
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import User from "../../../models/User"; // Adjusted relative path to the User model
+import User from "../../../models/User"; 
 
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
-    // Kết nối nếu chưa kết nối Mongo
     if (!mongoose.connection.readyState) {
       await mongoose.connect(process.env.MONGODB_URI as string);
     }
@@ -20,7 +18,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "User not found!" }, { status: 404 });
     }
 
-    if (password !== user.password) {
+    if (!(await bcrypt.compare(password, user.password))) {
       return NextResponse.json({ message: "Invalid credentials!" }, { status: 401 });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "secret", {
