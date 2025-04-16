@@ -11,6 +11,7 @@ import ModalLogin from "../modal-login/ModalLogin";
 import ModalRegister from "../modal-register/ModalRegister";
 import { useRouter } from "next/navigation";
 import { RouterUrl } from "@/src/constants/path";
+import { ToastContainer } from "react-toastify";
 import ModalForgotPassword from "../modal-email-pw/ModalForgotPassword";
 import ModalVerifyCode from "../modal-verify-pw/ModalVerifyCode";
 import ModalSetPassword from "../modal-set-pw/ModalSetPassword";
@@ -238,6 +239,7 @@ const Header = () => {
           setIsShowLogin={setIsShowLogin}
         />
       )}
+      <ToastContainer />
       {isShowForgotPassword && (
         <ModalForgotPassword
           isShowForgotPassword={isShowForgotPassword}
