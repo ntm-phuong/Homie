@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const MONGODB_URI = process.env.MONGODB_URI || "";
 
 if (!MONGODB_URI) {
-  throw new Error("⚠️ Vui lòng cung cấp biến môi trường MONGODB_URI");
+  throw new Error("Please add your Mongo URI to .env.local");
 }
 
 let cached = (global as any).mongoose || { conn: null, promise: null };

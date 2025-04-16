@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Modal, Form, Input, Button, Checkbox } from "antd";
-import { message } from "antd";
+import { Modal, Form, Input } from "antd";
+import { toast } from "react-toastify";
 
 interface ModalRegisterProps {
   isShowRegister: boolean;
@@ -23,12 +23,12 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
     const { email, password, confirmPassword, agreement } = values;
 
     if (!email || !password || !confirmPassword || !agreement) {
-      message.error("Please fill in all required fields.");
+      toast.error("Please fill in all required fields.", { position: "top-right" });
       return;
     }
 
     if (password !== confirmPassword) {
-      message.error("Passwords do not match.");
+      toast.error("Passwords do not match.", { position: "top-right" });
       return;
     }
 
@@ -47,18 +47,14 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
       const data = await response.json();
 
       if (response.ok) {
-        message.success("Registration successful!");
+        toast.success(data.message || "Registration successful!", { position: "top-right" });
         setIsShowRegister(false);
         setIsShowLogin(true);
       } else {
-        message.error(
-          `Registration failed: ${data.message || "An error occurred."}`
-        );
-        console.warn("Server responded with:", response.status, data);
+        toast.error(data.message || "Registration failed!", { position: "top-right" });
       }
     } catch (error) {
-      console.error("Error during registration:", error);
-      message.error("Server connection error.");
+      toast.error("Server connection error.", { position: "top-right" });
     }
   };
 
@@ -143,12 +139,14 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
                 value
                   ? Promise.resolve()
                   : Promise.reject(
-                      new Error("You need to agree with the terms!")
-                    ),
+                    new Error("You need to agree with the terms!")
+                  ),
             },
           ]}
         >
-          <Checkbox>I agree to the terms and conditions</Checkbox>
+          <div className="flex items-center gap-2">
+            <input type="checkbox" /> <p>I agree to the terms and conditions</p>
+          </div>
         </Form.Item>
         <Form.Item>
           <button className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer">
