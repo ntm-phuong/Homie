@@ -11,6 +11,7 @@ import ModalLogin from "../modal-login/ModalLogin";
 import ModalRegister from "../modal-register/ModalRegister";
 import { useRouter } from "next/navigation";
 import { RouterUrl } from "@/src/constants/path";
+import { ToastContainer } from "react-toastify";
 
 const { RangePicker } = DatePicker;
 
@@ -65,7 +66,7 @@ const Header = () => {
       router.push(RouterUrl.PROFILE);
     }
   };
-  
+
   const userItems: MenuProps = {
     items: [
       {
@@ -79,13 +80,13 @@ const Header = () => {
       {
         key: '3',
         label: <span className="font-semibold w-full block">Profile</span>,
-      },    
+      },
       { key: '4', label: 'Host an experience' },
       { key: '5', label: 'Help' },
     ],
     onClick: handleMenuClick,
   };
-  
+
 
   const _renderLogo = () => (
     <Link href="/" className="flex items-center no-underline">
@@ -231,8 +232,9 @@ const Header = () => {
           setIsShowLogin={setIsShowLogin}
         />
       )}
+      <ToastContainer />
     </div>
   );
-}; //end 
+};
 
 export default Header;
