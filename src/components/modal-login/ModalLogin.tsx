@@ -10,9 +10,10 @@ interface ModalLoginProps {
   isShowLogin: boolean;
   setIsShowLogin: (isShowLogin: boolean) => void;
   setIsShowRegister: (isShowLogin: boolean) => void;
+  setIsShowForgotPassword: (isShowForgotPassword: boolean) => void;
 }
 
-const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, setIsShowRegister }) => {
+const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, setIsShowRegister, setIsShowForgotPassword }) => {
   const [loading, setLoading] = useState(false);
 
   const handleCancel = () => {
@@ -62,6 +63,11 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
     signIn(provider);
   };
 
+  const handleForgotPassword = () => {
+    setIsShowForgotPassword(true);
+    setIsShowLogin(false);
+  }
+
   return (
     <>
       <Modal
@@ -102,23 +108,17 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
             <Input.Password placeholder="Enter your password" className="h-[50px] text-md" />
           </Form.Item>
 
-          <div className="pb-3 flex flex-row justify-end font-semibold cursor-pointer text-[16px]">
-            Forgot Password
-          </div>
-
+          <div onClick={handleForgotPassword} className="pb-3 flex flex-row justify-end font-semibold cursor-pointer text-[16px]">Forgot Password?</div>
           <Form.Item>
             <button
-              className={`!text-white !h-[50px] !w-full !text-xl !font-medium bg-main rounded-xl text-center cursor-pointer ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-              disabled={loading}
+              className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer"
             >
-              {loading ? "Loading..." : "Login"}
+              Login
             </button>
           </Form.Item>
-
           <div className="text-center text-[16px]">
             Or login with:
           </div>
-
           <div className="flex justify-center gap-4 py-4">
             <button
               onClick={() => handleSocialLogin("google")}
@@ -133,12 +133,11 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
               Facebook
             </button>
           </div>
-
           <div className="text-center text-[16px]">
             Don't have an account? <span className="font-semibold cursor-pointer" onClick={switchToRegister}>Sign Up</span>
           </div>
-        </Form>
-      </Modal>
+        </Form >
+      </Modal >
     </>
   );
 };

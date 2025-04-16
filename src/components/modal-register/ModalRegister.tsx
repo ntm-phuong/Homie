@@ -109,7 +109,9 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
             },
           ]}
         >
-          <Checkbox>I agree to the terms and conditions</Checkbox>
+          <div className="flex items-center gap-2">
+            <input type="checkbox" /> <p>I agree to the terms and conditions</p>
+          </div>
         </Form.Item>
         <Form.Item>
           <button
