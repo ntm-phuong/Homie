@@ -1,21 +1,25 @@
 import React, { useState } from "react";
 import { Modal, Form, Input } from "antd";
 import { toast } from "react-toastify";
-import ModalVerify from "../modal-verify-otp/ModalVerify";
 
 interface ModalRegisterProps {
   isShowRegister: boolean;
   setIsShowRegister: (isShowRegister: boolean) => void;
   setIsShowLogin: (isShowLogin: boolean) => void;
+  setIsShowVerify: (isShowVerify: boolean) => void; 
+  isShowVerify: boolean;
+  setEmail: (email: string) => void; 
+  email: string; 
 }
 
 const ModalRegister: React.FC<ModalRegisterProps> = ({
   isShowRegister,
   setIsShowRegister,
   setIsShowLogin,
+  setIsShowVerify,
+  isShowVerify,
+  setEmail
 }) => {
-  const [isShowVerify, setIsShowVerify] = useState(false); // state để quản lý modal OTP
-  const [email, setEmail] = useState(""); // state để lưu email khi đăng ký thành công
 
   const handleCancel = () => {
     setIsShowRegister(false);
@@ -168,12 +172,6 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
           </div>
         </Form>
       </Modal>
-
-      <ModalVerify
-        isShowVerify={isShowVerify}
-        setIsShowVerify={setIsShowVerify}
-        email={email}
-      />
     </>
   );
 };
