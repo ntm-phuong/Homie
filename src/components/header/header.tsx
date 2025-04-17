@@ -15,6 +15,10 @@ import { ToastContainer } from "react-toastify";
 import ModalForgotPassword from "../modal-email-pw/ModalForgotPassword";
 import ModalVerifyCode from "../modal-verify-pw/ModalVerifyCode";
 import ModalSetPassword from "../modal-set-pw/ModalSetPassword";
+<<<<<<< HEAD
+import ModalVerifyOTP from "../modal-verify-otp/ModalVerify";
+=======
+>>>>>>> f2909c4ffb05042c50c17d28533fca6d04bf7e3c
 
 const { RangePicker } = DatePicker;
 
@@ -27,6 +31,12 @@ const Header = () => {
   const [isShowForgotPassword, setIsShowForgotPassword] = useState(false);
   const [isShowVerifyCode, setIsShowVerifyCode] = useState(false);
   const [isShowSetPassword, setIsShowSetPassword] = useState(false);
+<<<<<<< HEAD
+  const [isShowVerify, setIsShowVerify] = useState(false);
+  const [email, setEmail] = useState("");
+
+=======
+>>>>>>> f2909c4ffb05042c50c17d28533fca6d04bf7e3c
   const router = useRouter();
 
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
@@ -262,7 +272,15 @@ const Header = () => {
           setIsShowSetPassword={setIsShowSetPassword}
           setIsShowLogin={setIsShowLogin}
         />
-        )}
+      )}
+      {isShowVerify && (
+        <ModalVerifyOTP
+          isShowVerify={isShowVerify}
+          setIsShowVerify={setIsShowVerify}
+          email={email}
+          setIsShowLogin={setIsShowLogin}
+        />
+      )}
     </div>
   );
 };

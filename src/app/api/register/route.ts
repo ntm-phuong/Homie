@@ -1,22 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import mongoose from "mongoose";
 import User from "../../../models/User";
-
-const connectMongo = async () => {
-  if (mongoose.connection.readyState) {
-    return; 
-  }
-  try {
-    const uri = process.env.MONGODB_URI;
-    if (!uri) {
-      throw new Error("MONGODB_URI is not defined in environment variables");
-    }
-    await mongoose.connect(uri);
-  } catch (error) {
-    throw new Error("Failed to connect to MongoDB");
-  }
-};
+import { connectDB } from "@/src/lib/mongoose";
 
 export async function POST(req: Request) {
   try {
@@ -31,7 +16,7 @@ export async function POST(req: Request) {
     if (password.length < 6) {
       return NextResponse.json({ message: "Password must be at least 6 characters!" }, { status: 400 });
     }
-    await connectMongo();
+    await connectDB();
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json({ message: "Email already registered!" }, { status: 409 });
@@ -48,8 +33,6 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error: any) {
-    console.error("Register Error:", error);
-
     if (error.message.includes("Failed to connect to MongoDB")) {
       return NextResponse.json({ message: "Database connection error" }, { status: 500 });
     }
