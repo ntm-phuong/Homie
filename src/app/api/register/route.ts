@@ -25,7 +25,7 @@ const sendOtpEmail = async (email: string, otp: string) => {
   });
 
   const mailOptions = {
-    from: '"HOMIE - Xác thực tài khoản" <chinhkhong878@gmail.com>',
+    from: '"HOMIE - Xác thực tài khoản',
     to: email,
     subject: 'Mã OTP xác thực tài khoản của bạn',
     html: `
