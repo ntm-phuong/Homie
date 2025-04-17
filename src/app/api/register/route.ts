@@ -25,15 +25,23 @@ const sendOtpEmail = async (email: string, otp: string) => {
   });
 
   const mailOptions = {
-    from: "HOMIE ĐÂY",
-    to: email, 
-    subject: 'Mã OTP xác thực tài khoản',
+    from: '"HOMIE - Xác thực tài khoản" <chinhkhong878@gmail.com>',
+    to: email,
+    subject: 'Mã OTP xác thực tài khoản của bạn',
     html: `
-      <p>Chào bạn,</p>
-      <p>Mã OTP của bạn là: <strong>${otp}</strong></p>
-      <p>Mã có hiệu lực trong 10 phút.</p>
+      <div style="font-family: Arial, sans-serif; color: #333;">
+        <h2>Chào bạn,</h2>
+        <p>Bạn vừa đăng ký tài khoản tại <strong>HOMIE</strong>.</p>
+        <p>Mã OTP của bạn là:</p>
+        <h1 style="color: #007BFF">${otp}</h1>
+        <p>Mã có hiệu lực trong vòng <strong>10 phút</strong>.</p>
+        <br />
+        <p style="font-size: 12px; color: #777;">Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>
+        <p style="font-size: 12px; color: #777;">HOMIE Team</p>
+      </div>
     `,
   };
+  
 
   try {
     await transporter.sendMail(mailOptions);

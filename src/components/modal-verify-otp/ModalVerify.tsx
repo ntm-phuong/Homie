@@ -26,7 +26,7 @@ const ModalVerify: React.FC<ModalVerifyProps> = ({
     }
 
     try {
-      const response = await fetch("/api/verify", {
+      const response = await fetch("/api/verify-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
