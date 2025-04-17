@@ -35,10 +35,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
 
       try {
         data = await response.json();
-      } catch (jsonError) {
-        console.error("Failed to parse JSON:", jsonError);
-      }
-
+      } catch (jsonError) {}
       if (response.ok) {
         localStorage.setItem("token", data.token);
         toast.success(data.message || "Login successful!", { position: "top-right" });
@@ -47,7 +44,6 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
         toast.error(data.message || "Login failed!", { position: "top-right" });
       }
     } catch (error) {
-      console.error("Error during login:", error);
       toast.error("An error occurred during the login process!", { position: "top-right" });
     } finally {
       setLoading(false);
@@ -119,7 +115,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
           <div className="text-center text-[16px]">
             Or login with:
           </div>
-          <div className="flex justify-center gap-4 py-4">
+          {/* <div className="flex justify-center gap-4 py-4">
             <button
               onClick={() => handleSocialLogin("google")}
               className="!text-white !h-[50px] !w-[150px] !text-lg !font-medium bg-red-500 rounded-xl text-center cursor-pointer"
@@ -132,7 +128,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
             >
               Facebook
             </button>
-          </div>
+          </div> */}
           <div className="text-center text-[16px]">
             Don't have an account? <span className="font-semibold cursor-pointer" onClick={switchToRegister}>Sign Up</span>
           </div>
