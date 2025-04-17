@@ -9,7 +9,16 @@ const AddRoom = () => {
     address: '',
     rentalDate: '',
     price: '',
+    rating: '',
+    description_room: '',
+    check_in: '',
+    check_out: '',
+    status: '',
+    bed_rooms: '',
+    bath_room: '',
+    occupancy_limit: '',
   });
+
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,40 +30,46 @@ const AddRoom = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setFormData({ ...formData, image: file });
-      setPreviewImage(URL.createObjectURL(file));
+      setPreviewImage(URL.createObjectURL(file)); 
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const formDataToSend = new FormData();
-    formDataToSend.append('image', formData.image as File);
-    formDataToSend.append('name', formData.name);
-    formDataToSend.append('address', formData.address);
-    formDataToSend.append('rentalDate', formData.rentalDate);
-    formDataToSend.append('price', formData.price);
-
+  
+    if (!formData.image) {
+      alert('Please upload an image.');
+      return;
+    }
+  
+    const data = new FormData();
+    data.append('image', formData.image);
+    data.append('name', formData.name);
+    data.append('address', formData.address);
+    data.append('rentalDate', formData.rentalDate);
+    data.append('price', formData.price);
+    data.append('rating', formData.rating);
+    data.append('description_room', formData.description_room);
+    data.append('check_in', formData.check_in);
+    data.append('check_out', formData.check_out);
+    data.append('status', formData.status);
+    data.append('bed_rooms', formData.bed_rooms);
+    data.append('bath_room', formData.bath_room);
+    data.append('occupancy_limit', formData.occupancy_limit);
+  
     try {
-      const response = await fetch('/api/rooms', {
+      const response = await fetch('/api/add-rooms', {
         method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        body: data,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Room created successfully:', data);
-        // Reset form or show success message
-      } else {
-        console.error('Failed to create room:', await response.json());
-      }
+  
+      const result = await response.json();
+      console.log('Server response:', result);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Upload failed:', error);
     }
   };
+  
 
   const _renderInput = (label: string, name: keyof typeof formData, type: string) => {
     return (
@@ -65,7 +80,7 @@ const AddRoom = () => {
           name={name}
           value={formData[name] as string}
           onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 h-[50px]"
         />
       </div>
     );
@@ -107,16 +122,24 @@ const AddRoom = () => {
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-20 p-6 bg-gray-100 rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Create a Room</h1>
-      <form onSubmit={handleSubmit} className="max-w-[600px] flex flex-col gap-4">
+      <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">Create a Room</h1>
+      <form onSubmit={handleSubmit} className="max-w-[800px] grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-center">
         {_renderInputImage()}
         {_renderInput("Name Room:", "name", "text")}
         {_renderInput("Address:", "address", "text")}
         {_renderInput("Rental Date:", "rentalDate", "date")}
         {_renderInput("Price:", "price", "number")}
+        {_renderInput("Rating:", "rating", "string")}
+        {_renderInput("Description:", "description_room", "text")}
+        {_renderInput("Check In:", "check_in", "date")}
+        {_renderInput("Check Out:", "check_out", "date")}
+        {_renderInput("Status:", "status", "text")}
+        {_renderInput("Bedrooms:", "bed_rooms", "number")}
+        {_renderInput("Bathrooms:", "bath_room", "number")}
+        {_renderInput("Occupancy Limit:", "occupancy_limit", "number")}
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-main text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full h-[50px] px-4 bg-main text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Create Room
         </button>
