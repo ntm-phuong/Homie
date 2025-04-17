@@ -1,18 +1,10 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import mongoose from 'mongoose';
 import User from '../../../models/User';
 import nodemailer from 'nodemailer';
-
-const connectMongo = async () => {
-  if (mongoose.connection.readyState) return;
-  const uri = process.env.MONGODB_URI;
-  if (!uri) throw new Error("MONGODB_URI is not defined");
-  await mongoose.connect(uri);
-};
+import { connectDB } from '@/src/lib/mongoose';
 
 const sendOtpEmail = async (email: string, otp: string) => {
-  console.log(email, 'chinh686868')
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -41,16 +33,11 @@ const sendOtpEmail = async (email: string, otp: string) => {
       </div>
     `,
   };
-  
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`OTP sent to ${email}`);
-  } catch (error) {
-    console.error("Error sending OTP:", error);
-  }
+  } catch (error) {}
 };
-
 
 export async function POST(req: Request) {
   try {
@@ -60,7 +47,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Email và mật khẩu là bắt buộc" }, { status: 400 });
     }
 
-    await connectMongo();
+    await connectDB();
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -83,7 +70,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: "Đăng ký thành công! Vui lòng kiểm tra email để nhận OTP." }, { status: 200 });
   } catch (error: any) {
-    console.error("Register Error:", error);
     return NextResponse.json({ message: "Lỗi máy chủ" }, { status: 500 });
   }
 }

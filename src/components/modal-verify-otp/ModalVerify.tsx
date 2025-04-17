@@ -6,12 +6,14 @@ interface ModalVerifyProps {
   isShowVerify: boolean;
   setIsShowVerify: (isShowVerify: boolean) => void;
   email: string;
+  setIsShowLogin: (isShowLogin: boolean) => void;
 }
 
-const ModalVerify: React.FC<ModalVerifyProps> = ({
+const ModalVerifyOTP: React.FC<ModalVerifyProps> = ({
   isShowVerify,
   setIsShowVerify,
   email,
+  setIsShowLogin
 }) => {
   const [otp, setOtp] = useState<string>("");
 
@@ -42,6 +44,7 @@ const ModalVerify: React.FC<ModalVerifyProps> = ({
       if (response.ok) {
         toast.success(data.message || "Verification successful!", { position: "top-right" });
         setIsShowVerify(false);
+        setIsShowLogin(true)
       } else {
         toast.error(data.message || "Verification failed!", { position: "top-right" });
       }
@@ -58,7 +61,7 @@ const ModalVerify: React.FC<ModalVerifyProps> = ({
           We have sent you an OTP to verify your account.
         </p>
       </div>
-      <Form layout="vertical" onFinish={handleVerify} className="py-4 !px-2">
+      <Form layout="vertical" onFinish={handleVerify} requiredMark="optional" className="py-4 !px-2">
         <Form.Item
           label={
             <span className="font-bold text-lg">
@@ -86,4 +89,4 @@ const ModalVerify: React.FC<ModalVerifyProps> = ({
   );
 };
 
-export default ModalVerify;
+export default ModalVerifyOTP;
