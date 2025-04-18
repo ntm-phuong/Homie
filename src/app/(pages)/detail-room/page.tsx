@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { IMAGE_URL } from "@/public";
-import CalendarSection from "@/src/components/detail-room/CalendarSection";
+import CalendarSection from "@/src/components/CalendarSection/CalendarSection";
 import {
   ShareAltOutlined,
   HeartOutlined,
@@ -21,31 +21,36 @@ import {
   DownOutlined,
 } from "@ant-design/icons";
 
-const Title = () => (
-  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-    <h1 className="text-2xl md:text-2xl font-bold mb-4 md:mb-0 pb-5">
-      [Lazy House] Wooden sensibility's private sensibility accommodation
-    </h1>
-    <div className="flex space-x-2 gap-4">
-      {[
-        [<ShareAltOutlined className="mr-1" />, "Share"],
-        [<HeartOutlined className="mr-1" />, "Save"],
-      ].map(([icon, text], i) => (
-        <button
-          key={i}
-          className={`flex items-center text-gray-600 hover:text-gray-900 ${
-            i !== 0 ? "ml-4" : ""
-          } gap-2`}
-        >
-          {icon}
-          <span className="text-sm md:text-base">{text}</span>
-        </button>
-      ))}
-    </div>
-  </div>
-);
+const _renderTitle = () => {
+  const actions = [
+    [<ShareAltOutlined className="mr-1" />, "Share"],
+    [<HeartOutlined className="mr-1" />, "Save"],
+  ];
 
-const PhotoGallery = () => {
+  return (
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <h1 className="text-2xl md:text-2xl font-bold mb-4 md:mb-0 pb-5">
+        [Lazy House] Wooden sensibility's private sensibility accommodation
+      </h1>
+      <div className="flex space-x-2 gap-4">
+        {actions.map(([icon, text], i) => (
+          <button
+            key={i}
+            className={`flex items-center text-gray-600 hover:text-gray-900 ${
+              i !== 0 ? "ml-4" : ""
+            } gap-2`}
+          >
+            {icon}
+            <span className="text-sm md:text-base">{text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+const _renderPhotoGallery = () => {
   const cornerClasses = ["rounded-tr-lg", "", "rounded-bl-lg", "rounded-br-lg"];
 
   const images = [
@@ -58,7 +63,7 @@ const PhotoGallery = () => {
 
   return (
     <div className="mb-8">
-      <div className="grid grid-cols-4 grid-rows-2 gap-2 h-96  pr-1 relative">
+      <div className="grid grid-cols-4 grid-rows-2 gap-2 h-96 pr-1 relative">
         {/* Main image (left big image) */}
         <div
           className="col-span-2 row-span-2 rounded-tl-lg overflow-hidden bg-cover bg-center"
@@ -73,7 +78,7 @@ const PhotoGallery = () => {
             style={{ backgroundImage: `url(${url})` }}
           >
             {index === 3 && (
-              <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                 <button className="flex items-center bg-white px-3 py-1 rounded-md text-sm font-medium">
                   <BranchesOutlined className="mr-1" />
                   <span>Show all photos</span>
@@ -87,7 +92,7 @@ const PhotoGallery = () => {
   );
 };
 
-const AboutThisPlace = () => (
+const _renderAboutThisPlace = () => (
   <div className="pt-6 pb-6">
     <p className="pt-4 text-base pb-6">
       Some info has been automatically translated.{" "}
@@ -111,7 +116,8 @@ const AboutThisPlace = () => (
   </div>
 );
 
-const RoomFeatures = () => (
+
+const _renderRoomFeatures = () => (
   <div className="pt-6 pb-6 mb-6 border-b border-gray-200 leading-loose w-full pl-3">
     <div className="space-y-6">
       {[
@@ -143,7 +149,8 @@ const RoomFeatures = () => (
   </div>
 );
 
-const WhatThisPlaceOffers = () => (
+
+const _renderWhatThisPlaceOffers = () => (
   <div className="pt-6 border-t border-gray-200">
     <h2 className="text-xl font-semibold mt-6 mb-4 pb-6">
       What this place offers
@@ -162,7 +169,10 @@ const WhatThisPlaceOffers = () => (
         [<DesktopOutlined />, "Dedicated workspace"],
         [<AppstoreOutlined />, "Pool"],
         [<CoffeeOutlined />, "Breakfast"],
-        [<StopOutlined className="text-gray-500" />, <s>Smoke detector</s>],
+        [
+          <StopOutlined className="text-gray-500" />,
+          <s>Smoke detector</s>,
+        ],
       ].map(([icon, text], i) => (
         <div className="flex items-center gap-4" key={i}>
           <span className="text-xl text-gray-800">{icon}</span>
@@ -179,14 +189,15 @@ const WhatThisPlaceOffers = () => (
   </div>
 );
 
-const PriceBox = ({
+
+const _renderPriceBox = ({
   selectedDates,
 }: {
   selectedDates: { startDate: Date; endDate: Date };
 }) => {
   const pricePerNight = 17;
   const serviceFee = 17;
-  
+
   const nights = Math.max(
     1,
     Math.ceil(
@@ -198,8 +209,8 @@ const PriceBox = ({
   const total = pricePerNight * nights + serviceFee;
 
   return (
-    <div className="sticky top-24 self-start pt-6 ">
-      <div className="border border-neutral-300 rounded-2xl shadow-lg p-6 space-y-6 ">
+    <div className="sticky top-24 self-start pt-6">
+      <div className="border border-neutral-300 rounded-2xl shadow-lg p-6 space-y-6">
         <h3 className="text-2xl font-semibold pb-5">
           <span className="mr-1">€{pricePerNight}</span>
           <span className="text-base font-normal text-neutral-700">night</span>
@@ -271,6 +282,7 @@ const PriceBox = ({
   );
 };
 
+
 const DetailRoom = () => {
   const [selectedDates, setSelectedDates] = useState({
     startDate: new Date(2025, 4, 4),
@@ -279,14 +291,14 @@ const DetailRoom = () => {
 
   return (
     <div className="max-w-6xl mx-auto pl-30 px-4 py-8">
-      <Title />
-      <PhotoGallery />
+      {_renderTitle()}
+      {_renderPhotoGallery()}
+
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-10 relative items-start md:items-center pb-6 mb-6">
         <div>
+          {/* Room header info */}
           <div className="border-b border-gray-200 pb-6 mb-6 pt-6">
-            <h2 className="text-2xl font-semibold">
-              House in Phu Tho, Vietnam
-            </h2>
+            <h2 className="text-2xl font-semibold">House in Phu Tho, Vietnam</h2>
             <p className="text-gray-700 mt-1">
               1 king bed · Private attached bathroom
             </p>
@@ -299,6 +311,7 @@ const DetailRoom = () => {
             </div>
           </div>
 
+          {/* Host info */}
           <div className="flex items-center gap-4 border-b border-gray-300 pb-6 pt-6">
             <div className="w-12 h-12 rounded-full overflow-hidden relative">
               <img
@@ -313,9 +326,9 @@ const DetailRoom = () => {
             </div>
           </div>
 
-          <RoomFeatures />
-          <AboutThisPlace />
-          <WhatThisPlaceOffers />
+          {_renderRoomFeatures()}
+          {_renderAboutThisPlace()}
+          {_renderWhatThisPlaceOffers()}
 
           <div className="pt-6 border-t border-gray-200">
             <CalendarSection
@@ -326,14 +339,10 @@ const DetailRoom = () => {
           </div>
         </div>
 
-        <PriceBox selectedDates={selectedDates} />
+        {_renderPriceBox({ selectedDates })}
       </div>
     </div>
   );
 };
 
 export default DetailRoom;
-
-
-
-
