@@ -59,6 +59,7 @@ const _renderPhotoGallery = () => {
     IMAGE_URL.picture3,
     IMAGE_URL.picture4,
     IMAGE_URL.picture5,
+    IMAGE_URL.avatar,
   ];
 
   return (
@@ -78,7 +79,7 @@ const _renderPhotoGallery = () => {
             style={{ backgroundImage: `url(${url})` }}
           >
             {index === 3 && (
-              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+              <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
                 <button className="flex items-center bg-white px-3 py-1 rounded-md text-sm font-medium">
                   <BranchesOutlined className="mr-1" />
                   <span>Show all photos</span>
@@ -91,6 +92,7 @@ const _renderPhotoGallery = () => {
     </div>
   );
 };
+
 
 const _renderAboutThisPlace = () => (
   <div className="pt-6 pb-6">
@@ -169,10 +171,7 @@ const _renderWhatThisPlaceOffers = () => (
         [<DesktopOutlined />, "Dedicated workspace"],
         [<AppstoreOutlined />, "Pool"],
         [<CoffeeOutlined />, "Breakfast"],
-        [
-          <StopOutlined className="text-gray-500" />,
-          <s>Smoke detector</s>,
-        ],
+        [<StopOutlined className="text-gray-500" />, <s>Smoke detector</s>],
       ].map(([icon, text], i) => (
         <div className="flex items-center gap-4" key={i}>
           <span className="text-xl text-gray-800">{icon}</span>
@@ -298,14 +297,16 @@ const DetailRoom = () => {
         <div>
           {/* Room header info */}
           <div className="border-b border-gray-200 pb-6 mb-6 pt-6">
-            <h2 className="text-2xl font-semibold">House in Phu Tho, Vietnam</h2>
+            <h2 className="text-2xl font-semibold">
+              House in Phu Tho, Vietnam
+            </h2>
             <p className="text-gray-700 mt-1">
               1 king bed · Private attached bathroom
             </p>
             <div className="flex items-center text-base text-gray-800 mt-1">
               <span className="font-semibold">★ 4.67</span>
               <span className="mx-1 text-gray-400">·</span>
-              <span className="underline cursor-pointer font-semibold">
+              <span className="underline cursor-pointer font-semibold pl-3">
                 6 reviews
               </span>
             </div>
@@ -315,7 +316,7 @@ const DetailRoom = () => {
           <div className="flex items-center gap-4 border-b border-gray-300 pb-6 pt-6">
             <div className="w-12 h-12 rounded-full overflow-hidden relative">
               <img
-                src={IMAGE_URL.picture5}
+                src={IMAGE_URL.avatar}
                 alt="Host avatar"
                 className="object-cover w-full h-full rounded-full"
               />
