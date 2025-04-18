@@ -8,12 +8,26 @@ const connectDB = async () => {
   }
 };
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     await connectDB();
-    const rooms = await Room.find();
+
+    const { searchParams } = new URL(req.url);
+    const keyword = searchParams.get('search_room') || '';
+    const filter = keyword
+      ? {
+        $or: [
+          { name: { $regex: keyword, $options: 'i' } },
+          { address: { $regex: keyword, $options: 'i' } },
+        ],
+      }
+      : {};
+    const rooms = await Room.find(filter);
     return NextResponse.json({ success: true, data: rooms });
   } catch (error) {
-    return NextResponse.json({ success: false, message: 'Failed to fetch rooms' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: 'Failed to fetch rooms' },
+      { status: 500 }
+    );
   }
 }
