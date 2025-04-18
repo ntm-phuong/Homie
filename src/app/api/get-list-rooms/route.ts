@@ -14,7 +14,6 @@ export async function GET() {
     const rooms = await Room.find();
     return NextResponse.json({ success: true, data: rooms });
   } catch (error) {
-    console.error('Error fetching rooms:', error);
     return NextResponse.json({ success: false, message: 'Failed to fetch rooms' }, { status: 500 });
   }
 }
