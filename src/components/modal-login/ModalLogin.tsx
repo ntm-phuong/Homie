@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState } from "react";
+import React from "react";
 import { Modal, Form, Input } from "antd";
 import { signIn } from "next-auth/react";
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
 interface ModalLoginProps {
   isShowLogin: boolean;
@@ -14,8 +13,7 @@ interface ModalLoginProps {
 }
 
 const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, setIsShowRegister, setIsShowForgotPassword }) => {
-  const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = React.useState(false);
   const handleCancel = () => {
     setIsShowLogin(false);
   };
@@ -35,7 +33,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
 
       try {
         data = await response.json();
-      } catch (jsonError) {}
+      } catch (jsonError) { }
       if (response.ok) {
         localStorage.setItem("token", data.token);
         toast.success(data.message || "Login successful!", { position: "top-right" });
@@ -86,8 +84,14 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
             label={<span className="font-bold text-lg">Email <span className="text-red-500">*</span></span>}
             name="email"
             rules={[
-              { required: true, message: "Please enter your email!" },
-              { type: 'email', message: "Invalid email format!" }
+              {
+                required: true,
+                message: "Please enter your email!"
+              },
+              {
+                type: 'email',
+                message: "Invalid email format!"
+              }
             ]}
           >
             <Input placeholder="Enter your email" className="h-[50px] text-md" />
@@ -97,13 +101,18 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
             label={<span className="font-bold text-lg">Password <span className="text-red-500">*</span></span>}
             name="password"
             rules={[
-              { required: true, message: "Please enter your password!" },
-              { min: 8, message: "Password must be at least 8 characters!" }
+              {
+                required: true,
+                message: "Please enter your password!"
+              },
+              {
+                min: 8,
+                message: "Password must be at least 8 characters!"
+              }
             ]}
           >
             <Input.Password placeholder="Enter your password" className="h-[50px] text-md" />
           </Form.Item>
-
           <div onClick={handleForgotPassword} className="pb-3 flex flex-row justify-end font-semibold cursor-pointer text-[16px]">Forgot Password?</div>
           <Form.Item>
             <button
@@ -132,8 +141,8 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
           <div className="text-center text-[16px]">
             Don't have an account? <span className="font-semibold cursor-pointer" onClick={switchToRegister}>Sign Up</span>
           </div>
-        </Form >
-      </Modal >
+        </Form>
+      </Modal>
     </>
   );
 };
