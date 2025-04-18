@@ -15,6 +15,7 @@ import ModalVerifyCode from "../modal-verify-pw/ModalVerifyCode";
 import ModalSetPassword from "../modal-set-pw/ModalSetPassword";
 import ModalVerifyOTP from "../modal-verify-otp/ModalVerify";
 import ModalRegister from "../modal-register/ModalRegister";
+import { ToastContainer } from "react-toastify";
 
 const { RangePicker } = DatePicker;
 
@@ -227,6 +228,7 @@ const Header = () => {
         {_renderUserControls()}
       </div>
       {_renderSearchBar()}
+      <ToastContainer />
       {isShowLogin && (
         <ModalLogin
           isShowLogin={isShowLogin}
@@ -256,21 +258,21 @@ const Header = () => {
       )}
       {isShowVerifyCode && (
         <ModalVerifyCode
-        isShowVerifyCode={isShowVerifyCode}
-        setIsShowVerifyCode={setIsShowVerifyCode}
-        setIsShowSetPassword={setIsShowSetPassword}
-        setIsShowLogin={setIsShowLogin}
-        email={email}
-        resetToken={resetToken}
-        setResetToken={setResetToken}
-      />
+          isShowVerifyCode={isShowVerifyCode}
+          setIsShowVerifyCode={setIsShowVerifyCode}
+          setIsShowSetPassword={setIsShowSetPassword}
+          setIsShowLogin={setIsShowLogin}
+          email={email}
+          resetToken={resetToken}
+          setResetToken={setResetToken}
+        />
       )}
       {isShowSetPassword && (
         <ModalSetPassword
-        isShowSetPassword={isShowSetPassword}
-        setIsShowSetPassword={setIsShowSetPassword}
-        setIsShowLogin={setIsShowLogin}
-        resetToken={resetToken}
+          isShowSetPassword={isShowSetPassword}
+          setIsShowSetPassword={setIsShowSetPassword}
+          setIsShowLogin={setIsShowLogin}
+          resetToken={resetToken}
         />
       )}
       {isShowVerify && (
