@@ -12,14 +12,15 @@
     "antd": "^5.22.3",
     "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.0",
     "mongoose": "^8.13.1",
     "next": "15.2.3",
     "next-auth": "^4.24.11",
-    "nodemailer": "^6.10.0",
+    "nodemailer": "^6.10.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-toastify": "^11.0.5"
   },
-  
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/mongoose": "^5.11.97",

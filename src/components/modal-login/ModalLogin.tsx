@@ -2,7 +2,8 @@
 
 import React from "react";
 import { Modal, Form, Input } from "antd";
-import { signIn } from "next-auth/react"; // Import NextAuth.js signIn function
+import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 
 interface ModalLoginProps {
   isShowLogin: boolean;
@@ -12,13 +13,39 @@ interface ModalLoginProps {
 }
 
 const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, setIsShowRegister, setIsShowForgotPassword }) => {
-
+  const [loading, setLoading] = React.useState(false);
   const handleCancel = () => {
     setIsShowLogin(false);
   };
 
-  const handleLogin = (values: { email: string; password: string }) => {
-    console.log(values, 'test1');
+  const handleLogin = async (values: { email: string; password: string }) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      let data: any = {};
+
+      try {
+        data = await response.json();
+      } catch (jsonError) { }
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        toast.success(data.message || "Login successful!", { position: "top-right" });
+        setIsShowLogin(false);
+      } else {
+        toast.error(data.message || "Login failed!", { position: "top-right" });
+      }
+    } catch (error) {
+      toast.error("An error occurred during the login process!", { position: "top-right" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const switchToRegister = () => {
@@ -27,7 +54,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
   }
 
   const handleSocialLogin = (provider: string) => {
-    signIn(provider); // Trigger NextAuth.js signIn with the specified provider
+    signIn(provider);
   };
 
   const handleForgotPassword = () => {
@@ -97,7 +124,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
           <div className="text-center text-[16px]">
             Or login with:
           </div>
-          <div className="flex justify-center gap-4 py-4">
+          {/* <div className="flex justify-center gap-4 py-4">
             <button
               onClick={() => handleSocialLogin("google")}
               className="!text-white !h-[50px] !w-[150px] !text-lg !font-medium bg-red-500 rounded-xl text-center cursor-pointer"
@@ -110,7 +137,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({ isShowLogin, setIsShowLogin, se
             >
               Facebook
             </button>
-          </div>
+          </div> */}
           <div className="text-center text-[16px]">
             Don't have an account? <span className="font-semibold cursor-pointer" onClick={switchToRegister}>Sign Up</span>
           </div>

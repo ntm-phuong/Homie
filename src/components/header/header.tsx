@@ -8,12 +8,13 @@ import type { MenuProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import Image from 'next/image';
 import ModalLogin from "../modal-login/ModalLogin";
-import ModalRegister from "../modal-register/ModalRegister";
 import { useRouter } from "next/navigation";
 import { RouterUrl } from "@/src/constants/path";
 import ModalForgotPassword from "../modal-email-pw/ModalForgotPassword";
 import ModalVerifyCode from "../modal-verify-pw/ModalVerifyCode";
 import ModalSetPassword from "../modal-set-pw/ModalSetPassword";
+import ModalVerifyOTP from "../modal-verify-otp/ModalVerify";
+import ModalRegister from "../modal-register/ModalRegister";
 
 const { RangePicker } = DatePicker;
 
@@ -26,8 +27,9 @@ const Header = () => {
   const [isShowForgotPassword, setIsShowForgotPassword] = useState(false);
   const [isShowVerifyCode, setIsShowVerifyCode] = useState(false);
   const [isShowSetPassword, setIsShowSetPassword] = useState(false);
-  const [email, setEmail] = useState('');
   const [resetToken, setResetToken] = useState('');
+  const [isShowVerify, setIsShowVerify] = useState(false);
+  const [email, setEmail] = useState("");
   const router = useRouter();
 
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
@@ -238,6 +240,10 @@ const Header = () => {
           isShowRegister={isShowRegister}
           setIsShowRegister={setIsShowRegister}
           setIsShowLogin={setIsShowLogin}
+          setIsShowVerify={setIsShowVerify}
+          isShowVerify={isShowVerify}
+          setEmail={setEmail}
+          email={email}
         />
       )}
       {isShowForgotPassword && (
@@ -265,8 +271,16 @@ const Header = () => {
         setIsShowSetPassword={setIsShowSetPassword}
         setIsShowLogin={setIsShowLogin}
         resetToken={resetToken}
-      />
-        )}
+        />
+      )}
+      {isShowVerify && (
+        <ModalVerifyOTP
+          isShowVerify={isShowVerify}
+          setIsShowVerify={setIsShowVerify}
+          email={email}
+          setIsShowLogin={setIsShowLogin}
+        />
+      )}
     </div>
   );
 };

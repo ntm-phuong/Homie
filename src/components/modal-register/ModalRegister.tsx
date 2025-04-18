@@ -1,26 +1,69 @@
 "use client";
-
-import React from "react";
-import { Modal, Form, Input, Button, Checkbox } from "antd";
+import React, { useState } from "react";
+import { Modal, Form, Input } from "antd";
+import { toast } from "react-toastify";
 
 interface ModalRegisterProps {
   isShowRegister: boolean;
   setIsShowRegister: (isShowRegister: boolean) => void;
   setIsShowLogin: (isShowLogin: boolean) => void;
+  setIsShowVerify: (isShowVerify: boolean) => void;
+  isShowVerify: boolean;
+  setEmail: (email: string) => void;
+  email: string;
 }
 
 const ModalRegister: React.FC<ModalRegisterProps> = ({
   isShowRegister,
   setIsShowRegister,
   setIsShowLogin,
+  setIsShowVerify,
+  isShowVerify,
+  setEmail
 }) => {
+
   const handleCancel = () => {
     setIsShowRegister(false);
   };
 
-  const handleRegister = (values: any) => {
-    console.log("Register values:", values);
-    setIsShowRegister(false);
+  const handleRegister = async (values: any) => {
+    const { email, password, confirmPassword, agreement } = values;
+
+    if (!email || !password || !confirmPassword || !agreement) {
+      toast.error("Please fill in all required fields.", { position: "top-right" });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match.", { position: "top-right" });
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || "Registration successful!", { position: "top-right" });
+        setIsShowRegister(false);
+        setEmail(email);
+        setIsShowVerify(true);
+      } else {
+        toast.error(data.message || "Registration failed!", { position: "top-right" });
+      }
+    } catch (error) {
+      toast.error("Server connection error.", { position: "top-right" });
+    }
   };
 
   const switchToLogin = () => {
@@ -109,17 +152,23 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
             },
           ]}
         >
-          <Checkbox>I agree to the terms and conditions</Checkbox>
+          <div className="flex items-center gap-2">
+            <input type="checkbox" /> <p>I agree to the terms and conditions</p>
+          </div>
         </Form.Item>
         <Form.Item>
-          <button
-            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer"
-          >
+          <button className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main !hover:none rounded-xl text-center cursor-pointer">
             Register
           </button>
         </Form.Item>
         <div className="text-center text-[16px]">
-          Already have an account? <span onClick={switchToLogin} className="font-semibold cursor-pointer">Sign In</span>
+          Already have an account?{" "}
+          <span
+            onClick={switchToLogin}
+            className="font-semibold cursor-pointer"
+          >
+            Sign In
+          </span>
         </div>
       </Form>
     </Modal>
