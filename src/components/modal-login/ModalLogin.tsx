@@ -115,7 +115,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
 
         <Form.Item>
           <button
-            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main hover:bg-main/90 rounded-xl"
+            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main hover:bg-main/90 rounded-xl cursor-pointer"
           >
             Login
           </button>
