@@ -1,7 +1,17 @@
 'use client'
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const Product = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      router.push('/home');
+    }
+  }, [router]);
+
    useEffect(() => {
       fetch("/api/homie")
         .then((res) => res.json())

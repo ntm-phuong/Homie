@@ -1,10 +1,21 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Profile = () => {
   const { data: session } = useSession();
   console.log(session, 'chinh12');
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      router.push('/home');
+    }
+  }, [router]);
+
   return (
     <div className="lg:px-38">
       <div className=" pb-4">

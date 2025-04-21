@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input } from "antd";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
 
@@ -10,19 +10,21 @@ interface ModalLoginProps {
   setIsShowLogin: (isShowLogin: boolean) => void;
   setIsShowRegister: (isShowRegister: boolean) => void;
   setIsShowForgotPassword: (isShowForgotPassword: boolean) => void;
+  setIsToken: (isToken: boolean) => void;
 }
 
 const ModalLogin: React.FC<ModalLoginProps> = ({
   isShowLogin,
   setIsShowLogin,
   setIsShowRegister,
-  setIsShowForgotPassword
+  setIsShowForgotPassword,
+  setIsToken
 }) => {
   const [loading, setLoading] = React.useState(false);
-
   const handleCancel = () => {
     setIsShowLogin(false);
   };
+
 
   const handleLogin = async (values: { email: string; password: string }) => {
     setLoading(true);
@@ -36,7 +38,8 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
       const data = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        sessionStorage.setItem("token", data.token);
+        setIsToken(true);
         toast.success(data.message || "Login successful!", { position: "top-right" });
         setIsShowLogin(false);
       } else {
@@ -73,7 +76,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
     >
       <div className="text-center pb-4">
         <h2 className="text-2xl font-bold">Welcome to Homie</h2>
-        <p className="text-gray-500 text-lg">Please login to continue</p>
+        <p className="text-gray-500 text-lg">Please login to continue con cac</p>
       </div>
 
       <Form
