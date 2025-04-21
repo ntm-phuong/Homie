@@ -4,7 +4,7 @@ import { IMAGE_URL } from "@/public";
 import { toast } from "react-toastify";
 
 const Profile = () => {
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<any>({});
 
@@ -101,7 +101,7 @@ const Profile = () => {
         <input
           type={type}
           name={name}
-          value={value}
+          value={value ?? ""} 
           onChange={handleChange}
           className="border border-gray-300 w-full rounded px-3 py-2"
         />
@@ -138,6 +138,8 @@ const Profile = () => {
       )}
     </div>
   );
+
+  if (!user) return <div>Loading...</div>;  // Add a loading state
 
   return (
     <div className="lg:px-38 px-4 py-8 flex flex-col gap-10">
