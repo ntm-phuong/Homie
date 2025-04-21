@@ -13,9 +13,10 @@ const ModalVerifyOTP: React.FC<ModalVerifyProps> = ({
   isShowVerify,
   setIsShowVerify,
   email,
-  setIsShowLogin
+  setIsShowLogin,
 }) => {
   const [otp, setOtp] = useState<string>("");
+  const [resendLoading, setResendLoading] = useState<boolean>(false);
 
   const handleCancel = () => {
     setIsShowVerify(false);
@@ -44,12 +45,37 @@ const ModalVerifyOTP: React.FC<ModalVerifyProps> = ({
       if (response.ok) {
         toast.success(data.message || "Verification successful!", { position: "top-right" });
         setIsShowVerify(false);
-        setIsShowLogin(true)
+        setIsShowLogin(true);
       } else {
         toast.error(data.message || "Verification failed!", { position: "top-right" });
       }
     } catch (error) {
       toast.error("Server connection error.", { position: "top-right" });
+    }
+  };
+
+  const handleResendOTP = async () => {
+    setResendLoading(true);
+    try {
+      const response = await fetch("/api/resend-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || "OTP has been resent!", { position: "top-right" });
+      } else {
+        toast.error(data.message || "Failed to resend OTP!", { position: "top-right" });
+      }
+    } catch (error) {
+      toast.error("Server connection error.", { position: "top-right" });
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -85,6 +111,19 @@ const ModalVerifyOTP: React.FC<ModalVerifyProps> = ({
           </button>
         </Form.Item>
       </Form>
+
+      <div className=" gap-1  flex flex-row  justify-center">
+        <p className="text-gray-500 text-lg">Didn't receive the OTP?</p>
+        <button
+          onClick={handleResendOTP}
+          disabled={resendLoading} // Nút chỉ bị vô hiệu hóa khi đang gửi yêu cầu
+          className={`ml-1 text-rose-500 hover:text-rose-700 cursor-pointer ${
+            resendLoading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          {resendLoading ? "Resending..." : "Resend OTP"}
+        </button>
+      </div>
     </Modal>
   );
 };

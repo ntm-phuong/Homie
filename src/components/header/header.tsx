@@ -32,7 +32,7 @@ const Header = () => {
   const [isShowVerify, setIsShowVerify] = useState(false);
   const [email, setEmail] = useState("");
   const router = useRouter();
-
+  console.log(isShowVerify, 'chinh333');
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
     if (dates) {
       setSelectedDates(dates);
@@ -235,6 +235,8 @@ const Header = () => {
           setIsShowLogin={setIsShowLogin}
           setIsShowRegister={setIsShowRegister}
           setIsShowForgotPassword={setIsShowForgotPassword}
+          setIsShowVerify={setIsShowVerify}
+          isShowVerify={isShowVerify}
         />
       )}
       {isShowRegister && (

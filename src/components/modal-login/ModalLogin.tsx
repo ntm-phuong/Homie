@@ -10,13 +10,17 @@ interface ModalLoginProps {
   setIsShowLogin: (isShowLogin: boolean) => void;
   setIsShowRegister: (isShowRegister: boolean) => void;
   setIsShowForgotPassword: (isShowForgotPassword: boolean) => void;
+  setIsShowVerify: (isShowVerify: boolean) => void;
+  isShowVerify: boolean;
 }
 
 const ModalLogin: React.FC<ModalLoginProps> = ({
   isShowLogin,
   setIsShowLogin,
   setIsShowRegister,
-  setIsShowForgotPassword
+  setIsShowForgotPassword,
+  setIsShowVerify,
+  isShowVerify
 }) => {
   const [loading, setLoading] = React.useState(false);
 
@@ -34,13 +38,20 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
       });
 
       const data = await response.json().catch(() => ({}));
-
+      console.log(data.meta, 'chinh67');
+      if (data.meta === 333) {
+        setIsShowVerify(true);
+        setIsShowLogin(false);
+        toast.error("Vui lòng xác thực OTP trước khi đăng nhập!", { position: "top-right" });
+        return;
+      }
       if (response.ok) {
+
         localStorage.setItem("token", data.token);
-        toast.success(data.message || "Login successful!", { position: "top-right" });
+        toast.success(data.message || "Đăng nhập thành công!", { position: "top-right" });
         setIsShowLogin(false);
       } else {
-        toast.error(data.message || "Login failed!", { position: "top-right" });
+        toast.error(data.message || "Đăng nhập thất bại!", { position: "top-right" });
       }
     } catch (error) {
       toast.error("An error occurred during the login process!", { position: "top-right" });
@@ -98,7 +109,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
           name="password"
           rules={[
             { required: true, message: "Please enter your password!" },
-            { min: 8, message: "Password must be at least 8 characters!" },
+            { min: 6, message: "Password must be at least 6 characters!" },
           ]}
         >
           <Input.Password placeholder="Enter your password" className="h-[50px] text-md" />

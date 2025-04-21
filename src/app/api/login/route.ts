@@ -21,6 +21,11 @@ export async function POST(req: Request) {
     if (!(await bcrypt.compare(password, user.password))) {
       return NextResponse.json({ message: "Invalid credentials!" }, { status: 401 });
     }
+
+    if (!user.isVerified) {
+      return NextResponse.json({ message: "Tài khoản chưa được xác thực!", meta: 333 }, { status: 403 });
+    }
+    
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "secret", {
       expiresIn: "1d",
     });
@@ -32,6 +37,7 @@ export async function POST(req: Request) {
         id: user._id,
         email: user.email,
         name: user.name,
+        isVerified: user.isVerified,
       },
     });
 
