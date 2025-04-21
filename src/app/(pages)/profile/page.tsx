@@ -74,7 +74,7 @@ const Profile = () => {
 
   const _renderAvatar = () => (
     <div className="flex flex-col items-center gap-6">
-      <div className="w-32 h-32 rounded-full overflow-hidden border-main">
+      <div className="w-32 h-32 rounded-full overflow-hidden ">
         <img
           src={IMAGE_URL.USER}
           alt="User Avatar"
@@ -82,7 +82,7 @@ const Profile = () => {
         />
       </div>
       <div className="text-center">
-        <h2 className="text-xl font-bold">{user?.name}</h2>
+        <h2 className="text-2xl font-bold">{user?.name}</h2>
         <p className="text-gray-500 text-md">{user?.email}</p>
       </div>
     </div>
@@ -95,27 +95,30 @@ const Profile = () => {
     value: string,
     data: string
   ) => (
-    <div className="p-4 border border-gray-300 rounded-lg flex flex-col gap-2">
-      <h4 className="font-bold text-lg">{label}</h4>
-      {isEditing ? (
-        <input
-          type={type}
-          name={name}
-          value={value ?? ""} 
-          onChange={handleChange}
-          className="border border-gray-300 w-full rounded px-3 py-2"
-        />
-      ) : (
-        <p className="text-gray-500 mt-1">{data || "Not provided"}</p>
-      )}
-    </div>
+    <div className="p-3 sm:p-4 border border-gray-300 rounded-lg flex flex-col gap-1 sm:gap-2">
+    <h4 className="font-bold text-sm sm:text-lg w-[120px] sm:w-auto">{label}</h4>
+  
+    {isEditing ? (
+      <input
+        type={type}
+        name={name}
+        value={value ?? ""}
+        onChange={handleChange}
+        className="border border-gray-300 w-full rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base"
+      />
+    ) : (
+      <p className="text-gray-500 mt-1 text-sm sm:text-base">{data || "Not provided"}</p>
+    )}
+  </div>
+  
+  
   );
 
   const _renderEditButton = () => (
     <div className="flex justify-center items-center">
       {!isEditing ? (
         <button
-          className="px-6 font-semibold py-2 bg-main text-white rounded-lg cursor-pointer"
+          className="px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg hover:bg-rose-600 cursor-pointer"
           onClick={() => setIsEditing(true)}
         >
           Edit Profile
@@ -123,13 +126,13 @@ const Profile = () => {
       ) : (
         <div className="flex gap-4">
           <button
-            className="px-6 font-semibold py-2 bg-main text-white rounded-lg cursor-pointer"
+            className="px-6 py-2 bg-rose-500 text-white font-semibold rounded-lg hover:bg-rose-600 cursor-pointer"
             onClick={handleSave}
           >
             Save
           </button>
           <button
-            className="px-6 font-semibold py-2 border border-black text-black rounded-lg cursor-pointer"
+            className="px-6 py-2 border border-gray-500 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 cursor-pointer"
             onClick={handleCancel}
           >
             Cancel
@@ -142,17 +145,22 @@ const Profile = () => {
   if (!user) return <div>Loading...</div>;  // Add a loading state
 
   return (
-    <div className="lg:px-38 px-4 py-8 flex flex-col gap-10">
+    <div className="lg:px-38 px-4 py-8 flex flex-col gap-10 ">
+      {/* Avatar Section */}
       {_renderAvatar()}
+
+      {/* Profile Details Section */}
       <div className="w-full flex flex-col justify-center items-center gap-6">
-        <h3 className="text-xl font-bold mb-4">Profile Details</h3>
-        <div className="grid md:grid-cols-2 gap-6 min-w-[750px]">
+        <h3 className="text-xl font-bold mb-4 ">Profile Details</h3>
+        <div className="grid md:grid-cols-2 gap-6 w-full max-w-4xl">
           {_renderUserInfo("Full Name", "text", "name", formData.name, user?.name)}
           {_renderUserInfo("Email", "email", "email", formData.email, user?.email)}
           {_renderUserInfo("Phone", "text", "phone", formData.phone, user?.phone)}
           {_renderUserInfo("Address", "text", "address", formData.address, user?.address)}
         </div>
       </div>
+
+      {/* Edit Button Section */}
       {_renderEditButton()}
     </div>
   );
