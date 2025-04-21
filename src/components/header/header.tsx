@@ -8,14 +8,14 @@ import type { MenuProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import Image from 'next/image';
 import ModalLogin from "../modal-login/ModalLogin";
-import ModalRegister from "../modal-register/ModalRegister";
 import { useRouter } from "next/navigation";
 import { RouterUrl } from "@/src/constants/path";
-import { ToastContainer } from "react-toastify";
 import ModalForgotPassword from "../modal-email-pw/ModalForgotPassword";
 import ModalVerifyCode from "../modal-verify-pw/ModalVerifyCode";
 import ModalSetPassword from "../modal-set-pw/ModalSetPassword";
 import ModalVerifyOTP from "../modal-verify-otp/ModalVerify";
+import ModalRegister from "../modal-register/ModalRegister";
+import { ToastContainer } from "react-toastify";
 
 const { RangePicker } = DatePicker;
 
@@ -28,9 +28,9 @@ const Header = () => {
   const [isShowForgotPassword, setIsShowForgotPassword] = useState(false);
   const [isShowVerifyCode, setIsShowVerifyCode] = useState(false);
   const [isShowSetPassword, setIsShowSetPassword] = useState(false);
+  const [resetToken, setResetToken] = useState('');
   const [isShowVerify, setIsShowVerify] = useState(false);
   const [email, setEmail] = useState("");
-
   const router = useRouter();
 
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
@@ -228,6 +228,7 @@ const Header = () => {
         {_renderUserControls()}
       </div>
       {_renderSearchBar()}
+      <ToastContainer />
       {isShowLogin && (
         <ModalLogin
           isShowLogin={isShowLogin}
@@ -247,7 +248,6 @@ const Header = () => {
           email={email}
         />
       )}
-      <ToastContainer />
       {isShowForgotPassword && (
         <ModalForgotPassword
           isShowForgotPassword={isShowForgotPassword}
@@ -260,8 +260,11 @@ const Header = () => {
         <ModalVerifyCode
           isShowVerifyCode={isShowVerifyCode}
           setIsShowVerifyCode={setIsShowVerifyCode}
-          setIsShowLogin={setIsShowLogin}
           setIsShowSetPassword={setIsShowSetPassword}
+          setIsShowLogin={setIsShowLogin}
+          email={email}
+          resetToken={resetToken}
+          setResetToken={setResetToken}
         />
       )}
       {isShowSetPassword && (
@@ -269,6 +272,7 @@ const Header = () => {
           isShowSetPassword={isShowSetPassword}
           setIsShowSetPassword={setIsShowSetPassword}
           setIsShowLogin={setIsShowLogin}
+          resetToken={resetToken}
         />
       )}
       {isShowVerify && (

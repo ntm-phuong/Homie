@@ -1,13 +1,15 @@
 'use client';
 
-import { Modal, Form, Input } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons"; 
+import { Modal, Form, Input, message } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import axios from 'axios';
+import { useState } from 'react';
 
 interface ModalForgotPasswordProps {
   isShowForgotPassword: boolean;
   setIsShowForgotPassword: (isShowForgotPassword: boolean) => void;
   setIsShowLogin: (isShowLogin: boolean) => void;
-  setIsShowVerifyCode: (isShowVerifyCode: boolean) => void;
+  setIsShowVerifyCode: (isShow: boolean) => void;
 }
 
 const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
@@ -16,42 +18,43 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
   setIsShowLogin,
   setIsShowVerifyCode,
 }) => {
+  const [form] = Form.useForm();
+  const [email, setEmail] = useState(''); // Lưu email để truyền sang ModalVerifyCode
+
   const handleCancel = () => {
     setIsShowForgotPassword(false);
     setIsShowLogin(true);
   };
 
-  const handleSubmit = (values: { email: string }) => {
-    console.log("Password reset requested for:", values.email);
-    setIsShowForgotPassword(false);
-    setIsShowVerifyCode(true);
-  };
-
-  const switchToLogin = () => {
-    setIsShowForgotPassword(false);
-    setIsShowLogin(true);
+  const handleSubmit = async (values: { email: string }) => {
+    try {
+      const response = await axios.post('/api/forgotpassword', { email: values.email });
+      message.success(response.data.message);
+      setEmail(values.email); // Lưu email
+      setIsShowForgotPassword(false);
+      setIsShowVerifyCode(true); // Mở ModalVerifyCode
+    } catch (error: any) {
+      message.error(error.response?.data?.message || 'Đã có lỗi xảy ra');
+    }
   };
 
   return (
-    <Modal
-      open={isShowForgotPassword}
-      onCancel={handleCancel}
-      footer={null}
-    >
-       <button
-        onClick={switchToLogin}
-        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2 cursor-pointer"
+    <Modal open={isShowForgotPassword} onCancel={handleCancel} footer={null}>
+      <button
+        onClick={() => setIsShowLogin(true)}
+        className="text-rose-500 hover:text-rose-700 text-lg mb-6 inline-flex items-center font-medium transition-colors gap-2"
       >
-        <span className="mr-1"><ArrowLeftOutlined /></span> Back to login
+        <span className="mr-1">
+          <ArrowLeftOutlined />
+        </span>{' '}
+        Back to login
       </button>
-
-
       <div className="text-center py-4">
         <h2 className="text-2xl font-bold">Forgot your password?</h2>
         <p className="text-gray-500 text-lg">Enter your email below to reset your password</p>
       </div>
-
       <Form
+        form={form}
         layout="vertical"
         onFinish={handleSubmit}
         className="py-4 !px-2"
@@ -62,15 +65,11 @@ const ModalForgotPassword: React.FC<ModalForgotPasswordProps> = ({
           name="email"
           rules={[
             { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'Please enter a valid email address!' }
+            { type: 'email', message: 'Please enter a valid email address!' },
           ]}
         >
-          <Input
-            placeholder="Enter your email"
-            className="h-[50px] text-md"
-          />
+          <Input placeholder="Enter your email" className="h-[50px] text-md" />
         </Form.Item>
-
         <Form.Item>
           <button
             type="submit"
