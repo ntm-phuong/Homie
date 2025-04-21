@@ -26,11 +26,12 @@ export default function RootLayout({
     <html lang="en">
       <head />
       <body>
-        <div>Header</div>
-        {children}
-        <div>Footer</div>
+        <div className="min-h-screen flex flex-col">
+          <div className="bg-white shadow-sm">Header</div>
+          <div className="flex-1 bg-gray-100 p-10">{children}</div>
+          <div className="bg-white shadow-sm">Footer</div>
+        </div>
       </body>
     </html>
   );
-
 }
