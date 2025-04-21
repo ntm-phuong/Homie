@@ -38,12 +38,12 @@ const Header = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       if (token) {
         setSessionToken(token);
       }
     }
-  }, []);
+  }, [isToken]);
 
   function handleDateChange(dates: [Dayjs | null, Dayjs | null] | null) {
     if (dates) {
@@ -88,8 +88,8 @@ const Header = () => {
       router.push(RouterUrl.PROFILE);
     }
     else if (key === '4') {
-      sessionStorage.removeItem('token');
-      signOut({ callbackUrl: "/" });
+      localStorage.removeItem('token');
+      signOut({ redirect: true, callbackUrl: "/home" });
     }
   };
 
