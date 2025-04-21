@@ -9,15 +9,17 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const keyword = searchParams.get("search") || "";
 
-    const filter = keyword
-      ? {
-          $or: [
-            { email: { $regex: keyword, $options: "i" } },
-            { name: { $regex: keyword, $options: "i" } },
-            { phone: { $regex: keyword, $options: "i" } },
-          ],
-        }
-      : {};
+    const filter = {
+      ...(keyword
+        ? {
+            $or: [
+              { email: { $regex: keyword, $options: "i" } },
+              { name: { $regex: keyword, $options: "i" } },
+              { phone: { $regex: keyword, $options: "i" } },
+            ],
+          }
+        : {}),
+    };
 
     const users = await User.find(filter).select(
       "-password -verificationCode -resetToken -codeExpiry -resetTokenExpiry -otp -otpExpiresAt"
@@ -32,7 +34,7 @@ export async function GET(req: Request) {
   }
 }
 
-// Delete user
+// Soft Delete user
 export async function DELETE(req: Request) {
   try {
     await connectDB();
@@ -46,8 +48,13 @@ export async function DELETE(req: Request) {
       );
     }
 
-    const deletedUser = await User.findByIdAndDelete(userId);
-    if (!deletedUser) {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { status: "deleted" },
+      { new: true }
+    );
+
+    if (!updatedUser) {
       return NextResponse.json(
         { success: false, message: "User not found" },
         { status: 404 }

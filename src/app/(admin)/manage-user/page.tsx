@@ -1,11 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Table, Input, Modal, Form, Button, Space, Popconfirm } from "antd";
+import {
+  Table,
+  Input,
+  Modal,
+  Form,
+  Button,
+  Space,
+  Popconfirm,
+  Switch,
+} from "antd";
 import {
   SearchOutlined,
   EditOutlined,
   DeleteOutlined,
+  UndoOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -17,6 +27,7 @@ interface User {
   phone: string;
   address: string;
   isVerified: boolean;
+  status: "active" | "deleted";
 }
 
 const ManageUser = () => {
@@ -31,7 +42,9 @@ const ManageUser = () => {
     try {
       setLoading(true);
       const response = await axios.get("/api/users", {
-        params: search ? { search } : {},
+        params: {
+          search: search || undefined,
+        },
       });
       if (response.data.success) {
         setUsers(response.data.data);
@@ -44,7 +57,7 @@ const ManageUser = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchUsers(searchText);
   }, []);
 
   const handleSearch = () => {
@@ -66,6 +79,20 @@ const ManageUser = () => {
       }
     } catch (error) {
       toast.error("Failed to delete user");
+    }
+  };
+
+  const handleRestore = async (userId: string) => {
+    try {
+      const response = await axios.put(`/api/users?id=${userId}`, {
+        status: "active",
+      });
+      if (response.data.success) {
+        toast.success("User restored successfully");
+        fetchUsers(searchText);
+      }
+    } catch (error) {
+      toast.error("Failed to restore user");
     }
   };
 
@@ -110,13 +137,29 @@ const ManageUser = () => {
       key: "address",
     },
     {
-      title: "Status",
+      title: "Is verified",
       dataIndex: "isVerified",
       key: "isVerified",
       render: (isVerified: boolean) => (
-        <span className={isVerified ? "text-green-600" : "text-red-600"}>
-          {isVerified ? "Verified" : "Unverified"}
-        </span>
+        <Space>
+          <span className={isVerified ? "text-green-600" : "text-red-600"}>
+            {isVerified ? "Verified" : "Unverified"}
+          </span>
+        </Space>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status: "deleted" | "active") => (
+        <Space>
+          {status === "deleted" ? (
+            <span className="text-red-600 ml-2">Deleted</span>
+          ) : (
+            <span className="text-green-600">Active</span>
+          )}
+        </Space>
       ),
     },
     {
@@ -124,24 +167,41 @@ const ManageUser = () => {
       key: "actions",
       render: (_: any, record: User) => (
         <Space>
-          <Button
-            type="text"
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
-            className="text-blue-600 hover:text-blue-800"
-          />
-          <Popconfirm
-            title="Are you sure you want to delete this user?"
-            onConfirm={() => handleDelete(record._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button
-              type="text"
-              icon={<DeleteOutlined />}
-              className="text-red-600 hover:text-red-800"
-            />
-          </Popconfirm>
+          {record.status === "active" ? (
+            <>
+              <Button
+                type="text"
+                icon={<EditOutlined />}
+                onClick={() => handleEdit(record)}
+                className="text-blue-600 hover:text-blue-800"
+              />
+              <Popconfirm
+                title="Are you sure you want to delete this user?"
+                onConfirm={() => handleDelete(record._id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  type="text"
+                  icon={<DeleteOutlined />}
+                  className="text-red-600 hover:text-red-800"
+                />
+              </Popconfirm>
+            </>
+          ) : (
+            <Popconfirm
+              title="Are you sure you want to restore this user?"
+              onConfirm={() => handleRestore(record._id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="text"
+                icon={<UndoOutlined />}
+                className="text-green-600 hover:text-green-800"
+              />
+            </Popconfirm>
+          )}
         </Space>
       ),
     },
@@ -152,28 +212,35 @@ const ManageUser = () => {
       <div className="flex justify-between pb-4">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Manage Users</h1>
         <div className="mb-6 flex items-center gap-4">
-          <Input
-            placeholder="Search by name, email, or phone"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            onPressEnter={handleSearch}
-            prefix={<SearchOutlined />}
-            className="max-w-md"
-            size="large"
-          />
-
-          <Button type="primary" onClick={handleSearch} className="bg-main">
-            Search
-          </Button>
+          <Space>
+            <Input
+              placeholder="Search by name, email, or phone"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onPressEnter={handleSearch}
+              prefix={<SearchOutlined />}
+              className="max-w-md"
+              size="large"
+            />
+            <Button
+              size="large"
+              type="primary"
+              onClick={handleSearch}
+              className="bg-main"
+            >
+              Search
+            </Button>
+          </Space>
         </div>
       </div>
 
       <Table
+        scroll={{ x: "max-content" }}
         columns={columns}
         dataSource={users}
         rowKey="_id"
         loading={loading}
-        pagination={{ pageSize: 10 }}
+        pagination={{ pageSize: 5 }}
       />
 
       <Modal
