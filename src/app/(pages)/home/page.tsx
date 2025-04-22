@@ -1,21 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { HeartFilled, StarFilled,} from "@ant-design/icons";
+import { HeartFilled, StarFilled, } from "@ant-design/icons";
+import FormSearchTypeRoom from "@/src/components/FormSearchTypeRoom/FormSearchTypeRoom";
 
 const Home = () => {
-  const [rooms, setRooms] = useState([]); 
-  useEffect(() => {
-    getListRooms();
-  }, []);
+  const [rooms, setRooms] = useState([]);
+  const [typeRoom, setTypeRoom] = useState("");
 
-  const getListRooms = async () => {
+  useEffect(() => {
+    getListRooms(typeRoom);
+  }, [typeRoom]);
+
+  const getListRooms = async (type: string) => {
     try {
-      const response = await fetch("/api/get-list-rooms"); 
+      const response = await fetch(`/api/get-list-rooms?search_room=${type}`);
       const data = await response.json();
-        setRooms(data.data); 
-      
-    } catch (error) {}
+      setRooms(data.data);
+    } catch (error) { }
   };
 
   const _renderItemRoom = (room: any) => {
@@ -49,7 +51,7 @@ const Home = () => {
         </div>
         <div className="flex flex-col ">
           <div className="font-[500] text-md flex flex-row justify-between items-center">
-            <span>{truncateName(room.name || "Tên phòng", 4)}</span> 
+            <span>{truncateName(room.name || "Tên phòng", 4)}</span>
             <div className="flex items-center">
               <StarFilled style={{ color: "#fadb14", marginRight: "2px" }} />
               {room.rating || "N/A"}
@@ -59,20 +61,20 @@ const Home = () => {
           <p className="text-gray-500 text-sm">{room.rentalDate || "Không có ngày thuê"}</p>
         </div>
         <div className="text-md font-medium text-black-600">
-        <span className="font-[500]">{room.price || "N/A"} đ</span> / đêm
+          <span className="font-[500]">{room.price || "N/A"} đ</span> / đêm
         </div>
       </div>
     );
   };
 
   return (
-    <div className="lg:px-38 px-4 w-full flex flex-col gap-8 justify-center items-center">
-      <h1 className="text-2xl font-bold">Danh sách phòng</h1>
+    <div className="lg:px-38 px-4 w-full flex flex-col gap-8">
+      <FormSearchTypeRoom onChangeType={setTypeRoom} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-8">
         {rooms.length > 0 ? (
-          rooms.map((room) => _renderItemRoom(room)) 
+          rooms.map((room) => _renderItemRoom(room))
         ) : (
-          <p>Đang tải danh sách phòng...</p> 
+          <p className="!w-full">No matching rooms found.</p>
         )}
       </div>
     </div>

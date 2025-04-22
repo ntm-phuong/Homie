@@ -19,6 +19,7 @@ export async function GET(req: Request) {
         $or: [
           { name: { $regex: keyword, $options: 'i' } },
           { address: { $regex: keyword, $options: 'i' } },
+          { type_room: {$regex: keyword, $options: 'i' } },
         ],
       }
       : {};
