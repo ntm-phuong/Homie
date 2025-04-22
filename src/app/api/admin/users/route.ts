@@ -1,34 +1,51 @@
 import { NextResponse } from "next/server";
+import { verifyAdmin } from "@/src/middleware/auth";
 import User from "@/src/models/User";
 import { connectDB } from "@/src/lib/mongoose";
 
-export async function GET(req: Request) {
+export async function GET(request: Request) {
   try {
+    const authResult = await verifyAdmin(request);
+
+    if (!authResult.success) {
+      return NextResponse.json(
+        { message: authResult.message },
+        { status: authResult.status }
+      );
+    }
+
     await connectDB();
 
-    const { searchParams } = new URL(req.url);
-    const keyword = searchParams.get("search") || "";
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search") || "";
+    const status = searchParams.get("status") || "";
 
-    const filter = {
-      ...(keyword
-        ? {
-            $or: [
-              { email: { $regex: keyword, $options: "i" } },
-              { name: { $regex: keyword, $options: "i" } },
-              { phone: { $regex: keyword, $options: "i" } },
-            ],
-          }
-        : {}),
-    };
+    const query: any = {};
 
-    const users = await User.find(filter).select(
-      "-password -verificationCode -resetToken -codeExpiry -resetTokenExpiry -otp -otpExpiresAt"
-    );
-    return NextResponse.json({ success: true, data: users });
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { phone: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    if (status) {
+      query.status = status;
+    }
+
+    query.role = "user";
+
+    const users = await User.find(query).sort({ createdAt: -1 });
+
+    return NextResponse.json({
+      success: true,
+      data: users,
+    });
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error in admin users API:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to fetch users" },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }
@@ -37,6 +54,15 @@ export async function GET(req: Request) {
 // Soft Delete user
 export async function DELETE(req: Request) {
   try {
+    const authResult = await verifyAdmin(req);
+
+    if (!authResult.success) {
+      return NextResponse.json(
+        { message: authResult.message },
+        { status: authResult.status }
+      );
+    }
+
     await connectDB();
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("id");
@@ -77,6 +103,15 @@ export async function DELETE(req: Request) {
 // Update user
 export async function PUT(req: Request) {
   try {
+    const authResult = await verifyAdmin(req);
+
+    if (!authResult.success) {
+      return NextResponse.json(
+        { message: authResult.message },
+        { status: authResult.status }
+      );
+    }
+
     await connectDB();
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("id");
@@ -93,8 +128,6 @@ export async function PUT(req: Request) {
       userId,
       { $set: data },
       { new: true }
-    ).select(
-      "-password -verificationCode -resetToken -codeExpiry -resetTokenExpiry -otp -otpExpiresAt"
     );
 
     if (!updatedUser) {

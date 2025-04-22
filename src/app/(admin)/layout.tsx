@@ -1,37 +1,18 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-// import "./globals.css";
+"use client";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import Footer from "@/src/components/footer/footer";
+import AdminHeader from "@/src/components/header/AdminHeader";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Homie",
-  description: "Homie",
-};
-
-export default function RootLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head />
-      <body>
-        <div className="min-h-screen flex flex-col">
-          <div className="bg-white shadow-sm">Header</div>
-          <div className="flex-1 bg-gray-100 p-10">{children}</div>
-          <div className="bg-white shadow-sm">Footer</div>
-        </div>
-      </body>
-    </html>
+    <div className="min-h-screen flex flex-col">
+      <AdminHeader />
+      <div className="flex-1 bg-[#ffe3e8] p-10">{children}</div>
+      <Footer />
+    </div>
   );
 }

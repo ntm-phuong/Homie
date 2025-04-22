@@ -1,19 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Input,
-  Modal,
-  Form,
-  Button,
-  Space,
-  Popconfirm,
-  Switch,
-} from "antd";
+import { Table, Input, Button, Space, Popconfirm, Typography } from "antd";
 import {
   SearchOutlined,
-  EditOutlined,
   DeleteOutlined,
   UndoOutlined,
 } from "@ant-design/icons";
@@ -34,23 +24,26 @@ const ManageUser = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [form] = Form.useForm();
+  const token = localStorage.getItem("token");
 
   const fetchUsers = async (search: string = "") => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/users", {
+
+      const response = await axios.get("/api/admin/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           search: search || undefined,
         },
       });
+
       if (response.data.success) {
         setUsers(response.data.data);
       }
-    } catch (error) {
-      toast.error("Failed to fetch users");
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -64,53 +57,39 @@ const ManageUser = () => {
     fetchUsers(searchText);
   };
 
-  const handleEdit = (user: User) => {
-    setEditingUser(user);
-    form.setFieldsValue(user);
-    setIsModalVisible(true);
-  };
-
   const handleDelete = async (userId: string) => {
     try {
-      const response = await axios.delete(`/api/users?id=${userId}`);
+      const response = await axios.delete(`/api/admin/users?id=${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.data.success) {
         toast.success("User deleted successfully");
         fetchUsers(searchText);
       }
-    } catch (error) {
-      toast.error("Failed to delete user");
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
   };
 
   const handleRestore = async (userId: string) => {
     try {
-      const response = await axios.put(`/api/users?id=${userId}`, {
-        status: "active",
-      });
+      const response = await axios.put(
+        `/api/admin/users?id=${userId}`,
+        { status: "active" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.data.success) {
         toast.success("User restored successfully");
         fetchUsers(searchText);
       }
-    } catch (error) {
-      toast.error("Failed to restore user");
-    }
-  };
-
-  const handleUpdate = async (values: any) => {
-    if (!editingUser) return;
-
-    try {
-      const response = await axios.put(
-        `/api/users?id=${editingUser._id}`,
-        values
-      );
-      if (response.data.success) {
-        toast.success("User updated successfully");
-        setIsModalVisible(false);
-        fetchUsers(searchText);
-      }
-    } catch (error) {
-      toast.error("Failed to update user");
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
   };
 
@@ -169,12 +148,6 @@ const ManageUser = () => {
         <Space>
           {record.status === "active" ? (
             <>
-              <Button
-                type="text"
-                icon={<EditOutlined />}
-                onClick={() => handleEdit(record)}
-                className="text-blue-600 hover:text-blue-800"
-              />
               <Popconfirm
                 title="Are you sure you want to delete this user?"
                 onConfirm={() => handleDelete(record._id)}
@@ -190,6 +163,9 @@ const ManageUser = () => {
             </>
           ) : (
             <Popconfirm
+              okButtonProps={{
+                className: "bg-main",
+              }}
               title="Are you sure you want to restore this user?"
               onConfirm={() => handleRestore(record._id)}
               okText="Yes"
@@ -210,7 +186,7 @@ const ManageUser = () => {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between pb-4">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Manage Users</h1>
+        <Typography.Title level={2}>Manage Users</Typography.Title>
         <div className="mb-6 flex items-center gap-4">
           <Space>
             <Input
@@ -242,48 +218,6 @@ const ManageUser = () => {
         loading={loading}
         pagination={{ pageSize: 5 }}
       />
-
-      <Modal
-        title="Edit User"
-        open={isModalVisible}
-        onCancel={() => {
-          setIsModalVisible(false);
-          form.resetFields();
-        }}
-        footer={null}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleUpdate}
-          initialValues={editingUser || {}}
-        >
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: "Please input the name!" }]}
-          >
-            <Input size="large" />
-          </Form.Item>
-          <Form.Item name="email" label="Email">
-            <Input size="large" disabled />
-          </Form.Item>
-          <Form.Item name="phone" label="Phone">
-            <Input size="large" />
-          </Form.Item>
-          <Form.Item name="address" label="Address">
-            <Input size="large" />
-          </Form.Item>
-          <Form.Item className="mb-0 flex justify-end">
-            <Space>
-              <Button onClick={() => setIsModalVisible(false)}>Cancel</Button>
-              <Button type="primary" htmlType="submit" className="bg-main">
-                Update
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 };

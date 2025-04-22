@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
   otpExpiresAt: { type: Date, required: false },
   isVerified: { type: Boolean, default: false },
   status: { type: String, enum: ["active", "deleted"], default: "active" },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
