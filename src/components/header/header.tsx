@@ -250,6 +250,8 @@ const Header = () => {
           setIsShowLogin={setIsShowLogin}
           setIsShowRegister={setIsShowRegister}
           setIsShowForgotPassword={setIsShowForgotPassword}
+          setIsShowVerify={setIsShowVerify}
+          isShowVerify={isShowVerify}
         />
       )}
       {isShowRegister && (

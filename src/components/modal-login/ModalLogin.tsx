@@ -11,6 +11,8 @@ interface ModalLoginProps {
   setIsShowLogin: (isShowLogin: boolean) => void;
   setIsShowRegister: (isShowRegister: boolean) => void;
   setIsShowForgotPassword: (isShowForgotPassword: boolean) => void;
+  setIsShowVerify: (isShowVerify: boolean) => void;
+  isShowVerify: boolean;
   setIsToken: (isToken: boolean) => void;
 }
 
@@ -19,6 +21,8 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
   setIsShowLogin,
   setIsShowRegister,
   setIsShowForgotPassword,
+  setIsShowVerify,
+  isShowVerify,
   setIsToken
 }) => {
   const [loading, setLoading] = React.useState(false);
@@ -35,10 +39,15 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-
       const data = await response.json().catch(() => ({}));
-
+      if (data.meta === 401 ) {
+        setIsShowVerify(true);
+        setIsShowLogin(false);
+        toast.error("Please authenticate OTP before logging in!", { position: "top-right" });
+        return;
+      }
       if (response.ok) {
+
         localStorage.setItem("token", data.token);
         setIsToken(true);
         toast.success(data.message || "Login successful!", { position: "top-right" });
@@ -102,7 +111,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
           placeholder="Enter your password"
           rules={[
             { required: true, message: "Please enter your password!" },
-            { min: 8, message: "Password must be at least 8 characters!" },
+            { min: 6, message: "Password must be at least 6 characters!" },
           ]}
         />
 
