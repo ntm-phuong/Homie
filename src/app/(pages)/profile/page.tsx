@@ -146,10 +146,8 @@ const Profile = () => {
 
   return (
     <div className="lg:px-38 px-4 py-8 flex flex-col gap-10 ">
-      {/* Avatar Section */}
       {_renderAvatar()}
 
-      {/* Profile Details Section */}
       <div className="w-full flex flex-col justify-center items-center gap-6">
         <h3 className="text-xl font-bold mb-4 ">Profile Details</h3>
         <div className="grid md:grid-cols-2 gap-6 w-full max-w-4xl">
@@ -160,7 +158,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Edit Button Section */}
       {_renderEditButton()}
     </div>
   );
