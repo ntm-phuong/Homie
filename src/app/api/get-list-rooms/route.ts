@@ -1,12 +1,6 @@
 import { NextResponse } from 'next/server';
 import Room from '@/src/models/Room';
-import mongoose from 'mongoose';
-
-const connectDB = async () => {
-  if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(process.env.MONGODB_URI || '');
-  }
-};
+import { connectDB } from '@/src/lib/mongoose';
 
 export async function GET(req: Request) {
   try {
@@ -14,17 +8,32 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const keyword = searchParams.get('search_room') || '';
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '8');
+    const skip = (page - 1) * limit;
+
     const filter = keyword
       ? {
-        $or: [
-          { name: { $regex: keyword, $options: 'i' } },
-          { address: { $regex: keyword, $options: 'i' } },
-          { type_room: {$regex: keyword, $options: 'i' } },
-        ],
-      }
+          $or: [
+            { name: { $regex: keyword, $options: 'i' } },
+            { address: { $regex: keyword, $options: 'i' } },
+            { type_room: { $regex: keyword, $options: 'i' } },
+          ],
+        }
       : {};
-    const rooms = await Room.find(filter).sort({ createdAt: -1 });
-    return NextResponse.json({ success: true, data: rooms });
+
+    const [rooms, total] = await Promise.all([
+      Room.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Room.countDocuments(filter),
+    ]);
+
+    return NextResponse.json({
+      success: true,
+      data: rooms,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (error) {
     return NextResponse.json(
       { success: false, message: 'Failed to fetch rooms' },
@@ -32,3 +41,4 @@ export async function GET(req: Request) {
     );
   }
 }
+
