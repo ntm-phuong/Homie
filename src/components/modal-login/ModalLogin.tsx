@@ -36,10 +36,8 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-
       const data = await response.json().catch(() => ({}));
-      console.log(data.meta, 'chinh67');
-      if (data.meta === 333) {
+      if (data.meta === 401 ) {
         setIsShowVerify(true);
         setIsShowLogin(false);
         toast.error("Please authenticate OTP before logging in!", { position: "top-right" });
