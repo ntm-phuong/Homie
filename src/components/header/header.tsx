@@ -1,7 +1,7 @@
 "use client"
 
 import { IMAGE_URL } from "@/public";
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Dropdown, DatePicker } from "antd";
 import type { MenuProps } from 'antd';
@@ -16,6 +16,7 @@ import ModalSetPassword from "../modal-set-pw/ModalSetPassword";
 import ModalVerifyOTP from "../modal-verify-otp/ModalVerify";
 import ModalRegister from "../modal-register/ModalRegister";
 import { ToastContainer } from "react-toastify";
+import { signOut } from "next-auth/react";
 
 const { RangePicker } = DatePicker;
 
@@ -32,14 +33,25 @@ const Header = () => {
   const [isShowVerify, setIsShowVerify] = useState(false);
   const [email, setEmail] = useState("");
   const router = useRouter();
-  console.log(isShowVerify, 'chinh333');
-  const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [isToken, setIsToken] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        setSessionToken(token);
+      }
+    }
+  }, [isToken]);
+
+  function handleDateChange(dates: [Dayjs | null, Dayjs | null] | null) {
     if (dates) {
       setSelectedDates(dates);
     } else {
       setSelectedDates([null, null]);
     }
-  };
+  }
 
   const handleApplyDates = () => {
     setShowDatePicker(false);
@@ -75,28 +87,30 @@ const Header = () => {
     else if (key === '3') {
       router.push(RouterUrl.PROFILE);
     }
+    else if (key === '4') {
+      localStorage.removeItem('token');
+      signOut({ redirect: true, callbackUrl: "/home" });
+    }
   };
 
   const userItems: MenuProps = {
     items: [
-      {
-        key: '1',
-        label: <span className="font-semibold w-full block">Sign Up</span>,
-      },
-      {
-        key: '2',
-        label: <span className="font-semibold w-full block">Log in</span>,
-      },
-      {
-        key: '3',
-        label: <span className="font-semibold w-full block">Profile</span>,
-      },
-      { key: '4', label: 'Host an experience' },
+      ...(!sessionToken ? [
+        { key: '1', label: <span className="font-semibold w-full block">Sign Up</span> }
+      ] : []),
+      ...(!sessionToken ? [
+        { key: '2', label: <span className="font-semibold w-full block">Login</span> }
+      ] : []),
+      ...(sessionToken ? [
+        { key: '3', label: <span className="font-semibold w-full block">Profile</span> }
+      ] : []),
+      ...(sessionToken ? [
+        { key: '4', label: <span className="font-semibold w-full block">Log out</span> }
+      ] : []),
       { key: '5', label: 'Help' },
     ],
     onClick: handleMenuClick,
   };
-
 
   const _renderLogo = () => (
     <Link href="/" className="flex items-center no-underline">
@@ -231,6 +245,7 @@ const Header = () => {
       <ToastContainer />
       {isShowLogin && (
         <ModalLogin
+          setIsToken={setIsToken}
           isShowLogin={isShowLogin}
           setIsShowLogin={setIsShowLogin}
           setIsShowRegister={setIsShowRegister}
