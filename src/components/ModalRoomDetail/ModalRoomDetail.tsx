@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Input } from 'antd';
+import { Modal, Input, Select } from 'antd';
 import { ParamsRoom } from '@/src/app/(admin)/manage-list-room/page';
 import { toast } from 'react-toastify';
 
@@ -9,6 +9,7 @@ interface RoomDetailModalProps {
   onClose: () => void;
   onUpdate: (updatedRoom: ParamsRoom) => void; 
 }
+const { Option } = Select;
 
 const RoomDetailModal: React.FC<RoomDetailModalProps> = ({ isModalVisible, selectedRoom, onClose, onUpdate }) => {
    const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({ isModalVisible, selec
       bed_rooms: '',
       bath_room: '',
       occupancy_limit: '',
+      type_room: '', 
     });
   
     const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -45,6 +47,7 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({ isModalVisible, selec
           bed_rooms: selectedRoom.bed_rooms.toString(),
           bath_room: selectedRoom.bath_room.toString(),
           occupancy_limit: selectedRoom.occupancy_limit.toString(),
+          type_room: selectedRoom.type_room.toString(),
         });
         setPreviewImage(selectedRoom.image);
       }
@@ -79,6 +82,7 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({ isModalVisible, selec
         bed_rooms: Number(formData.bed_rooms),
         bath_room: Number(formData.bath_room),
         occupancy_limit: Number(formData.occupancy_limit),
+        type_room: formData.type_room,
       };
     
       onUpdate(updatedRoom);
@@ -133,7 +137,30 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({ isModalVisible, selec
           </div>
         </div>
       );
-    }
+    };
+
+    const handleSelectChange = (value: string) => {
+      setFormData({ ...formData, type_room: value });
+    };
+
+    const _renderSelectTypeRoom = () => {
+      return (
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium text-gray-700">Room Type:</label>
+          <Select
+            value={formData.type_room}
+            onChange={handleSelectChange}
+            placeholder="Room Type"
+            className="w-full !h-[50px]"
+          >
+            <Option value="countryside">Countryside</Option>
+            <Option value="villa">Villa</Option>
+            <Option value="lakeside">Lakeside</Option>
+            <Option value="seaside">Seaside</Option>
+          </Select>
+        </div>
+      );
+    };
 
     return (
       <Modal
@@ -159,6 +186,7 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({ isModalVisible, selec
             {_renderInput("Bedrooms:", "bed_rooms", "number")}
             {_renderInput("Bathrooms:", "bath_room", "number")}
             {_renderInput("Occupancy Limit:", "occupancy_limit", "number")}
+            {_renderSelectTypeRoom()}
             <button
               type="submit"
               className="w-full h-[50px] px-4 bg-main text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"

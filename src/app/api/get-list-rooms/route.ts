@@ -22,7 +22,7 @@ export async function GET(req: Request) {
         ],
       }
       : {};
-    const rooms = await Room.find(filter);
+    const rooms = await Room.find(filter).sort({ createdAt: -1 });
     return NextResponse.json({ success: true, data: rooms });
   } catch (error) {
     return NextResponse.json(

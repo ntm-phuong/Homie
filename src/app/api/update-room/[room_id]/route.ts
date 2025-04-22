@@ -24,6 +24,7 @@ export const PUT = async (req: NextRequest) => {
     const bed_rooms = formData.get('bed_rooms') as string;
     const bath_room = formData.get('bath_room') as string;
     const occupancy_limit = formData.get('occupancy_limit') as string;
+    const type_room = formData.get('type_room') as string;
 
     // Kiểm tra dữ liệu đầu vào
     if (!roomId || !name || !address) {
@@ -71,6 +72,7 @@ export const PUT = async (req: NextRequest) => {
         bed_rooms,
         bath_room,
         occupancy_limit,
+        type_room,
         image: imageUrl || undefined, // Nếu có ảnh mới thì cập nhật
       },
       { new: true } // Trả về document đã cập nhật

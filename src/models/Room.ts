@@ -15,6 +15,7 @@ const RoomSchema = new mongoose.Schema({
   bed_rooms: String,
   bath_room: String,
   occupancy_limit: String,
+  type_room: String,
 }, { timestamps: true });
 
 export default mongoose.models.Room || mongoose.model('Room', RoomSchema);
