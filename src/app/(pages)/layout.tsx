@@ -29,11 +29,9 @@ export default function RootLayout({
     <html lang="en">
       <head />
       <body>
-        <ClientWrapper>
           <Header />
           {children}
           <Footer />
-        </ClientWrapper>
       </body>
     </html>
   );

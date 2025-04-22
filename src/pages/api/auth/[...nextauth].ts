@@ -26,12 +26,12 @@ export default NextAuth({
     signIn: "/auth/signin",
   },
   callbacks: {
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub || ""; 
-      }
-      return session;
-    },
+    // async session({ session, token }) {
+    //   if (session.user) {
+    //     session.user.id = token.sub || ""; 
+    //   }
+    //   return session;
+    // },
     async redirect({ url, baseUrl }) {
       return "/";
     },
