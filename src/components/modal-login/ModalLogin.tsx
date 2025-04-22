@@ -42,16 +42,16 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
       if (data.meta === 333) {
         setIsShowVerify(true);
         setIsShowLogin(false);
-        toast.error("Vui lòng xác thực OTP trước khi đăng nhập!", { position: "top-right" });
+        toast.error("Please authenticate OTP before logging in!", { position: "top-right" });
         return;
       }
       if (response.ok) {
 
         localStorage.setItem("token", data.token);
-        toast.success(data.message || "Đăng nhập thành công!", { position: "top-right" });
+        toast.success(data.message || "Login successful!", { position: "top-right" });
         setIsShowLogin(false);
       } else {
-        toast.error(data.message || "Đăng nhập thất bại!", { position: "top-right" });
+        toast.error(data.message || "Login failed!", { position: "top-right" });
       }
     } catch (error) {
       toast.error("An error occurred during the login process!", { position: "top-right" });

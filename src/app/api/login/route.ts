@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     if (!user.isVerified) {
-      return NextResponse.json({ message: "Tài khoản chưa được xác thực!", meta: 333 }, { status: 403 });
+      return NextResponse.json({ message: "The account has not been authentic!", meta: 401 }, { status: 403 });
     }
     
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "secret", {

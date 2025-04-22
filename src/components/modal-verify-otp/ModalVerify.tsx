@@ -116,7 +116,7 @@ const ModalVerifyOTP: React.FC<ModalVerifyProps> = ({
         <p className="text-gray-500 text-lg">Didn't receive the OTP?</p>
         <button
           onClick={handleResendOTP}
-          disabled={resendLoading} // Nút chỉ bị vô hiệu hóa khi đang gửi yêu cầu
+          disabled={resendLoading} 
           className={`ml-1 text-rose-500 hover:text-rose-700 cursor-pointer ${
             resendLoading ? 'opacity-50 cursor-not-allowed' : ''
           }`}

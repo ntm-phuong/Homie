@@ -2,21 +2,21 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import User from '../../../models/User';
 import { connectDB } from '@/src/lib/mongoose';
-import { sendOtpEmail } from '@/src/lib/email'; // Import sendOtpEmail
+import { sendOtpEmail } from '@/src/lib/email'; 
 
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
     if (!email || !password) {
-      return NextResponse.json({ message: "Email và mật khẩu là bắt buộc" }, { status: 400 });
+      return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
     }
 
     await connectDB();
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return NextResponse.json({ message: "Email đã được đăng ký" }, { status: 409 });
+      return NextResponse.json({ message: "Email has been registered" }, { status: 409 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -35,9 +35,9 @@ export async function POST(req: Request) {
     // Gửi OTP qua email
     await sendOtpEmail(email, otp);
 
-    return NextResponse.json({ message: "Đăng ký thành công! Vui lòng kiểm tra email để nhận OTP." }, { status: 200 });
+    return NextResponse.json({ message: "Successful registration! Please check your email to receive OTP." }, { status: 200 });
   } catch (error: any) {
     console.error("Error in register API:", error);
-    return NextResponse.json({ message: "Lỗi máy chủ" }, { status: 500 });
+    return NextResponse.json({ message: "Server errorerror" }, { status: 500 });
   }
 }
