@@ -98,11 +98,11 @@ const BookHistory = () => {
       key: "actions",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
-          <Button className="bg-blue-500 text-white" size="small"
+          <button className="" 
             onClick={() => handleViewDetails(record.id)}
           >
             View
-          </Button>
+          </button>
         </div>
       ),
     },
