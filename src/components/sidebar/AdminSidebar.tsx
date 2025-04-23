@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Icon, {
-  HomeOutlined,
+import {
   UserOutlined,
   ShopOutlined,
   CloseOutlined,
@@ -15,7 +14,6 @@ interface AdminSidebarProps {
 }
 
 const menuItems = [
-  { name: "Home", href: "/", icon: HomeOutlined },
   { name: "Users", href: "/admin/manage-user", icon: UserOutlined },
   { name: "Rooms", href: "/admin/manage-list-room", icon: ShopOutlined },
 ];

@@ -4,9 +4,9 @@ import { IMAGE_URL } from "@/public";
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Dropdown, DatePicker } from "antd";
-import type { MenuProps } from 'antd';
-import dayjs, { Dayjs } from 'dayjs';
-import Image from 'next/image';
+import type { MenuProps } from "antd";
+import { Dayjs } from "dayjs";
+import Image from "next/image";
 import ModalLogin from "../ModalComponent/ModalLogin/ModalLogin";
 import { useRouter } from "next/navigation";
 import { RouterUrl } from "@/src/constants/path";
@@ -14,7 +14,7 @@ import ModalForgotPassword from "../ModalComponent/ModalEmailPW/ModalForgotPassw
 import ModalVerifyCode from "../ModalComponent/ModalVerifyPW/ModalVerifyCode";
 import ModalSetPassword from "../ModalComponent/ModalSetPW/ModalSetPassword";
 import ModalVerifyOTP from "../ModalComponent/ModalVerifyOTP/ModalVerify";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { signOut } from "next-auth/react";
 import ModalRegister from "../ModalComponent/ModalRegister/ModalRegister";
 import axios from "axios";
@@ -64,8 +64,13 @@ const Header = () => {
         if (response.data.success) {
           router.push("/admin/manage-user");
         }
-      } catch (error) {
-        console.error("Admin verification failed:", error);
+      } catch (error: any) {
+        if (error?.response?.status === 403) {
+          toast.error("Unauthorized access");
+          router.push("/");
+          return;
+        }
+        toast.error(error?.response?.data?.message || "Verification failed");
       }
     };
 
@@ -114,35 +119,66 @@ const Header = () => {
       setIsShowLogin(true);
     } else if (key === "3") {
       router.push(RouterUrl.PROFILE);
-    }
-    else if (key === '4') {
+    } else if (key === "4") {
       router.push(RouterUrl.HISTORY);
-    } else if (key === '5') {
-      localStorage.removeItem('token');
+    } else if (key === "5") {
+      localStorage.removeItem("token");
       signOut({ redirect: true, callbackUrl: "/home" });
-      
     }
   };
 
   const userItems: MenuProps = {
     items: [
-      ...(!sessionToken ? [
-        { key: '1', label: <span className="font-semibold w-full block">Sign Up</span> }
-      ] : []),
-      ...(!sessionToken ? [
-        { key: '2', label: <span className="font-semibold w-full block">Login</span> }
-      ] : []),
-      ...(sessionToken ? [
-        { key: '3', label: <span className="font-semibold w-full block">Profile</span> }
-      ] : []),
-      ...(sessionToken ? [
-        { key: '4', label: <span className="font-semibold w-full block">Book History</span> }
-      ] : []),
-      ...(sessionToken ? [
-        { key: '5', label: <span className="font-semibold w-full block">Log out</span> }
-      ] : []),
-     
-      { key: '6', label: 'Help' },
+      ...(!sessionToken
+        ? [
+            {
+              key: "1",
+              label: (
+                <span className="font-semibold w-full block">Sign Up</span>
+              ),
+            },
+          ]
+        : []),
+      ...(!sessionToken
+        ? [
+            {
+              key: "2",
+              label: <span className="font-semibold w-full block">Login</span>,
+            },
+          ]
+        : []),
+      ...(sessionToken
+        ? [
+            {
+              key: "3",
+              label: (
+                <span className="font-semibold w-full block">Profile</span>
+              ),
+            },
+          ]
+        : []),
+      ...(sessionToken
+        ? [
+            {
+              key: "4",
+              label: (
+                <span className="font-semibold w-full block">Book History</span>
+              ),
+            },
+          ]
+        : []),
+      ...(sessionToken
+        ? [
+            {
+              key: "5",
+              label: (
+                <span className="font-semibold w-full block">Log out</span>
+              ),
+            },
+          ]
+        : []),
+
+      { key: "6", label: "Help" },
     ],
     onClick: handleMenuClick,
   };
