@@ -40,6 +40,7 @@ export async function POST(req: Request) {
         email: user.email,
         name: user.name,
         isVerified: user.isVerified,
+        isAdmin: user?.role === "admin"
       },
     });
 

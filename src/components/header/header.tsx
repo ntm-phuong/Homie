@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import { IMAGE_URL } from "@/public";
-import React, { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { Dropdown, DatePicker } from "antd";
 import type { MenuProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
@@ -17,24 +17,28 @@ import ModalVerifyOTP from "../ModalComponent/ModalVerifyOTP/ModalVerify";
 import { ToastContainer } from "react-toastify";
 import { signOut } from "next-auth/react";
 import ModalRegister from "../ModalComponent/ModalRegister/ModalRegister";
+import axios from "axios";
 
 const { RangePicker } = DatePicker;
 
 const Header = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
+  const [selectedDates, setSelectedDates] = useState<
+    [Dayjs | null, Dayjs | null]
+  >([null, null]);
   const datePickerRef = useRef<HTMLDivElement>(null);
   const [isShowLogin, setIsShowLogin] = useState(false);
   const [isShowRegister, setIsShowRegister] = useState(false);
   const [isShowForgotPassword, setIsShowForgotPassword] = useState(false);
   const [isShowVerifyCode, setIsShowVerifyCode] = useState(false);
   const [isShowSetPassword, setIsShowSetPassword] = useState(false);
-  const [resetToken, setResetToken] = useState('');
+  const [resetToken, setResetToken] = useState("");
   const [isShowVerify, setIsShowVerify] = useState(false);
   const [email, setEmail] = useState("");
   const router = useRouter();
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [isToken, setIsToken] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -44,6 +48,29 @@ const Header = () => {
       }
     }
   }, [isToken]);
+
+  useEffect(() => {
+    const verifyAdmin = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const response = await axios.get("/api/admin/verify", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.data.success) {
+          router.push("/admin/manage-user");
+        }
+      } catch (error) {
+        console.error("Admin verification failed:", error);
+      }
+    };
+
+    verifyAdmin();
+  }, []);
 
   function handleDateChange(dates: [Dayjs | null, Dayjs | null] | null) {
     if (dates) {
@@ -65,26 +92,27 @@ const Header = () => {
   const formatSelectedDates = () => {
     if (!selectedDates[0] || !selectedDates[1]) return "Add dates";
     const format = "D MMM";
-    return `${selectedDates[0].format(format)} - ${selectedDates[1].format(format)}`;
+    return `${selectedDates[0].format(format)} - ${selectedDates[1].format(
+      format
+    )}`;
   };
 
   const languageItems: MenuProps = {
     items: [
-      { key: '1', label: 'English' },
-      { key: '2', label: 'Vietnamese' },
-      { key: '3', label: 'Japanese' },
-      { key: '4', label: 'French' },
-      { key: '5', label: 'Chinese' },
-    ]
+      { key: "1", label: "English" },
+      { key: "2", label: "Vietnamese" },
+      { key: "3", label: "Japanese" },
+      { key: "4", label: "French" },
+      { key: "5", label: "Chinese" },
+    ],
   };
 
-  const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
-    if (key === '1') {
+  const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
+    if (key === "1") {
       setIsShowRegister(true);
-    } else if (key === '2') {
+    } else if (key === "2") {
       setIsShowLogin(true);
-    }
-    else if (key === '3') {
+    } else if (key === "3") {
       router.push(RouterUrl.PROFILE);
     }
     else if (key === '4') {
@@ -129,8 +157,12 @@ const Header = () => {
 
   const _renderNavigation = () => (
     <div className="hidden md:flex space-x-4 text-[24px]">
-      <Link href="#" className="font-semibold px-2">Home</Link>
-      <Link href="#" className="font-semibold px-2">Experiences</Link>
+      <Link href="#" className="font-semibold px-2">
+        Home
+      </Link>
+      <Link href="#" className="font-semibold px-2">
+        Experiences
+      </Link>
     </div>
   );
 
@@ -147,18 +179,9 @@ const Header = () => {
         </button>
       </Dropdown>
 
-      <Dropdown
-        menu={userItems}
-        placement="bottomRight"
-        trigger={['click']}
-      >
+      <Dropdown menu={userItems} placement="bottomRight" trigger={["click"]}>
         <button className="rounded-full border border-gray-300 flex gap-2 items-center px-4 py-2 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
-          <Image
-            src={IMAGE_URL.MENU}
-            alt="Menu"
-            width={20}
-            height={20}
-          />
+          <Image src={IMAGE_URL.MENU} alt="Menu" width={20} height={20} />
           <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
             <Image
               src={IMAGE_URL.USER}

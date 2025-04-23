@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
+  name: { type: String },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  name: { type: String },
   phone: { type: String },
   address: { type: String },
   verificationCode: { type: String },
@@ -14,7 +14,10 @@ const UserSchema = new mongoose.Schema({
   otpExpiresAt: { type: Date, required: false },
   isVerified: { type: Boolean, default: false },
   token: { type: String },
+  status: { type: String, enum: ["active", "deleted"], default: "active" },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
 });
 
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
+
 export default User;

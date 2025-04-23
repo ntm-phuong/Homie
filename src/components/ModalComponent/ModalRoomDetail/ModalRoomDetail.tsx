@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Input, Select } from 'antd';
-import { ParamsRoom } from '@/src/app/(admin)/manage-list-room/page';
+import { ParamsRoom } from '@/src/app/(admin)/admin/manage-list-room/page';
 import { toast } from 'react-toastify';
 
 interface RoomDetailModalProps {
