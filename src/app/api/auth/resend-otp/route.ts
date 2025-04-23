@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import User from '../../../models/User';
+import User from '../../../../models/User';
 import { connectDB } from '@/src/lib/mongoose';
 import { sendOtpEmail } from '@/src/lib/email'; 
 

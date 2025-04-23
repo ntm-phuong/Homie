@@ -19,7 +19,7 @@ const Home = () => {
   const getListRooms = async (type: string) => {
     try {
       const response = await fetch(
-        `/api/get-list-rooms?search_room=${type}&page=${page}&limit=${limit}`
+        `/api/room/get-list-rooms?search_room=${type}&page=${page}&limit=${limit}`
       );
       const data = await response.json();
       setRooms(data.data);

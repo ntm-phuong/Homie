@@ -40,7 +40,7 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
 
   const handleSubmit = async (values: { code: string }) => {
     try {
-      const response = await axios.post('/api/verifycode', {
+      const response = await axios.post('/api/auth/verifycode', {
         email,
         code: values.code.trim(),
       });
@@ -59,7 +59,7 @@ const ModalVerifyCode: React.FC<VerifyCodeProps> = ({
     setResending(true);
 
     try {
-      const response = await axios.post('/api/forgotpassword', { email });
+      const response = await axios.post('/api/auth/forgotpassword', { email });
       message.success('Verification code resent');
       setResetToken(response.data.resetToken);
     } catch (error: any) {
