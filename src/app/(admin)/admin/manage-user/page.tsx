@@ -116,7 +116,7 @@ const ManageUser = () => {
       key: "address",
     },
     {
-      title: "Is verified",
+      title: "Verify",
       dataIndex: "isVerified",
       key: "isVerified",
       render: (isVerified: boolean) => (

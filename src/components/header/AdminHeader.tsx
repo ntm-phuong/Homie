@@ -3,17 +3,24 @@
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
+import { Dropdown, MenuProps } from "antd";
+import { IMAGE_URL } from "@/public";
+import Image from "next/image";
 
-const MENU_LIST = [
-  {
-    href: "/admin/manage-user",
-    label: "Users",
-  },
-  {
-    href: "/admin/manage-room",
-    label: "Rooms",
-  },
-];
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  window.location.href = "/";
+};
+
+const userItems: MenuProps = {
+  items: [
+    {
+      key: "1",
+      label: <span className="font-semibold w-full block">Logout</span>,
+      onClick: handleLogout,
+    },
+  ],
+};
 
 const AdminHeader = () => {
   const pathname = usePathname();
@@ -27,19 +34,11 @@ const AdminHeader = () => {
   );
 
   const _renderNavigator = () => (
-    <div className="hidden md:flex gap-2">
-      {MENU_LIST.map((menuItem) => (
-        <Link
-          key={menuItem.label}
-          href={menuItem.href}
-          className={`font px-2 ${
-            pathname === menuItem.href && "text-rose-500 font-semibold"
-          }`}
-        >
-          {menuItem.label}
-        </Link>
-      ))}
-    </div>
+    <Dropdown menu={userItems} placement="bottomRight" trigger={["click"]}>
+      <button className="rounded-full border border-gray-300 flex gap-2 items-center px-4 py-2 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+        <Image src={IMAGE_URL.MENU} alt="Menu" width={16} height={16} />
+      </button>
+    </Dropdown>
   );
 
   return (
