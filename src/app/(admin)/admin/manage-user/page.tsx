@@ -185,7 +185,7 @@ const ManageUser = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex justify-between pb-4">
+      <div className="sm:flex justify-between pb-4 gap-4">
         <Typography.Title level={2}>Manage Users</Typography.Title>
         <div className="mb-6 flex items-center gap-4">
           <Space>

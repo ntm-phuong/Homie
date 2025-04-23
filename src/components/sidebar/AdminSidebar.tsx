@@ -2,21 +2,40 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HomeOutlined, UserOutlined, ShopOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  UserOutlined,
+  ShopOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
+
+interface AdminSidebarProps {
+  onClose?: () => void;
+}
 
 const menuItems = [
   { name: "Home", href: "/", icon: HomeOutlined },
   { name: "Users", href: "/admin/manage-user", icon: UserOutlined },
-  { name: "Rooms", href: "/admin/manage-list-roóm", icon: ShopOutlined },
+  { name: "Rooms", href: "/admin/manage-list-room", icon: ShopOutlined },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ onClose }: AdminSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <div className="w-64 bg-white shadow-lg min-h-screen flex flex-col">
+    <div className="w-64 bg-white shadow-lg h-full flex flex-col relative">
+      {/* Mobile close button */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="lg:hidden absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full"
+        >
+          <CloseOutlined className="text-lg" />
+        </button>
+      )}
+
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
+      <nav className="flex-1 px-4 py-6 mt-8 lg:mt-0">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
@@ -27,9 +46,10 @@ export default function AdminSidebar() {
                   href={item.href}
                   className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                     isActive
-                      ? " bg-rose-500 text-white"
+                      ? "bg-rose-500 text-white"
                       : "text-gray-700 hover:bg-main/10"
                   }`}
+                  onClick={() => onClose?.()}
                 >
                   <Icon className="text-lg" />
                   <span className="pl-3">{item.name}</span>
