@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import Footer from "@/src/components/footer/footer";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import AdminHeader from "@/src/components/header/AdminHeader";
 import AdminSidebar from "@/src/components/sidebar/AdminSidebar";
-import { MenuOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 export default function AdminLayout({
   children,
@@ -12,17 +12,49 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const verifyAdmin = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          router.push("/");
+          return;
+        }
+
+        const response = await axios.get("/api/admin/verify", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.data.success) {
+          router.push("/");
+          return;
+        }
+
+        setIsLoading(false);
+      } catch (error) {
+        router.push("/");
+      }
+    };
+
+    verifyAdmin();
+  }, [router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-20 bg-white shadow-sm">
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-4 hover:bg-gray-100"
-        >
-          <MenuOutlined className="text-xl" />
-        </button>
-      </div>
+      <AdminHeader onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
       <div className="min-h-screen flex flex-col lg:flex-row">
         {/* Sidebar - hidden on mobile by default */}
@@ -41,7 +73,6 @@ export default function AdminLayout({
           <div className="flex-1 bg-[#ffe3e8] p-4 pt-20 lg:p-10">
             {children}
           </div>
-          <Footer />
         </div>
       </div>
     </div>

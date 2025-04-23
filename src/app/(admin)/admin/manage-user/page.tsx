@@ -216,7 +216,11 @@ const ManageUser = () => {
         dataSource={users}
         rowKey="_id"
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          pageSize: 5,
+          responsive: true,
+          showSizeChanger: true,
+        }}
       />
     </div>
   );
