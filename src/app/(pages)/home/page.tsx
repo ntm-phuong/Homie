@@ -74,7 +74,10 @@ const Home = () => {
 
   return (
     <div className="lg:px-38 px-4 w-full flex flex-col gap-8">
-      <LocationSearch/>
+      <LocationSearch onSearchLocation={(keyword) => {
+      setTypeRoom(keyword); 
+      setPage(1);
+      }} />
       <FormSearchTypeRoom onChangeType={(val) => {
         setPage(1);
         setTypeRoom(val);

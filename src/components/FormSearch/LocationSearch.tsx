@@ -1,11 +1,14 @@
 'use client';
 import { IMAGE_URL } from "@/public";
 import { DatePicker, Image } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { Dayjs } from "dayjs";
 import { useRef, useState } from "react";
 const { RangePicker } = DatePicker;
 
-const LocationSearch = () => {
+const LocationSearch = ({ onSearchLocation }: { onSearchLocation: (val: string) => void }) => {
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [rooms, setRooms] = useState([]); 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const datePickerRef = useRef<HTMLDivElement>(null);
@@ -35,12 +38,19 @@ const LocationSearch = () => {
     setShowDatePicker(false);
   };
 
+  const handleSearch = () => {
+    onSearchLocation(searchKeyword);
+  };
+  
+  
   const _renderLocationSearch = () => (
     <div className="flex flex-col items-center justify-center p-1">
       <div className="font-medium text-base text-center w-full">Location</div>
       <input
         className="text-sm text-gray-600 outline-none text-center w-full"
         placeholder="Search destinations"
+        value={searchKeyword}
+        onChange={(e) => setSearchKeyword(e.target.value)}
       />
     </div>
   );
@@ -84,13 +94,13 @@ const LocationSearch = () => {
           {formatSelectedDates()}
         </div>
       </div>
-      <Image
-        src={IMAGE_URL.SEARCH}
-        alt="Search"
-        width={45}
-        height={45}
-        className="cursor-pointer"
-      />
+      <button
+      type="button"
+      onClick={handleSearch} 
+      className="w-[45px] h-[45px] rounded-full bg-[#ff2e63] flex items-center justify-center shadow-md hover:opacity-80 transition cursor-pointer"
+      >
+      <SearchOutlined style={{ color: 'white', fontSize: '20px' }} />
+      </button>
       {showDatePicker && _renderDatePickerPopup()}
     </div>
   );
