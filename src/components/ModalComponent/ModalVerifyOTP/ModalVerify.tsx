@@ -29,7 +29,7 @@ const ModalVerifyOTP: React.FC<ModalVerifyProps> = ({
     }
 
     try {
-      const response = await fetch("/api/verify-otp", {
+      const response = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const ModalVerifyOTP: React.FC<ModalVerifyProps> = ({
   const handleResendOTP = async () => {
     setResendLoading(true);
     try {
-      const response = await fetch("/api/resend-otp", {
+      const response = await fetch("/api/auth/resend-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

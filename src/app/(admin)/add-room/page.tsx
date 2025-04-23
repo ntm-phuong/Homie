@@ -65,7 +65,7 @@ const AddRoom = () => {
     data.append('occupancy_limit', formData.occupancy_limit);
     data.append('type_room', formData.type_room); 
     try {
-      const response = await fetch('/api/add-rooms', {
+      const response = await fetch('/api/room/add-rooms', {
         method: 'POST',
         body: data,
       });

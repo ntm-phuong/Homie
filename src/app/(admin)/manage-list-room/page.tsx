@@ -5,7 +5,7 @@ import { Table, Input } from 'antd';
 import axios from 'axios';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
-import RoomDetailModal from '@/src/components/ModalRoomDetail/ModalRoomDetail';
+import RoomDetailModal from '@/src/components/ModalComponent/ModalRoomDetail/ModalRoomDetail';
 
 export interface ParamsRoom {
   room_id: number;
@@ -39,7 +39,7 @@ const RoomListPage = () => {
   const getListRoom = async (query: string = '') => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/get-list-rooms', {
+      const response = await axios.get('/api/room/get-list-rooms', {
         params: query ? { search_room: query } : {},
       });
 
@@ -90,7 +90,7 @@ const RoomListPage = () => {
         const imageBlob = await fetch(updatedRoom.image).then(res => res.blob());
         formData.append('image', imageBlob, 'image.jpg');
       }
-      const response = await axios.put(`/api/update-room/${updatedRoom.room_id}`, formData, {
+      const response = await axios.put(`/api/room/update-room/${updatedRoom.room_id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }

@@ -4,7 +4,7 @@ import React from "react";
 import { Modal, Form, Input } from "antd";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
-import FormInput from "../FormInput/FormInput";
+import FormInput from "../../FormInput/FormInput";
 
 interface ModalLoginProps {
   isShowLogin: boolean;
@@ -34,7 +34,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
   const handleLogin = async (values: { email: string; password: string }) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

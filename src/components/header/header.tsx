@@ -7,16 +7,16 @@ import { Dropdown, DatePicker } from "antd";
 import type { MenuProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import Image from 'next/image';
-import ModalLogin from "../modal-login/ModalLogin";
+import ModalLogin from "../ModalComponent/ModalLogin/ModalLogin";
 import { useRouter } from "next/navigation";
 import { RouterUrl } from "@/src/constants/path";
-import ModalForgotPassword from "../modal-email-pw/ModalForgotPassword";
-import ModalVerifyCode from "../modal-verify-pw/ModalVerifyCode";
-import ModalSetPassword from "../modal-set-pw/ModalSetPassword";
-import ModalVerifyOTP from "../modal-verify-otp/ModalVerify";
-import ModalRegister from "../modal-register/ModalRegister";
+import ModalForgotPassword from "../ModalComponent/ModalEmailPW/ModalForgotPassword";
+import ModalVerifyCode from "../ModalComponent/ModalVerifyPW/ModalVerifyCode";
+import ModalSetPassword from "../ModalComponent/ModalSetPW/ModalSetPassword";
+import ModalVerifyOTP from "../ModalComponent/ModalVerifyOTP/ModalVerify";
 import { ToastContainer } from "react-toastify";
 import { signOut } from "next-auth/react";
+import ModalRegister from "../ModalComponent/ModalRegister/ModalRegister";
 
 const { RangePicker } = DatePicker;
 

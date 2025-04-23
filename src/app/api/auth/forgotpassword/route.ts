@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import User from '../../../models/User';
+import User from '../../../../models/User';
 import { randomBytes } from 'crypto';
 import { sendEmail } from '@/src/lib/email';
 import { connectDB } from '@/src/lib/mongoose';
