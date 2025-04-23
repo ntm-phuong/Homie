@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { HeartFilled, StarFilled } from "@ant-design/icons";
 import FormSearchTypeRoom from "@/src/components/FormSearchTypeRoom/FormSearchTypeRoom";
 import { Pagination } from "antd";
+import { useRouter } from 'next/navigation';
 
 const Home = () => {
   const [rooms, setRooms] = useState([]);
@@ -12,6 +13,7 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 16;
 
+  const router = useRouter();
   useEffect(() => {
     getListRooms(typeRoom);
   }, [typeRoom, page]);
@@ -35,8 +37,12 @@ const Home = () => {
   };
 
   const _renderItemRoom = (room: any) => (
-    <div key={room._id} className="flex flex-col gap-1 md:w-[19vw] w-full">
-      <div className="relative w-full">
+    <div key={room.room_id} className="flex flex-col gap-1 md:w-[19vw] w-full">
+      {/* Click vào ảnh */}
+      <div
+        className="relative w-full" 
+        onClick={() => router.push(`/detail-room/${room.room_id}`)} // Chuyển hướng khi click vào ảnh
+      >
         <img
           className="rounded-xl md:h-[18vw] w-full object-cover"
           src={room.image}
@@ -54,17 +60,34 @@ const Home = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col">
-        <div className="font-[500] text-md flex flex-row justify-between items-center">
-          <span>{truncateName(room.name || "Tên phòng", 4)}</span>
-          <div className="flex items-center">
-            <StarFilled style={{ color: "#fadb14", marginRight: "2px" }} />
-            {room.rating || "N/A"}
-          </div>
-        </div>
-        <p className="text-gray-500 text-sm">{room.address || "Địa chỉ không xác định"}</p>
-        <p className="text-gray-500 text-sm">{room.rentalDate || "Không có ngày thuê"}</p>
-      </div>
+      
+      {/* Click vào tên */}
+<div
+  className="font-[500] text-md flex flex-row justify-between items-center"
+  onClick={async () => {
+    try {
+      const response = await fetch(`/api/room/get-room-detail?room_id=${room.room_id}`);
+      if (response.ok) {
+        const roomDetail = await response.json();
+        // Chuyển hướng sau khi lấy dữ liệu thành công
+        router.push(`/detail-room/${room.room_id}`);
+      } else {
+        console.error("Failed to fetch room details");
+      }
+    } catch (error) {
+      console.error("Error fetching room details:", error);
+    }
+  }}
+>
+  <span>{truncateName(room.name || "Tên phòng", 4)}</span>
+  <div className="flex items-center">
+    <StarFilled style={{ color: "#fadb14", marginRight: "2px" }} />
+    {room.rating || "N/A"}
+  </div>
+</div>
+  
+      <p className="text-gray-500 text-sm">{room.address || "Địa chỉ không xác định"}</p>
+      <p className="text-gray-500 text-sm">{room.rentalDate || "Không có ngày thuê"}</p>
       <div className="text-md font-medium text-black-600">
         <span className="font-[500]">{room.price || "N/A"} đ</span> / đêm
       </div>
