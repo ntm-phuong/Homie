@@ -1,0 +1,110 @@
+'use client';
+import { IMAGE_URL } from "@/public";
+import { DatePicker, Image } from "antd";
+import { Dayjs } from "dayjs";
+import { useRef, useState } from "react";
+const { RangePicker } = DatePicker;
+
+const LocationSearch = () => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  const formatSelectedDates = () => {
+    if (!selectedDates[0] || !selectedDates[1]) return "Add dates";
+    const format = "D MMM";
+    return `${selectedDates[0].format(format)} - ${selectedDates[1].format(
+      format
+    )}`;
+  };
+
+  function handleDateChange(dates: [Dayjs | null, Dayjs | null] | null) {
+    if (dates) {
+      setSelectedDates(dates);
+    } else {
+      setSelectedDates([null, null]);
+    }
+  }
+
+  const handleClearDates = () => {
+    setSelectedDates([null, null]);
+    setShowDatePicker(false);
+  };
+
+  const handleApplyDates = () => {
+    setShowDatePicker(false);
+  };
+
+  const _renderLocationSearch = () => (
+    <div className="flex flex-col items-center justify-center p-1">
+      <div className="font-medium text-base text-center w-full">Location</div>
+      <input
+        className="text-sm text-gray-600 outline-none text-center w-full"
+        placeholder="Search destinations"
+      />
+    </div>
+  );
+
+  const _renderDatePickerPopup = () => (
+    <div
+      ref={datePickerRef}
+      className="absolute top-[110%] left-1/3 right-0 mt-2 p-4 bg-white rounded-xl shadow-lg z-50"
+    >
+      <RangePicker
+        className="w-full"
+        format="DD/MM/YYYY"
+        value={selectedDates}
+        onChange={handleDateChange}
+      />
+      <div className="mt-4 flex justify-between">
+        <button
+          className="text-gray-500 underline cursor-pointer bg-transparent border-none"
+          onClick={handleClearDates}
+        >
+          Clear dates
+        </button>
+        <button
+          className="px-4 py-2 bg-rose-500 text-white rounded-md cursor-pointer border-none"
+          onClick={handleApplyDates}
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  );
+
+  const _renderDatePickerComponent = () => (
+    <div className="flex items-center justify-between border-l border-gray-300 pl-2 p-1">
+      <div className="flex-1">
+        <div className="font-medium text-base text-center w-full">Schedule</div>
+        <div
+          className="flex justify-center items-center text-sm text-gray-600 cursor-pointer"
+          onClick={() => setShowDatePicker(!showDatePicker)}
+        >
+          {formatSelectedDates()}
+        </div>
+      </div>
+      <Image
+        src={IMAGE_URL.SEARCH}
+        alt="Search"
+        width={45}
+        height={45}
+        className="cursor-pointer"
+      />
+      {showDatePicker && _renderDatePickerPopup()}
+    </div>
+  );
+
+  return (
+    <div className="w-full flex justify-center items-center">
+      <div className="relative flex justify-center items-center border border-gray-200 rounded-full shadow-sm p-2 min-w-xl">
+        <div className="grid grid-cols-2 w-full">
+          {_renderLocationSearch()}
+          {_renderDatePickerComponent()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default LocationSearch
