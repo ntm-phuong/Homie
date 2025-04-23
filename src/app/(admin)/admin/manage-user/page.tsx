@@ -1,14 +1,23 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Table, Input, Button, Space, Popconfirm, Typography } from "antd";
+import { Input, Table } from "antd";
+import axios from "axios";
+import { toast } from "react-toastify";
 import {
   SearchOutlined,
   DeleteOutlined,
   UndoOutlined,
 } from "@ant-design/icons";
-import axios from "axios";
-import { toast } from "react-toastify";
+import {
+  Typography,
+  Button,
+  Box,
+  Stack,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+} from "@mui/material";
 
 interface User {
   _id: string;
@@ -24,26 +33,29 @@ const ManageUser = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    userId: string | null;
+    action: "delete" | "restore" | null;
+  }>({ open: false, userId: null, action: null });
+
   const token = localStorage.getItem("token");
 
   const fetchUsers = async (search: string = "") => {
     try {
       setLoading(true);
-
       const response = await axios.get("/api/admin/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: {
-          search: search || undefined,
-        },
+        params: { search: search || undefined },
       });
 
       if (response.data.success) {
         setUsers(response.data.data);
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -60,16 +72,14 @@ const ManageUser = () => {
   const handleDelete = async (userId: string) => {
     try {
       const response = await axios.delete(`/api/admin/users?id=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.success) {
         toast.success("User deleted successfully");
         fetchUsers(searchText);
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error deleting user");
     }
   };
 
@@ -79,9 +89,7 @@ const ManageUser = () => {
         `/api/admin/users?id=${userId}`,
         { status: "active" },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       if (response.data.success) {
@@ -89,8 +97,17 @@ const ManageUser = () => {
         fetchUsers(searchText);
       }
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error restoring user");
     }
+  };
+
+  const handleDialogConfirm = () => {
+    if (confirmDialog.action === "delete" && confirmDialog.userId) {
+      handleDelete(confirmDialog.userId);
+    } else if (confirmDialog.action === "restore" && confirmDialog.userId) {
+      handleRestore(confirmDialog.userId);
+    }
+    setConfirmDialog({ open: false, userId: null, action: null });
   };
 
   const columns = [
@@ -100,31 +117,17 @@ const ManageUser = () => {
       key: "name",
       sorter: (a: User, b: User) => (a.name || "").localeCompare(b.name || ""),
     },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
+    { title: "Email", dataIndex: "email", key: "email" },
+    { title: "Phone", dataIndex: "phone", key: "phone" },
+    { title: "Address", dataIndex: "address", key: "address" },
     {
       title: "Verify",
       dataIndex: "isVerified",
       key: "isVerified",
       render: (isVerified: boolean) => (
-        <Space>
-          <span className={isVerified ? "text-green-600" : "text-red-600"}>
-            {isVerified ? "Verified" : "Unverified"}
-          </span>
-        </Space>
+        <Typography color={isVerified ? "green" : "error"}>
+          {isVerified ? "Verified" : "Unverified"}
+        </Typography>
       ),
     },
     {
@@ -132,83 +135,72 @@ const ManageUser = () => {
       dataIndex: "status",
       key: "status",
       render: (status: "deleted" | "active") => (
-        <Space>
-          {status === "deleted" ? (
-            <span className="text-red-600 ml-2">Deleted</span>
-          ) : (
-            <span className="text-green-600">Active</span>
-          )}
-        </Space>
+        <Typography color={status === "deleted" ? "error" : "green"}>
+          {status === "deleted" ? "Deleted" : "Active"}
+        </Typography>
       ),
     },
     {
       title: "Actions",
       key: "actions",
       render: (_: any, record: User) => (
-        <Space>
+        <Stack direction="row" spacing={1}>
           {record.status === "active" ? (
-            <>
-              <Popconfirm
-                title="Are you sure you want to delete this user?"
-                onConfirm={() => handleDelete(record._id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button
-                  type="text"
-                  icon={<DeleteOutlined />}
-                  className="text-red-600 hover:text-red-800"
-                />
-              </Popconfirm>
-            </>
-          ) : (
-            <Popconfirm
-              okButtonProps={{
-                className: "bg-main",
-              }}
-              title="Are you sure you want to restore this user?"
-              onConfirm={() => handleRestore(record._id)}
-              okText="Yes"
-              cancelText="No"
+            <Button
+              color="error"
+              onClick={() =>
+                setConfirmDialog({
+                  open: true,
+                  userId: record._id,
+                  action: "delete",
+                })
+              }
             >
-              <Button
-                type="text"
-                icon={<UndoOutlined />}
-                className="text-green-600 hover:text-green-800"
-              />
-            </Popconfirm>
+              <DeleteOutlined />
+            </Button>
+          ) : (
+            <Button
+              color="success"
+              onClick={() =>
+                setConfirmDialog({
+                  open: true,
+                  userId: record._id,
+                  action: "restore",
+                })
+              }
+            >
+              <UndoOutlined />
+            </Button>
           )}
-        </Space>
+        </Stack>
       ),
     },
   ];
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="sm:flex justify-between pb-4 gap-4">
-        <Typography.Title level={2}>Manage Users</Typography.Title>
-        <div className="mb-6 flex items-center gap-4">
-          <Space>
-            <Input
-              placeholder="Search by name, email, or phone"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              onPressEnter={handleSearch}
-              prefix={<SearchOutlined />}
-              className="max-w-md"
-              size="large"
-            />
-            <Button
-              size="large"
-              type="primary"
-              onClick={handleSearch}
-              className="bg-main"
-            >
-              Search
-            </Button>
-          </Space>
-        </div>
-      </div>
+      <Box display="flex" justifyContent="space-between" flexWrap="wrap" mb={3}>
+        <Typography variant="h5" component="h2">
+          Manage Users
+        </Typography>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Input
+            placeholder="Search by name, email, or phone"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onPressEnter={handleSearch}
+            prefix={<SearchOutlined />}
+            className="max-w-md"
+            size="large"
+          />
+          <button
+            className="bg-main p-2 rounded-sm text-white"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
+        </Stack>
+      </Box>
 
       <Table
         scroll={{ x: "max-content" }}
@@ -222,6 +214,37 @@ const ManageUser = () => {
           showSizeChanger: true,
         }}
       />
+
+      {/* Confirm Dialog */}
+      <Dialog
+        open={confirmDialog.open}
+        onClose={() =>
+          setConfirmDialog({ open: false, userId: null, action: null })
+        }
+      >
+        <DialogTitle>
+          {confirmDialog.action === "delete"
+            ? "Are you sure you want to delete this user?"
+            : "Are you sure you want to restore this user?"}
+        </DialogTitle>
+        <DialogActions>
+          <button
+            className="p-2 rounded-sm"
+            onClick={() =>
+              setConfirmDialog({ open: false, userId: null, action: null })
+            }
+          >
+            Cancel
+          </button>
+
+          <button
+            className="bg-main p-2 rounded-sm text-white"
+            onClick={handleDialogConfirm}
+          >
+            Confirm
+          </button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
