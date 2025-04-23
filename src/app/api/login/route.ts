@@ -21,10 +21,17 @@ export async function POST(req: Request) {
     if (!(await bcrypt.compare(password, user.password))) {
       return NextResponse.json({ message: "Invalid credentials!" }, { status: 401 });
     }
+
+    if (!user.isVerified) {
+      return NextResponse.json({ message: "The account has not been authentic!", meta: 401 }, { status: 403 });
+    }
+    
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "secret", {
       expiresIn: "1d",
     });
-
+    user.token = token;
+    await user.save();
+    
     return NextResponse.json({
       message: "Login successful!",
       token,
@@ -32,11 +39,11 @@ export async function POST(req: Request) {
         id: user._id,
         email: user.email,
         name: user.name,
+        isVerified: user.isVerified,
       },
     });
 
   } catch (error) {
-    console.error("Login Error:", error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

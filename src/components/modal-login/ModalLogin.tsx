@@ -1,28 +1,35 @@
 'use client';
 
 import React from "react";
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input } from "antd";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
+import FormInput from "../FormInput/FormInput";
 
 interface ModalLoginProps {
   isShowLogin: boolean;
   setIsShowLogin: (isShowLogin: boolean) => void;
   setIsShowRegister: (isShowRegister: boolean) => void;
   setIsShowForgotPassword: (isShowForgotPassword: boolean) => void;
+  setIsShowVerify: (isShowVerify: boolean) => void;
+  isShowVerify: boolean;
+  setIsToken: (isToken: boolean) => void;
 }
 
 const ModalLogin: React.FC<ModalLoginProps> = ({
   isShowLogin,
   setIsShowLogin,
   setIsShowRegister,
-  setIsShowForgotPassword
+  setIsShowForgotPassword,
+  setIsShowVerify,
+  isShowVerify,
+  setIsToken
 }) => {
   const [loading, setLoading] = React.useState(false);
-
   const handleCancel = () => {
     setIsShowLogin(false);
   };
+
 
   const handleLogin = async (values: { email: string; password: string }) => {
     setLoading(true);
@@ -32,11 +39,17 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-
       const data = await response.json().catch(() => ({}));
-
+      if (data.meta === 401 ) {
+        setIsShowVerify(true);
+        setIsShowLogin(false);
+        toast.error("Please authenticate OTP before logging in!", { position: "top-right" });
+        return;
+      }
       if (response.ok) {
+
         localStorage.setItem("token", data.token);
+        setIsToken(true);
         toast.success(data.message || "Login successful!", { position: "top-right" });
         setIsShowLogin(false);
       } else {
@@ -73,7 +86,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
     >
       <div className="text-center pb-4">
         <h2 className="text-2xl font-bold">Welcome to Homie</h2>
-        <p className="text-gray-500 text-lg">Please login to continue</p>
+        <p className="text-gray-500 text-lg">Please login to continue con cac</p>
       </div>
 
       <Form
@@ -82,27 +95,25 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
         className="py-4 px-2"
         requiredMark="optional"
       >
-        <Form.Item
-          label={<span className="font-bold text-lg">Email <span className="text-red-500">*</span></span>}
+        <FormInput
+          label="Email"
           name="email"
+          placeholder="Enter your email"
           rules={[
             { required: true, message: "Please enter your email!" },
             { type: "email", message: "Invalid email format!" },
           ]}
-        >
-          <Input placeholder="Enter your email" className="h-[50px] text-md" />
-        </Form.Item>
-
-        <Form.Item
-          label={<span className="font-bold text-lg">Password <span className="text-red-500">*</span></span>}
+        />
+        <FormInput
+          label="Password"
           name="password"
+          type="password"
+          placeholder="Enter your password"
           rules={[
             { required: true, message: "Please enter your password!" },
-            { min: 8, message: "Password must be at least 8 characters!" },
+            { min: 6, message: "Password must be at least 6 characters!" },
           ]}
-        >
-          <Input.Password placeholder="Enter your password" className="h-[50px] text-md" />
-        </Form.Item>
+        />
 
         <div
           onClick={handleForgotPassword}
@@ -113,7 +124,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
 
         <Form.Item>
           <button
-            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main hover:bg-main/90 rounded-xl"
+            className="!text-white !h-[50px] !w-full !text-xl !font-medium bg-main hover:bg-main/90 rounded-xl cursor-pointer"
           >
             Login
           </button>

@@ -22,6 +22,7 @@ export interface ParamsRoom {
   bed_rooms: number;
   bath_room: number;
   occupancy_limit: number;
+  type_room: string;
 }
 
 const RoomListPage = () => {
@@ -82,6 +83,8 @@ const RoomListPage = () => {
       formData.append('bed_rooms', updatedRoom.bed_rooms.toString());
       formData.append('bath_room', updatedRoom.bath_room.toString());
       formData.append('occupancy_limit', updatedRoom.occupancy_limit.toString());
+      formData.append('type_room', updatedRoom.type_room.toString());
+
 
       if (updatedRoom.image) {
         const imageBlob = await fetch(updatedRoom.image).then(res => res.blob());
@@ -101,11 +104,6 @@ const RoomListPage = () => {
   };
 
   const columns = [
-    {
-      title: 'Room ID',
-      dataIndex: 'room_id',
-      key: 'room_id',
-    },
     {
       title: 'Image',
       dataIndex: 'image',
@@ -154,6 +152,11 @@ const RoomListPage = () => {
       title: 'Occupancy Limit',
       dataIndex: 'occupancy_limit',
       key: 'occupancy_limit',
+    },
+    {
+      title: 'Room Type',
+      dataIndex: 'type_room',
+      key: 'type_room',
     },
   ];
 

@@ -23,6 +23,7 @@ export const POST = async (req: NextRequest) => {
   const bed_rooms = formData.get('bed_rooms') as string;
   const bath_room = formData.get('bath_room') as string;
   const occupancy_limit = formData.get('occupancy_limit') as string;
+  const type_room = formData.get('type_room') as string;
 
   try {
    
@@ -58,6 +59,7 @@ export const POST = async (req: NextRequest) => {
       bed_rooms,
       bath_room,
       occupancy_limit,
+      type_room,
       image: uploadRes.secure_url,
     });
 

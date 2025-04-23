@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
   otp: { type: String, required: false },
   otpExpiresAt: { type: Date, required: false },
   isVerified: { type: Boolean, default: false },
+  token: { type: String },
   status: { type: String, enum: ["active", "deleted"], default: "active" },
   role: { type: String, enum: ["user", "admin"], default: "user" },
 });

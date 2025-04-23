@@ -1,6 +1,8 @@
 'use client';
-import { Input, Button } from 'antd';
+import { Input, Button, Select } from 'antd';
 import React, { useState } from 'react';
+
+const { Option } = Select;
 
 const AddRoom = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ const AddRoom = () => {
     bed_rooms: '',
     bath_room: '',
     occupancy_limit: '',
+    type_room: '',
   });
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -26,22 +29,26 @@ const AddRoom = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleSelectChange = (value: string) => {
+    setFormData({ ...formData, type_room: value });
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setFormData({ ...formData, image: file });
-      setPreviewImage(URL.createObjectURL(file)); 
+      setPreviewImage(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!formData.image) {
       alert('Please upload an image.');
       return;
     }
-  
+
     const data = new FormData();
     data.append('image', formData.image);
     data.append('name', formData.name);
@@ -56,20 +63,19 @@ const AddRoom = () => {
     data.append('bed_rooms', formData.bed_rooms);
     data.append('bath_room', formData.bath_room);
     data.append('occupancy_limit', formData.occupancy_limit);
-  
+    data.append('type_room', formData.type_room); 
     try {
       const response = await fetch('/api/add-rooms', {
         method: 'POST',
         body: data,
       });
-  
+
       const result = await response.json();
       console.log('Server response:', result);
     } catch (error) {
       console.error('Upload failed:', error);
     }
   };
-  
 
   const _renderInput = (label: string, name: keyof typeof formData, type: string) => {
     return (
@@ -88,16 +94,17 @@ const AddRoom = () => {
 
   const _renderInputImage = () => {
     return (
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Image:</label>
-        <div className="flex flex-row gap-4">
+      <div className="flex flex-col gap-2 col-span-1 md:col-span-2">
+        <label className="text-sm font-medium text-gray-700">Image:</label>
+        <div className="flex flex-row gap-4 items-start">
           <button
+            type="button"
             onClick={() => document.getElementById('fileInput')?.click()}
-            className='bg-main w-[150px] h-[50px] text-white font-semibold rounded-md cursor-pointer'
+            className="bg-main w-[150px] h-[50px] text-white font-semibold rounded-md cursor-pointer"
           >
             Upload Image
           </button>
-          <div className='w-[300px]'>
+          <div className="w-[300px]">
             <input
               id="fileInput"
               type="file"
@@ -110,7 +117,7 @@ const AddRoom = () => {
                 <img
                   src={previewImage}
                   alt="Preview"
-                  className="w-full  h-auto rounded-md border border-gray-300"
+                  className="w-full h-auto rounded-md border border-gray-300"
                 />
               </div>
             )}
@@ -118,28 +125,48 @@ const AddRoom = () => {
         </div>
       </div>
     );
-  }
+  };
+
+  const _renderSelectTypeRoom = () => {
+    return (
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700">Room Type:</label>
+        <Select
+          value={formData.type_room}
+          onChange={handleSelectChange}
+          placeholder="Room Type"
+          className="w-full !h-[50px]"
+        >
+          <Option value="countryside">Countryside</Option>
+          <Option value="villa">Villa</Option>
+          <Option value="lakeside">Lakeside</Option>
+          <Option value="seaside">Seaside</Option>
+        </Select>
+      </div>
+    );
+  };
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-20 p-6 bg-gray-100 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">Create a Room</h1>
       <form onSubmit={handleSubmit} className="max-w-[800px] grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-center">
         {_renderInputImage()}
-        {_renderInput("Name Room:", "name", "text")}
-        {_renderInput("Address:", "address", "text")}
-        {_renderInput("Rental Date:", "rentalDate", "date")}
-        {_renderInput("Price:", "price", "number")}
-        {_renderInput("Rating:", "rating", "string")}
-        {_renderInput("Description:", "description_room", "text")}
-        {_renderInput("Check In:", "check_in", "date")}
-        {_renderInput("Check Out:", "check_out", "date")}
-        {_renderInput("Status:", "status", "text")}
-        {_renderInput("Bedrooms:", "bed_rooms", "number")}
-        {_renderInput("Bathrooms:", "bath_room", "number")}
-        {_renderInput("Occupancy Limit:", "occupancy_limit", "number")}
+        {_renderInput('Name Room:', 'name', 'text')}
+        {_renderInput('Address:', 'address', 'text')}
+        {_renderInput('Rental Date:', 'rentalDate', 'date')}
+        {_renderInput('Price:', 'price', 'number')}
+        {_renderInput('Rating:', 'rating', 'string')}
+        {_renderInput('Description:', 'description_room', 'text')}
+        {_renderInput('Check In:', 'check_in', 'date')}
+        {_renderInput('Check Out:', 'check_out', 'date')}
+        {_renderInput('Status:', 'status', 'text')}
+        {_renderInput('Bedrooms:', 'bed_rooms', 'number')}
+        {_renderInput('Bathrooms:', 'bath_room', 'number')}
+        {_renderInput('Occupancy Limit:', 'occupancy_limit', 'number')}
+        {_renderSelectTypeRoom()}
         <button
           type="submit"
-          className="w-full h-[50px] px-4 bg-main text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full h-[50px] px-4 bg-main text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 col-span-1 md:col-span-2"
         >
           Create Room
         </button>

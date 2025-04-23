@@ -92,7 +92,10 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
             </span>
           }
           name="email"
-          rules={[{ required: true, message: "Please enter your email!" }]}
+          rules={[
+            { required: true, message: "Please enter your email!" },
+            { type: "email", message: "Invalid email format!" },
+            ]}
         >
           <Input placeholder="Enter your email" className="h-[50px] text-md" />
         </Form.Item>
@@ -104,7 +107,10 @@ const ModalRegister: React.FC<ModalRegisterProps> = ({
             </span>
           }
           name="password"
-          rules={[{ required: true, message: "Please enter the password!" }]}
+          rules={[
+            { required: true, message: "Please enter the password!" },
+            { min: 6, message: "Password must be at least 6 characters!" }
+          ]}
         >
           <Input.Password
             placeholder="Enter your password"
