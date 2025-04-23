@@ -90,6 +90,8 @@ const Header = () => {
     else if (key === '4') {
       localStorage.removeItem('token');
       signOut({ redirect: true, callbackUrl: "/home" });
+    } else if (key === '5') {
+      router.push(RouterUrl.HISTORY); 
     }
   };
 
@@ -107,7 +109,10 @@ const Header = () => {
       ...(sessionToken ? [
         { key: '4', label: <span className="font-semibold w-full block">Log out</span> }
       ] : []),
-      { key: '5', label: 'Help' },
+      ...(sessionToken ? [
+        { key: '5', label: <span className="font-semibold w-full block">Book History</span> }
+      ] : []),
+      { key: '6', label: 'Help' },
     ],
     onClick: handleMenuClick,
   };
