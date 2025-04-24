@@ -14,10 +14,13 @@ import {
   ExperimentOutlined,
 } from "@ant-design/icons";
 import { Divider } from "@mui/material";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const { Option } = Select;
 
 const AddRoom = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     image: null as File | null,
     name: "",
@@ -82,14 +85,17 @@ const AddRoom = () => {
         method: "POST",
         body: data,
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
 
       await response.json();
-    } catch (error) {
-      console.error("Upload failed:", error);
+
+      toast.success("Add room successfully!");
+
+      router.push("/admin/manage-list-room");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message);
     }
   };
 
@@ -172,6 +178,7 @@ const AddRoom = () => {
         <h1 className="col-span-2 text-2xl font-bold mb-2 text-gray-800 pb-6">
           Room Details
         </h1>
+        {_renderInputImage()}
         <div className="flex flex-col gap-4">
           {_renderInput("Name Room", "name", "text", <HomeOutlined />)}
           {_renderInput(
