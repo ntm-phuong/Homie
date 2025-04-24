@@ -256,7 +256,7 @@ const RoomListPage = () => {
         </div>
 
         <Table
-          scroll={{ x: "max-content" }}
+          scroll={{ x: 400 }}
           dataSource={rooms}
           columns={columns}
           rowKey="room_id"
