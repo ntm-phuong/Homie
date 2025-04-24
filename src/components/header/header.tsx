@@ -52,12 +52,11 @@ const Header = () => {
   useEffect(() => {
     const verifyAdmin = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+        if (!sessionToken) return;
 
         const response = await axios.get("/api/admin/verify", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${sessionToken}`,
           },
         });
 
@@ -66,7 +65,6 @@ const Header = () => {
         }
       } catch (error: any) {
         if (error?.response?.status === 403) {
-          toast.error("Unauthorized access");
           router.push("/");
           return;
         }
@@ -75,7 +73,7 @@ const Header = () => {
     };
 
     verifyAdmin();
-  }, []);
+  }, [sessionToken]);
 
   function handleDateChange(dates: [Dayjs | null, Dayjs | null] | null) {
     if (dates) {

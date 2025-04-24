@@ -58,7 +58,6 @@ const ManageUser = () => {
       }
     } catch (error: any) {
       if (error?.response?.status === 403) {
-        toast.error("Unauthorized access");
         router.push("/");
         return;
       }
@@ -87,7 +86,6 @@ const ManageUser = () => {
       }
     } catch (error: any) {
       if (error?.response?.status === 403) {
-        toast.error("Unauthorized access");
         router.push("/");
         return;
       }
@@ -110,7 +108,6 @@ const ManageUser = () => {
       }
     } catch (error: any) {
       if (error?.response?.status === 403) {
-        toast.error("Unauthorized access");
         router.push("/");
         return;
       }
