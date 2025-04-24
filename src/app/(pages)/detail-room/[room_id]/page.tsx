@@ -26,16 +26,16 @@ import Image from "next/image";
 
 
 const DetailRoom = () => {
-  const params = useParams(); 
-  const roomId = params?.room_id; 
-  const [room, setRoom] = useState<any>(null); 
-  const [loading, setLoading] = useState<boolean>(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const params = useParams();
+  const roomId = params?.room_id;
+  const [room, setRoom] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedDates, setSelectedDates] = useState({
     startDate: new Date(),
     endDate: new Date(),
   });
-  
+
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
@@ -43,7 +43,7 @@ const DetailRoom = () => {
 
         const res = await fetch(`/api/room/get-room-detail?room_id=${roomId}`);
         const data = await res.json();
-        
+
         if (!res.ok || !data.success) {
           throw new Error(data.message || "Failed to fetch room details");
         }
@@ -56,13 +56,10 @@ const DetailRoom = () => {
         setLoading(false);
       }
     };
-  
-
     if (roomId) {
       fetchRoomDetails();
     }
   }, [roomId]);
-
 
   if (loading) {
     return (
@@ -70,9 +67,6 @@ const DetailRoom = () => {
     );
   }
 
-  
-
- 
   if (!room) {
     return (
       <div className="text-center py-20 text-xl font-medium">
@@ -81,10 +75,7 @@ const DetailRoom = () => {
     );
   }
 
-
   const _renderTitle = () => {
-
-
     return (
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <h1 className="text-2xl md:text-2xl font-bold mb-4 md:mb-0 pb-5">
@@ -111,48 +102,34 @@ const DetailRoom = () => {
   };
 
   const _renderPhotoGallery = () => {
-    if (!room?.image) {
-      return (
-        <div className="mb-8">
-          <p className="text-center text-gray-500">
-            No images available for this room.
-          </p>
-        </div>
-      );
-    }
-
-    const images = Array.isArray(room.image) ? room.image : [room.image]; 
-    const cornerClasses = [
-      "rounded-tr-lg",
-      "",
-      "rounded-bl-lg",
-      "rounded-br-lg",
-    ];
-
     return (
       <div className="mb-8">
-        <div className="grid grid-cols-4 grid-rows-2 gap-2 h-96 pr-1 relative">
-
-          <div
-            className="col-span-2 row-span-2 rounded-tl-lg overflow-hidden bg-cover bg-center"
-            style={{ backgroundImage: `url(${images[0]})` }}
-          >
-            <Image
-              src={images[0]}
-              alt="Main room image"
-              fill
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-
-        </div>
+        <img
+          src={room.image}
+          alt="Host avatar"
+          className="object-cover w-full lg:w-[600px] h-[400px] rounded-lg shadow-lg"
+        />
       </div>
     );
   };
 
   const _renderRoomFeatures = () => (
-    <div className="pt-6 pb-6 mb-6 border-b border-gray-200 leading-loose w-full pl-3">
+    <div className="pb-6 mb-6 border-b border-gray-200 leading-loose w-full pl-3">
+      <div className="border-b border-gray-200 pb-6 mb-6 pt-6">
+        <h2 className="text-2xl font-semibold">
+          {room.name || "Room Name"}, {room.address}
+        </h2>
+        <p className="text-gray-700 mt-1">
+          {room.bed_rooms} bed rooms · {room.bath_room} bath room ·{" "}
+        </p>
+        <div className="flex items-center text-base text-gray-800 mt-1">
+          <span className="font-semibold">★ {room.rating}</span>
+          <span className="mx-1 text-gray-400">·</span>
+          <span className="underline cursor-pointer font-semibold pl-3">
+            6 reviews
+          </span>
+        </div>
+      </div>
       <div className="space-y-6">
         {[
           [
@@ -171,7 +148,7 @@ const DetailRoom = () => {
             "This area is easy to get around.",
           ],
         ].map(([icon, title, desc], i) => (
-          <div className="flex items-center gap-4" key={i}>
+          <div className="flex items-center gap-4 !mb-4" key={i}>
             <span>{icon}</span>
             <div>
               <p className="font-semibold text-lg leading-relaxed">{title}</p>
@@ -180,6 +157,7 @@ const DetailRoom = () => {
           </div>
         ))}
       </div>
+
     </div>
   );
 
@@ -240,7 +218,7 @@ const DetailRoom = () => {
       1,
       Math.ceil(
         (selectedDates.endDate.getTime() - selectedDates.startDate.getTime()) /
-          (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
       )
     );
 
@@ -325,26 +303,12 @@ const DetailRoom = () => {
   return (
     <div className="lg:px-38 py-8">
       {_renderTitle()}
-      {_renderPhotoGallery()}
+      <div className="flex flex-row gap-4 items-center">
+        {_renderPhotoGallery()}
+        {_renderRoomFeatures()}
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-10 relative items-start md:items-center pb-6 mb-6">
         <div>
-          {/* Room header info */}
-          <div className="border-b border-gray-200 pb-6 mb-6 pt-6">
-            <h2 className="text-2xl font-semibold">
-              {room.name || "Room Name"}, {room.address}
-            </h2>
-            <p className="text-gray-700 mt-1">
-              {room.bed_rooms} bed rooms · {room.bath_room} bath room ·{" "}
-            </p>
-            <div className="flex items-center text-base text-gray-800 mt-1">
-              <span className="font-semibold">★ {room.rating}</span>
-              <span className="mx-1 text-gray-400">·</span>
-              <span className="underline cursor-pointer font-semibold pl-3">
-                6 reviews
-              </span>
-            </div>
-          </div>
-
           {/* Host info */}
           <div className="flex items-center gap-4 border-b border-gray-300 pb-6 pt-6">
             <div className="w-12 h-12 rounded-full overflow-hidden relative">
@@ -359,11 +323,8 @@ const DetailRoom = () => {
               <p className="text-base text-gray-600">1 year hosting</p>
             </div>
           </div>
-
-          {_renderRoomFeatures()}
           {_renderAboutThisPlace()}
           {_renderWhatThisPlaceOffers()}
-
           <div className="pt-6 border-t border-gray-200">
             <CalendarSection
               selectedDates={selectedDates}
