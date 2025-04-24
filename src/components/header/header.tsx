@@ -127,57 +127,23 @@ const Header = () => {
 
   const userItems: MenuProps = {
     items: [
-      ...(!sessionToken
-        ? [
-            {
-              key: "1",
-              label: (
-                <span className="font-semibold w-full block">Sign Up</span>
-              ),
-            },
-          ]
-        : []),
-      ...(!sessionToken
-        ? [
-            {
-              key: "2",
-              label: <span className="font-semibold w-full block">Login</span>,
-            },
-          ]
-        : []),
-      ...(sessionToken
-        ? [
-            {
-              key: "3",
-              label: (
-                <span className="font-semibold w-full block">Profile</span>
-              ),
-            },
-          ]
-        : []),
-      ...(sessionToken
-        ? [
-            {
-              key: "4",
-              label: (
-                <span className="font-semibold w-full block">Book History</span>
-              ),
-            },
-          ]
-        : []),
-      ...(sessionToken
-        ? [
-            {
-              key: "5",
-              label: (
-                <span className="font-semibold w-full block">Log out</span>
-              ),
-            },
-          ]
-        : []),
+      ...(!sessionToken ? [
+        { key: '1', label: <span className="font-semibold w-full block">Sign Up</span> }
+      ] : []),
+      ...(!sessionToken ? [
+        { key: '2', label: <span className="font-semibold w-full block">Login</span> }
+      ] : []),
+      ...(sessionToken ? [
+        { key: '3', label: <span className="font-semibold w-full block">Profile</span> }
+      ] : []),
+      ...(sessionToken ? [
+        { key: '4', label: <span className="font-semibold w-full block">Book History</span> }
+      ] : []),
+      ...(sessionToken ? [
+        { key: '5', label: <span className="font-semibold w-full block">Log out</span> }
+      ] : []),
 
-      { key: "6", label: "Help" },
-    ],
+      { key: '6', label: 'Help' }],
     onClick: handleMenuClick,
   };
 
