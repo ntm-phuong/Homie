@@ -18,6 +18,7 @@ import {
   DialogActions,
   DialogTitle,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 interface User {
   _id: string;
@@ -30,6 +31,7 @@ interface User {
 }
 
 const ManageUser = () => {
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -55,7 +57,11 @@ const ManageUser = () => {
         setUsers(response.data.data);
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      if (error?.response?.status === 403) {
+        router.push("/");
+        return;
+      }
+      toast.error(error?.response?.data?.message || "Failed to fetch users");
     } finally {
       setLoading(false);
     }
@@ -79,6 +85,10 @@ const ManageUser = () => {
         fetchUsers(searchText);
       }
     } catch (error: any) {
+      if (error?.response?.status === 403) {
+        router.push("/");
+        return;
+      }
       toast.error(error.response?.data?.message || "Error deleting user");
     }
   };
@@ -97,6 +107,10 @@ const ManageUser = () => {
         fetchUsers(searchText);
       }
     } catch (error: any) {
+      if (error?.response?.status === 403) {
+        router.push("/");
+        return;
+      }
       toast.error(error.response?.data?.message || "Error restoring user");
     }
   };
