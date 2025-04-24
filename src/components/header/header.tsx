@@ -170,7 +170,6 @@ const Header = () => {
         {_renderNavigation()}
         {_renderUserControls()}
       </div>
-      <ToastContainer />
       {isShowLogin && (
         <ModalLogin
           setIsToken={setIsToken}
