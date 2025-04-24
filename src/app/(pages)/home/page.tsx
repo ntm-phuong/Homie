@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { HeartFilled, StarFilled } from "@ant-design/icons";
 import FormSearchTypeRoom from "@/src/components/FormSearchTypeRoom/FormSearchTypeRoom";
 import { Pagination } from "antd";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 const Home = () => {
   const [rooms, setRooms] = useState([]);
@@ -33,16 +33,18 @@ const Home = () => {
 
   const truncateName = (name: string, wordLimit: number) => {
     const words = name.split(" ");
-    return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + " ..." : name;
+    return words.length > wordLimit
+      ? words.slice(0, wordLimit).join(" ") + " ..."
+      : name;
   };
 
   const _renderItemRoom = (room: any) => (
-    <div key={room.room_id} className="flex flex-col gap-1 md:w-[19vw] w-full">
-      {/* Click vào ảnh */}
-      <div
-        className="relative w-full" 
-        onClick={() => router.push(`/detail-room/${room.room_id}`)} // Chuyển hướng khi click vào ảnh
-      >
+    <div
+      key={room.room_id}
+      className="flex flex-col gap-1 md:w-[19vw] w-full cursor-pointer"
+      onClick={() => router.push(`/detail-room/${room.room_id}`)}
+    >
+      <div className="relative w-full">
         <img
           className="rounded-xl md:h-[18vw] w-full object-cover"
           src={room.image}
@@ -60,34 +62,18 @@ const Home = () => {
           />
         </div>
       </div>
-      
-      {/* Click vào tên */}
-<div
-  className="font-[500] text-md flex flex-row justify-between items-center"
-  onClick={async () => {
-    try {
-      const response = await fetch(`/api/room/get-room-detail?room_id=${room.room_id}`);
-      if (response.ok) {
-        const roomDetail = await response.json();
-        // Chuyển hướng sau khi lấy dữ liệu thành công
-        router.push(`/detail-room/${room.room_id}`);
-      } else {
-        console.error("Failed to fetch room details");
-      }
-    } catch (error) {
-      console.error("Error fetching room details:", error);
-    }
-  }}
->
-  <span>{truncateName(room.name || "Tên phòng", 4)}</span>
-  <div className="flex items-center">
-    <StarFilled style={{ color: "#fadb14", marginRight: "2px" }} />
-    {room.rating || "N/A"}
-  </div>
-</div>
-  
-      <p className="text-gray-500 text-sm">{room.address || "Địa chỉ không xác định"}</p>
-      <p className="text-gray-500 text-sm">{room.rentalDate || "Không có ngày thuê"}</p>
+      <div className="font-[500] text-md flex flex-row justify-between items-center">
+        <span>{truncateName(room.name || "Tên phòng", 4)}</span>
+        <div className="flex items-center">
+          <StarFilled style={{ color: "#fadb14", marginRight: "2px" }} />
+          {room.rating || "N/A"}
+        </div>
+      </div>
+
+      <p className="text-gray-500 text-sm">{room.address || ""}</p>
+      <p className="text-gray-500 text-sm">
+        {room.rentalDate || "Không có ngày thuê"}
+      </p>
       <div className="text-md font-medium text-black-600">
         <span className="font-[500]">{room.price || "N/A"} đ</span> / đêm
       </div>
@@ -96,10 +82,12 @@ const Home = () => {
 
   return (
     <div className="lg:px-38 px-4 w-full flex flex-col gap-8">
-      <FormSearchTypeRoom onChangeType={(val) => {
-        setPage(1);
-        setTypeRoom(val);
-      }} />
+      <FormSearchTypeRoom
+        onChangeType={(val) => {
+          setPage(1);
+          setTypeRoom(val);
+        }}
+      />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-8">
         {rooms.length > 0 ? (
           rooms.map((room) => _renderItemRoom(room))

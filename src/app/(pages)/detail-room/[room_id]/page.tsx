@@ -26,11 +26,11 @@ import Image from "next/image";
 
 
 const DetailRoom = () => {
-  const params = useParams(); // Lấy room_id từ URL
-  const roomId = params?.room_id; // room_id từ URL
-  const [room, setRoom] = useState<any>(null); // Dữ liệu phòng
-  const [loading, setLoading] = useState<boolean>(true); // Trạng thái tải dữ liệu
-  const [error, setError] = useState<string | null>(null); // Lỗi nếu có
+  const params = useParams(); 
+  const roomId = params?.room_id; 
+  const [room, setRoom] = useState<any>(null); 
+  const [loading, setLoading] = useState<boolean>(true); 
+  const [error, setError] = useState<string | null>(null); 
   const [selectedDates, setSelectedDates] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -40,59 +40,39 @@ const DetailRoom = () => {
     const fetchRoomDetails = async () => {
       try {
         setLoading(true);
-  
-        // Gọi API với đường dẫn chính xác
+
         const res = await fetch(`/api/room/get-room-detail?room_id=${roomId}`);
         const data = await res.json();
-  
-        // Kiểm tra phản hồi từ API
+        
         if (!res.ok || !data.success) {
           throw new Error(data.message || "Failed to fetch room details");
         }
-  
-        // Lưu dữ liệu phòng vào state
+
         setRoom(data.data);
-      } catch (err) {
-        console.error("Error fetching room details:", err);
-  
-        // Xử lý lỗi
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unexpected error occurred");
-        }
+      } catch (err: any) {
+        setError(err.message);
       } finally {
-        // Đảm bảo trạng thái tải được cập nhật
+
         setLoading(false);
       }
     };
   
-    // Chỉ gọi API nếu roomId tồn tại
+
     if (roomId) {
       fetchRoomDetails();
     }
   }, [roomId]);
 
-  // Hiển thị trạng thái tải dữ liệu
+
   if (loading) {
     return (
       <div className="text-center py-20 text-xl font-medium">Loading...</div>
     );
   }
 
-  // Hiển thị lỗi nếu có
-  if (error) {
-    return (
-      <div className="text-center py-20 text-xl font-medium text-red-500">
-        {error}
-        <a href="/" className="block mt-4 text-blue-500 underline">
-          Go back to Home
-        </a>
-      </div>
-    );
-  }
+  
 
-  // Kiểm tra nếu không có dữ liệu phòng
+ 
   if (!room) {
     return (
       <div className="text-center py-20 text-xl font-medium">
@@ -101,12 +81,9 @@ const DetailRoom = () => {
     );
   }
 
-  // Render các thành phần giao diện
+
   const _renderTitle = () => {
-    const actions: [React.ReactNode, string][] = [
-      [<ShareAltOutlined className="mr-1" />, "Share"],
-      [<HeartOutlined className="mr-1" />, "Save"],
-    ];
+
 
     return (
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
@@ -114,18 +91,20 @@ const DetailRoom = () => {
           {room.name}
         </h1>
         <div className="flex space-x-2 gap-4">
-          {actions.map(([icon, text], i) => (
-            <button
-              key={i}
-              className={`flex items-center text-gray-600 hover:text-gray-900 ${
-                i !== 0 ? "ml-4" : ""
-              } gap-2`}
-              aria-label={typeof text === "string" ? text : "Action button"}
-            >
-              {icon || <span>Icon missing</span>}
-              <span className="text-sm md:text-base">{text}</span>
-            </button>
-          ))}
+          <button
+            className="flex items-center text-gray-600 hover:text-gray-900 gap-2"
+            aria-label="Share"
+          >
+            <ShareAltOutlined className="mr-1" />
+            <span className="text-sm md:text-base">Share</span>
+          </button>
+          <button
+            className="flex items-center text-gray-600 hover:text-gray-900 gap-2"
+            aria-label="Save"
+          >
+            <HeartOutlined className="mr-1" />
+            <span className="text-sm md:text-base">Save</span>
+          </button>
         </div>
       </div>
     );
@@ -142,7 +121,7 @@ const DetailRoom = () => {
       );
     }
 
-    const images = Array.isArray(room.image) ? room.image : [room.image]; // Đảm bảo `room.image` là một mảng
+    const images = Array.isArray(room.image) ? room.image : [room.image]; 
     const cornerClasses = [
       "rounded-tr-lg",
       "",
@@ -153,7 +132,7 @@ const DetailRoom = () => {
     return (
       <div className="mb-8">
         <div className="grid grid-cols-4 grid-rows-2 gap-2 h-96 pr-1 relative">
-          {/* Main image (left big image) */}
+
           <div
             className="col-span-2 row-span-2 rounded-tl-lg overflow-hidden bg-cover bg-center"
             style={{ backgroundImage: `url(${images[0]})` }}
@@ -166,32 +145,7 @@ const DetailRoom = () => {
             />
           </div>
 
-          {/* 4 smaller images on the right */}
-          {(images && images.length > 1 ? images.slice(1, 5) : []).map(
-            (url: string, index: number) => (
-              <div
-                key={index}
-                className={`relative overflow-hidden bg-cover bg-center ${
-                  cornerClasses[index] || ""
-                }`}
-                style={{ backgroundImage: `url(${url})` }}
-              >
-                <img
-                  src={url}
-                  alt={`Room image ${index + 2}`}
-                  className="w-full h-full object-cover"
-                />
-                {index === 3 && (
-                  <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
-                    <button className="flex items-center bg-white px-3 py-1 rounded-md text-sm font-medium">
-                      <BranchesOutlined className="mr-1" />
-                      <span>Show all photos</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            )
-          )}
+
         </div>
       </div>
     );
