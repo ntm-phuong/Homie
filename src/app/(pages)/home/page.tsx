@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { HeartFilled, StarFilled } from "@ant-design/icons";
 import FormSearchTypeRoom from "@/src/components/FormSearchTypeRoom/FormSearchTypeRoom";
 import { Pagination } from "antd";
+import { useRouter } from "next/navigation";
 import LocationSearch from "@/src/components/FormSearch/LocationSearch";
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 16;
 
+  const router = useRouter();
   useEffect(() => {
     getListRooms(typeRoom);
   }, [typeRoom, page]);
@@ -32,11 +34,17 @@ const Home = () => {
 
   const truncateName = (name: string, wordLimit: number) => {
     const words = name.split(" ");
-    return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + " ..." : name;
+    return words.length > wordLimit
+      ? words.slice(0, wordLimit).join(" ") + " ..."
+      : name;
   };
 
   const _renderItemRoom = (room: any) => (
-    <div key={room._id} className="flex flex-col gap-1 md:w-[19vw] w-full">
+    <div
+      key={room.room_id}
+      className="flex flex-col gap-1 md:w-[19vw] w-full cursor-pointer"
+      onClick={() => router.push(`/detail-room/${room.room_id}`)}
+    >
       <div className="relative w-full">
         <img
           className="rounded-xl md:h-[18vw] w-full object-cover"
@@ -55,17 +63,18 @@ const Home = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col">
-        <div className="font-[500] text-md flex flex-row justify-between items-center">
-          <span>{truncateName(room.name || "Tên phòng", 4)}</span>
-          <div className="flex items-center">
-            <StarFilled style={{ color: "#fadb14", marginRight: "2px" }} />
-            {room.rating || "N/A"}
-          </div>
+      <div className="font-[500] text-md flex flex-row justify-between items-center">
+        <span>{truncateName(room.name || "Tên phòng", 4)}</span>
+        <div className="flex items-center">
+          <StarFilled style={{ color: "#fadb14", marginRight: "2px" }} />
+          {room.rating || "N/A"}
         </div>
-        <p className="text-gray-500 text-sm">{room.address || "Địa chỉ không xác định"}</p>
-        <p className="text-gray-500 text-sm">{room.rentalDate || "Không có ngày thuê"}</p>
       </div>
+
+      <p className="text-gray-500 text-sm">{room.address || ""}</p>
+      <p className="text-gray-500 text-sm">
+        {room.rentalDate || "Không có ngày thuê"}
+      </p>
       <div className="text-md font-medium text-black-600">
         <span className="font-[500]">{room.price || "N/A"} đ</span> / đêm
       </div>
@@ -75,8 +84,8 @@ const Home = () => {
   return (
     <div className="lg:px-38 px-4 w-full flex flex-col gap-8">
       <LocationSearch onSearchLocation={(keyword) => {
-      setTypeRoom(keyword); 
-      setPage(1);
+        setTypeRoom(keyword);
+        setPage(1);
       }} />
       <FormSearchTypeRoom onChangeType={(val) => {
         setPage(1);
