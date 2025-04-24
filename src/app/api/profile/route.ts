@@ -19,10 +19,10 @@ export async function GET(req: Request) {
       success: true,
       user: {
         email: user.email,
-        password: user.password,
         name: user.name,
         phone: user.phone,
         address: user.address,
+        avatar: user.avatar, 
       },
     });
   } catch (error: any) {

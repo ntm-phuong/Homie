@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { IMAGE_URL } from "@/public";
 
 const UserSchema = new mongoose.Schema({
   name: { type: String },
@@ -6,6 +7,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   phone: { type: String },
   address: { type: String },
+  avatar: { type: String },
   verificationCode: { type: String },
   resetToken: { type: String },
   codeExpiry: { type: Date },
