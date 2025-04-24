@@ -272,7 +272,6 @@ const Header = () => {
         {_renderUserControls()}
       </div>
       {_renderSearchBar()}
-      <ToastContainer />
       {isShowLogin && (
         <ModalLogin
           setIsToken={setIsToken}
