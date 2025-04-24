@@ -7,6 +7,7 @@ const Profile = () => {
   const [user, setUser] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<any>({});
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     getInfoUser();
@@ -72,15 +73,74 @@ const Profile = () => {
     setIsEditing(false);
   };
 
+  const handleUploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+    formData.append("name", user.name); // Thêm các trường khác nếu cần
+    formData.append("email", user.email);
+    formData.append("phone", user.phone);
+    formData.append("address", user.address);
+
+    setIsUploading(true);
+
+    try {
+      const res = await fetch("/api/update-profile", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setUser({ ...user, avatar: data.user.avatar });
+        toast.success("Avatar updated successfully!", { position: "top-right" });
+      } else {
+        toast.error(data.message || "Failed to upload avatar", { position: "top-right" });
+      }
+    } catch (error) {
+      toast.error("Failed to upload avatar", { position: "top-right" });
+      console.error(error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const _renderAvatar = () => (
     <div className="flex flex-col items-center gap-6">
-      <div className="w-32 h-32 rounded-full overflow-hidden ">
+      <div className="w-32 h-32 rounded-full overflow-hidden relative">
         <img
-          src={IMAGE_URL.USER}
+          src={user?.avatar || IMAGE_URL.USER}
           alt="User Avatar"
           className="w-full h-full object-cover"
         />
+        {isUploading && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <span className="text-white text-sm">Uploading...</span>
+          </div>
+        )}
       </div>
+      <label
+        htmlFor="avatar-upload"
+        className="px-4 py-2 bg-rose-500 text-white rounded-md cursor-pointer hover:bg-rose-600"
+      >
+        Change Avatar
+      </label>
+      <input
+        id="avatar-upload"
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleUploadAvatar}
+      />
       <div className="text-center">
         <h2 className="text-2xl font-bold">{user?.name}</h2>
         <p className="text-gray-500 text-md">{user?.email}</p>
@@ -96,22 +156,20 @@ const Profile = () => {
     data: string
   ) => (
     <div className="p-3 sm:p-4 border border-gray-300 rounded-lg flex flex-col gap-1 sm:gap-2">
-    <h4 className="font-bold text-sm sm:text-lg w-[120px] sm:w-auto">{label}</h4>
-  
-    {isEditing ? (
-      <input
-        type={type}
-        name={name}
-        value={value ?? ""}
-        onChange={handleChange}
-        className="border border-gray-300 w-full rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base"
-      />
-    ) : (
-      <p className="text-gray-500 mt-1 text-sm sm:text-base">{data || "Not provided"}</p>
-    )}
-  </div>
-  
-  
+      <h4 className="font-bold text-sm sm:text-lg w-[120px] sm:w-auto">{label}</h4>
+
+      {isEditing ? (
+        <input
+          type={type}
+          name={name}
+          value={value ?? ""}
+          onChange={handleChange}
+          className="border border-gray-300 w-full rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm sm:text-base"
+        />
+      ) : (
+        <p className="text-gray-500 mt-1 text-sm sm:text-base">{data || "Not provided"}</p>
+      )}
+    </div>
   );
 
   const _renderEditButton = () => (
@@ -142,7 +200,7 @@ const Profile = () => {
     </div>
   );
 
-  if (!user) return <div>Loading...</div>;  // Add a loading state
+  if (!user) return <div>Loading...</div>; // Add a loading state
 
   return (
     <div className="lg:px-38 px-4 py-8 flex flex-col gap-10 ">
