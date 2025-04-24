@@ -40,7 +40,6 @@ export async function PUT(req: Request) {
     
         imageUrl = uploadRes.secure_url;
       } catch (uploadError: any) {
-        console.error('Image upload error:', uploadError);
         return NextResponse.json(
           { success: false, message: 'Image upload failed', error: uploadError.message },
           { status: 500 }

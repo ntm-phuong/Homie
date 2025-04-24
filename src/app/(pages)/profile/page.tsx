@@ -98,23 +98,35 @@ const Profile = () => {
           className="w-full h-full object-cover"
         />
       </div>
+  
       {isEditing && (
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const selectedFile = e.target.files?.[0];
-            if (selectedFile) setFile(selectedFile);
-          }}
-          className="text-sm mt-2"
-        />
+        <>
+          <input
+            type="file"
+            id="avatarInput"
+            accept="image/*"
+            onChange={(e) => {
+              const selectedFile = e.target.files?.[0];
+              if (selectedFile) setFile(selectedFile);
+            }}
+            className="hidden"
+          />
+          <label
+            htmlFor="avatarInput"
+            className="cursor-pointer px-4 py-2 bg-rose-500 text-white rounded-md hover:bg-rose-600 transition"
+          >
+            Edit Avatar
+          </label>
+        </>
       )}
+  
       <div className="text-center">
         <h2 className="text-2xl font-bold">{user?.name}</h2>
         <p className="text-gray-500 text-md">{user?.email}</p>
       </div>
     </div>
   );
+  
 
   const _renderUserInfo = (
     label: string,

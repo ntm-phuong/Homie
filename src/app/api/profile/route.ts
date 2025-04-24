@@ -22,7 +22,7 @@ export async function GET(req: Request) {
         name: user.name,
         phone: user.phone,
         address: user.address,
-        avatar: user.avatar, // Trả về URL ảnh
+        avatar: user.avatar, 
       },
     });
   } catch (error: any) {
