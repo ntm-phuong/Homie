@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { HeartFilled, StarFilled } from "@ant-design/icons";
 import FormSearchTypeRoom from "@/src/components/FormSearchTypeRoom/FormSearchTypeRoom";
 import { Pagination } from "antd";
+import LocationSearch from "@/src/components/FormSearch/LocationSearch";
 
 const Home = () => {
   const [rooms, setRooms] = useState([]);
@@ -73,6 +74,10 @@ const Home = () => {
 
   return (
     <div className="lg:px-38 px-4 w-full flex flex-col gap-8">
+      <LocationSearch onSearchLocation={(keyword) => {
+      setTypeRoom(keyword); 
+      setPage(1);
+      }} />
       <FormSearchTypeRoom onChangeType={(val) => {
         setPage(1);
         setTypeRoom(val);
