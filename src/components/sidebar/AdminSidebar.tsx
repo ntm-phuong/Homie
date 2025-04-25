@@ -42,7 +42,7 @@ export default function AdminSidebar({ onClose }: AdminSidebarProps) {
       <nav className="flex-1 px-4 py-8 mt-8 lg:mt-0">
         <ul className="space-y-2">
           {menuItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname?.includes(item.href);
             const Icon = item.icon;
             return (
               <li key={item.name}>

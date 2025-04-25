@@ -73,7 +73,7 @@ const RoomListPage = () => {
   };
 
   const handleAddRoom = () => {
-    router.push("/admin/add-room");
+    router.push("/admin/manage-list-room/add-room");
   };
 
   const handleUpdateRoom = async (updatedRoom: ParamsRoom) => {
@@ -227,7 +227,7 @@ const RoomListPage = () => {
   return (
     <div>
       <div className="bg-white p-6 rounded-xl shadow-md flex flex-col gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Room List</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Manage Rooms</h1>
 
         <div className="flex justify-between">
           <div className="flex flex-row gap-4 items-center">
