@@ -13,12 +13,9 @@ export const POST = async (req: NextRequest) => {
 
   const name = formData.get("name") as string;
   const address = formData.get("address") as string;
-  const rentalDate = formData.get("rentalDate") as string;
   const price = formData.get("price") as string;
   const rating = formData.get("rating") as string;
   const description_room = formData.get("description_room") as string;
-  const check_in = formData.get("check_in") as string;
-  const check_out = formData.get("check_out") as string;
   const status = formData.get("status") as string;
   const bed_rooms = formData.get("bed_rooms") as string;
   const bath_room = formData.get("bath_room") as string;
@@ -48,12 +45,9 @@ export const POST = async (req: NextRequest) => {
       room_id,
       name,
       address,
-      rentalDate,
       price,
       rating,
       description_room,
-      check_in,
-      check_out,
       status,
       bed_rooms,
       bath_room,

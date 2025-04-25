@@ -69,12 +69,9 @@ const AddRoom = () => {
     data.append("image", formData.image);
     data.append("name", formData.name);
     data.append("address", formData.address);
-    data.append("rentalDate", formData.rentalDate);
     data.append("price", formData.price);
     data.append("rating", formData.rating);
     data.append("description_room", formData.description_room);
-    data.append("check_in", formData.check_in);
-    data.append("check_out", formData.check_out);
     data.append("status", formData.status);
     data.append("bed_rooms", formData.bed_rooms);
     data.append("bath_room", formData.bath_room);

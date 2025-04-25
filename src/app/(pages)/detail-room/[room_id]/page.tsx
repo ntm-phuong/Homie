@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CalendarSection from "@/src/components/CalendarSection/CalendarSection";
 import {
   ShareAltOutlined,
@@ -23,6 +23,7 @@ import {
 } from "@ant-design/icons";
 import { IMAGE_URL } from "@/public";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 
 const DetailRoom = () => {
@@ -35,7 +36,8 @@ const DetailRoom = () => {
     startDate: new Date(),
     endDate: new Date(),
   });
-
+  const router = useRouter();
+  console.log(room, 'chinh456')
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
@@ -74,6 +76,45 @@ const DetailRoom = () => {
       </div>
     );
   }
+
+const handleReserve = async () => {
+  const userId = localStorage.getItem("user_id") || "unknown_user";
+  const token = localStorage.getItem("token") || "unknown_user";
+  const reservationDetails = {
+    userId,
+    roomId: room.room_id,
+    roomName: room.name,
+    pricePerNight: room.price,
+    address: room.address,
+    checkIn: selectedDates.startDate.toLocaleDateString(),
+    checkOut: selectedDates.endDate.toLocaleDateString(),
+    totalNights: Math.max(1, Math.ceil((selectedDates.endDate.getTime() - selectedDates.startDate.getTime()) / (1000 * 60 * 60 * 24))),
+    totalPrice: parseInt(room.price) * Math.max(1, Math.ceil((selectedDates.endDate.getTime() - selectedDates.startDate.getTime()) / (1000 * 60 * 60 * 24))) + 17, // Service fee
+  };
+
+  console.log("chinh123", reservationDetails);
+
+  try {
+    const response = await fetch("/api/booking", {
+      method: "POST",
+      body: JSON.stringify(reservationDetails), // Use reservationDetails as the body
+      headers: {
+        "Content-Type": "application/json", // Add content-type header
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add room");
+    }
+
+    await response.json();
+    toast.success("đặt thành công");
+  } catch (error: any) {
+    toast.error(error.message || "An error occurred while reserving the room");
+  }
+};
+
 
   const _renderTitle = () => {
     return (
@@ -271,6 +312,7 @@ const DetailRoom = () => {
                 backgroundImage:
                   "radial-gradient(circle, #ff385c 0%, #e61e4d 27.5%, #e31c5f 40%, #d70466 57.5%)",
               }}
+              onClick={handleReserve}
             >
               Reserve
             </button>

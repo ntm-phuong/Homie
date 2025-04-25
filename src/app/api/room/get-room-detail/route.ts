@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     }
 
     const room = await Room.findOne({ room_id: roomId }).select(
-      'room_id name image address price rating description_room bed_rooms bath_room occupancy_limit status check_in check_out amenities'
+      'room_id name image address price rating description_room bed_rooms bath_room occupancy_limit status amenities'
     );
 
     if (!room) {
