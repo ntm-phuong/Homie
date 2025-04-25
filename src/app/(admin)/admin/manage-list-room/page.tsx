@@ -239,7 +239,7 @@ const RoomListPage = () => {
               className="mb-4 max-w-[350px] h-[40px]"
             />
             <Button
-              className="bg-main py-2 px-4 !font-[500] !text-white rounded-md cursor-pointer"
+              className="bg-main py-2 px-4 !font-[500] !text-white rounded-md cursor-pointer !capitalize"
               onClick={handleSearch}
               disabled={loading}
             >
@@ -248,7 +248,7 @@ const RoomListPage = () => {
           </div>
 
           <Button
-            className="bg-main py-2 px-4 !font-[500] !text-white rounded-md cursor-pointer"
+            className="bg-main py-2 px-4 !font-[500] !text-white rounded-md cursor-pointer !capitalize"
             onClick={handleAddRoom}
           >
             Add room
