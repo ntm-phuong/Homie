@@ -6,6 +6,7 @@ import FormSearchTypeRoom from "@/src/components/FormSearchTypeRoom/FormSearchTy
 import { Pagination } from "antd";
 import { useRouter } from "next/navigation";
 import LocationSearch from "@/src/components/FormSearch/LocationSearch";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [rooms, setRooms] = useState([]);
@@ -41,7 +42,7 @@ const Home = () => {
   const toggleLike = async (roomId: string, isLiked: boolean) => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return alert("Bạn cần đăng nhập để yêu thích phòng.");
+      if (!token) return toast.error("You need to login first.");
 
       const endpoint = isLiked
         ? `/api/room/${roomId}/unlike`

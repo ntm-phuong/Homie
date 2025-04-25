@@ -90,6 +90,8 @@ const Header = () => {
     } else if (key === "5") {
       localStorage.removeItem("token");
       signOut({ redirect: true, callbackUrl: "/home" });
+    } else if (key === "7") {
+      router.push(RouterUrl.FAVORITE);
     }
   };
 
@@ -127,7 +129,7 @@ const Header = () => {
 
   const _renderUserControls = () => (
     <div className="flex items-center gap-4">
-      <Dropdown menu={languageItems} placement="bottomRight">
+      {/* <Dropdown menu={languageItems} placement="bottomRight">
         <button className="rounded-full p-2 cursor-pointer">
           <Image
             src={IMAGE_URL.LANGUAGE}
@@ -136,7 +138,7 @@ const Header = () => {
             height={25}
           />
         </button>
-      </Dropdown>
+      </Dropdown> */}
 
       <Dropdown menu={userItems} placement="bottomRight" trigger={["click"]}>
         <button className="rounded-full border border-gray-300 flex gap-2 items-center px-4 py-2 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
@@ -158,7 +160,7 @@ const Header = () => {
     <div className="flex flex-col gap-4 items-center w-full lg:px-38 py-6 px-4">
       <div className="flex items-center justify-between w-full">
         {_renderLogo()}
-        {_renderNavigation()}
+        {/* {_renderNavigation()} */}
         {_renderUserControls()}
       </div>
       {isShowLogin && (

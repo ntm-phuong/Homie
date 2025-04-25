@@ -1,10 +1,10 @@
 import { connectDB } from "@/src/lib/mongoose";
 import Like from "@/src/models/Like";
 import User from "@/src/models/User";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { room_id: string } }
 ) {
   try {

@@ -1,8 +1,8 @@
+import { NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import Like from "@/src/models/Like";
 import Room from "@/src/models/Room";
 import User from "@/src/models/User";
-import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
@@ -15,23 +15,23 @@ export async function GET(req: Request) {
         { status: 401 }
       );
     }
+
     const token = authHeader.replace("Bearer ", "");
     const user = await User.findOne({ token });
     if (!user) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
     }
 
-    const userId = user._id;
+    const likes = await Like.find({ userId: user._id }).populate("roomId");
 
-    const likes = await Like.find({ userId }).select("roomId");
-    const roomIds = likes.map((like) => like.roomId);
+    const favoriteRooms = likes
+      .map((like) => like.roomId)
+      .filter((room) => room);
 
-    const rooms = await Room.find({ _id: { $in: roomIds } });
-
-    return NextResponse.json({ success: true, data: rooms });
+    return NextResponse.json({ success: true, data: favoriteRooms });
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Failed to fetch liked rooms" },
+      { message: "Failed to get favorites" },
       { status: 500 }
     );
   }

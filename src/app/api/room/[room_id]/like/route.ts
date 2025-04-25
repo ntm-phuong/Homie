@@ -1,10 +1,10 @@
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import Like from "@/src/models/Like";
 import User from "@/src/models/User";
-import { NextResponse } from "next/server";
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { room_id: string } }
 ) {
   try {
@@ -18,7 +18,6 @@ export async function POST(
       );
     }
     const token = authHeader.replace("Bearer ", "");
-
     const user = await User.findOne({ token });
     if (!user) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
@@ -30,18 +29,20 @@ export async function POST(
     });
 
     if (alreadyLiked) {
-      return NextResponse.json(
-        { success: false, message: "Already liked" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Already liked" }, { status: 400 });
     }
 
-    await Like.create({ userId: user._id, roomId: params.room_id });
+    const newLike = new Like({
+      userId: user._id,
+      roomId: params.room_id,
+    });
 
-    return NextResponse.json({ success: true, message: "Room liked" });
+    await newLike.save();
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Failed to like room" },
+      { message: "Failed to like room" },
       { status: 500 }
     );
   }
