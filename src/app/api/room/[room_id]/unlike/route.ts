@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { roomId: string } }
+  { params }: { params: { room_id: string } }
 ) {
   try {
     await connectDB();
@@ -25,7 +25,7 @@ export async function POST(
 
     const userId = user._id;
 
-    await Like.deleteOne({ userId, roomId: params.roomId });
+    await Like.deleteOne({ userId, roomId: params.room_id });
 
     return NextResponse.json({ success: true, message: "Room unliked" });
   } catch (error) {

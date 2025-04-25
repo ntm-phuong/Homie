@@ -21,14 +21,46 @@ const Home = () => {
 
   const getListRooms = async (type: string) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
-        `/api/room/get-list-rooms?search_room=${type}&page=${page}&limit=${limit}`
+        `/api/room/get-list-rooms?search_room=${type}&page=${page}&limit=${limit}`,
+        {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        }
       );
       const data = await response.json();
       setRooms(data.data);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const toggleLike = async (roomId: string, isLiked: boolean) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return alert("Bạn cần đăng nhập để yêu thích phòng.");
+
+      const endpoint = isLiked
+        ? `/api/room/${roomId}/unlike`
+        : `/api/room/${roomId}/like`;
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        getListRooms(typeRoom);
+      } else {
+        console.error("Like/unlike failed");
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -53,8 +85,12 @@ const Home = () => {
         />
         <div className="absolute top-3 right-4 cursor-pointer">
           <HeartFilled
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleLike(room._id, room.isUserFavorite);
+            }}
             style={{
-              color: "#e11d48",
+              color: room.isUserFavorite ? "#e11d48" : "#ccc",
               fontSize: "23px",
               stroke: "white",
               strokeWidth: 45,
@@ -83,16 +119,20 @@ const Home = () => {
 
   return (
     <div className="lg:px-38 px-4 w-full flex flex-col gap-8">
-      <LocationSearch onSearchLocation={(keyword) => {
-        setTypeRoom(keyword);
-        setPage(1);
-      }} />
-      <FormSearchTypeRoom onChangeType={(val) => {
-        setPage(1);
-        setTypeRoom(val);
-      }} />
+      <LocationSearch
+        onSearchLocation={(keyword) => {
+          setTypeRoom(keyword);
+          setPage(1);
+        }}
+      />
+      <FormSearchTypeRoom
+        onChangeType={(val) => {
+          setPage(1);
+          setTypeRoom(val);
+        }}
+      />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-8">
-        {rooms.length > 0 ? (
+        {rooms?.length > 0 ? (
           rooms.map((room) => _renderItemRoom(room))
         ) : (
           <p className="!w-full">No matching rooms found.</p>

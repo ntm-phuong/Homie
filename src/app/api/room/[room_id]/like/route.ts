@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { roomId: string } }
+  { params }: { params: { room_id: string } }
 ) {
   try {
     await connectDB();
@@ -26,7 +26,7 @@ export async function POST(
 
     const alreadyLiked = await Like.findOne({
       userId: user._id,
-      roomId: params.roomId,
+      roomId: params.room_id,
     });
 
     if (alreadyLiked) {
@@ -36,7 +36,7 @@ export async function POST(
       );
     }
 
-    await Like.create({ userId: user._id, roomId: params.roomId });
+    await Like.create({ userId: user._id, roomId: params.room_id });
 
     return NextResponse.json({ success: true, message: "Room liked" });
   } catch (error) {
