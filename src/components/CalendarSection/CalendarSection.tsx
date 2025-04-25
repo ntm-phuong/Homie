@@ -8,12 +8,14 @@ interface CalendarSectionProps {
   };
   setSelectedDates: (dates: { startDate: Date; endDate: Date }) => void;
   location: string;
+  disabledDates: { check_in: string; check_out: string }[]; // Thêm danh sách ngày đã đặt
 }
 
 const CalendarSection = ({
   selectedDates,
   setSelectedDates,
   location,
+  disabledDates,
 }: CalendarSectionProps) => {
   const startDate = dayjs(selectedDates.startDate);
   const endDate = dayjs(selectedDates.endDate);
@@ -39,6 +41,15 @@ const CalendarSection = ({
     });
   };
 
+  // Hàm kiểm tra ngày có bị disable không
+  const isDateDisabled = (current: dayjs.Dayjs) => {
+    return disabledDates.some(({ check_in, check_out }) => {
+      const start = dayjs(check_in);
+      const end = dayjs(check_out);
+      return current.isSame(start, "day") || current.isSame(end, "day") || (current.isAfter(start, "day") && current.isBefore(end, "day"));
+    });
+  };
+  
   return (
     <ConfigProvider
       theme={{
@@ -69,7 +80,7 @@ const CalendarSection = ({
             value={[startDate, endDate]}
             onChange={handleDateChange}
             format="DD MMM YYYY"
-            disabledDate={(current) => current && current < dayjs()}
+            disabledDate={isDateDisabled} // Disable các ngày đã đặt
             className="custom-range-picker"
           />
         </div>
@@ -81,30 +92,6 @@ const CalendarSection = ({
           Clear dates
         </button>
       </div>
-      <style jsx>{`
-        :global(
-            .ant-picker-cell-in-view.ant-picker-cell-selected
-              .ant-picker-cell-inner
-          ) {
-          background: #e61e4d !important;
-        }
-        :global(
-            .ant-picker-cell-in-view.ant-picker-cell-range-start
-              .ant-picker-cell-inner
-          ),
-        :global(
-            .ant-picker-cell-in-view.ant-picker-cell-range-end
-              .ant-picker-cell-inner
-          ) {
-          background: #e61e4d !important;
-        }
-        :global(
-            .ant-picker-cell-in-view.ant-picker-cell-today
-              .ant-picker-cell-inner::before
-          ) {
-          border-color: #e61e4d !important;
-        }
-      `}</style>
     </ConfigProvider>
   );
 };

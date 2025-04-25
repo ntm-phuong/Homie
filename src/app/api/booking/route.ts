@@ -9,13 +9,15 @@ export const POST = async (req: NextRequest) => {
     const body = await req.json();
 
     const {
-      user_id,
+      email,
       room_id,
       room_name,
       address,
       price_per_night,
       check_in,
       check_out,
+      total_nights,
+      total_price
     } = body;
 
     const checkInDate = new Date(check_in);
@@ -35,23 +37,8 @@ export const POST = async (req: NextRequest) => {
         { status: 400 }
       );
     }
-
-    // Tính số đêm và tổng giá
-    const total_nights =
-      (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24);
-
-    if (total_nights <= 0) {
-      return NextResponse.json(
-        { success: false, message: "Ngày trả phòng phải sau ngày nhận phòng." },
-        { status: 400 }
-      );
-    }
-
-    const total_price = total_nights * price_per_night;
-
-    // Tạo booking mới
     const newBooking = await Booking.create({
-      user_id,
+      email,
       room_id,
       room_name,
       address,
