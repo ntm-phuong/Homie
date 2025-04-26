@@ -34,9 +34,7 @@ const Favorite = () => {
 
       const data = await res.json();
       setFavoriteRooms(data.data || []);
-    } catch (err: any) {
-      console.error("Error fetching favorites:", err);
-    }
+    } catch (err: any) {}
   };
 
   const toggleLike = async (roomId: string) => {
@@ -107,9 +105,6 @@ const Favorite = () => {
         </div>
 
         <p className="text-gray-500 text-sm">{room.address || ""}</p>
-        {/* <p className="text-gray-500 text-sm">
-          {room?.rentalDate || "No date"}
-        </p> */}
 
         <div className="text-md font-medium text-black-600 mt-1">
           <span className="font-semibold">{room.price || "N/A"}</span>

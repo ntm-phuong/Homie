@@ -1,11 +1,10 @@
 "use client";
 
 import { IMAGE_URL } from "@/public";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Dropdown, DatePicker } from "antd";
+import { Dropdown } from "antd";
 import type { MenuProps } from "antd";
-import { Dayjs } from "dayjs";
 import Image from "next/image";
 import ModalLogin from "../ModalComponent/ModalLogin/ModalLogin";
 import { useRouter } from "next/navigation";
@@ -14,7 +13,7 @@ import ModalForgotPassword from "../ModalComponent/ModalEmailPW/ModalForgotPassw
 import ModalVerifyCode from "../ModalComponent/ModalVerifyPW/ModalVerifyCode";
 import ModalSetPassword from "../ModalComponent/ModalSetPW/ModalSetPassword";
 import ModalVerifyOTP from "../ModalComponent/ModalVerifyOTP/ModalVerify";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { signOut } from "next-auth/react";
 import ModalRegister from "../ModalComponent/ModalRegister/ModalRegister";
 import axios from "axios";
@@ -68,16 +67,6 @@ const Header = () => {
     verifyAdmin();
   }, [sessionToken]);
 
-  const languageItems: MenuProps = {
-    items: [
-      { key: "1", label: "English" },
-      { key: "2", label: "Vietnamese" },
-      { key: "3", label: "Japanese" },
-      { key: "4", label: "French" },
-      { key: "5", label: "Chinese" },
-    ],
-  };
-
   const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
     if (key === "1") {
       setIsShowRegister(true);
@@ -116,30 +105,8 @@ const Header = () => {
     </Link>
   );
 
-  const _renderNavigation = () => (
-    <div className="hidden md:flex space-x-4 text-[24px]">
-      <Link href="#" className="font-semibold px-2">
-        Home
-      </Link>
-      <Link href="#" className="font-semibold px-2">
-        Experiences
-      </Link>
-    </div>
-  );
-
   const _renderUserControls = () => (
     <div className="flex items-center gap-4">
-      {/* <Dropdown menu={languageItems} placement="bottomRight">
-        <button className="rounded-full p-2 cursor-pointer">
-          <Image
-            src={IMAGE_URL.LANGUAGE}
-            alt="Language selector"
-            width={25}
-            height={25}
-          />
-        </button>
-      </Dropdown> */}
-
       <Dropdown menu={userItems} placement="bottomRight" trigger={["click"]}>
         <button className="rounded-full border border-gray-300 flex gap-2 items-center px-4 py-2 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
           <Image src={IMAGE_URL.MENU} alt="Menu" width={20} height={20} />
@@ -160,7 +127,6 @@ const Header = () => {
     <div className="flex flex-col gap-4 items-center w-full lg:px-38 py-6 px-4">
       <div className="flex items-center justify-between w-full">
         {_renderLogo()}
-        {/* {_renderNavigation()} */}
         {_renderUserControls()}
       </div>
       {isShowLogin && (
