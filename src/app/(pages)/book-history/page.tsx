@@ -1,67 +1,50 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Table, Button, Tag, Image } from "antd";
+import { Table, Tag, Image } from "antd";
 import axios from "axios";
 
 const BookHistory = () => {
-  const [bookings, setBookings] = useState([
-    {
-      id: 1,
-      roomName: "Deluxe Room",
-      date: "2025-04-20",
-      status: "Completed",
-      price: "$120",
-      location: "Hanoi, Vietnam",
-      image: "/img/deluxe-room.jpg",
-    },
-    {
-      id: 2,
-      roomName: "Standard Room",
-      date: "2025-04-15",
-      status: "Cancelled",
-      price: "$80",
-      location: "Ho Chi Minh City, Vietnam",
-      image: "/img/standard-room.jpg",
-    },
-    {
-      id: 3,
-      roomName: "Suite Room",
-      date: "2025-04-21",
-      status: "Just Booked",
-      price: "$200",
-      location: "Da Nang, Vietnam",
-      image: "/img/suite-room.jpg",
-    },
-  ]);
+  const [bookings, setBookings] = useState([]); // State để lưu danh sách lịch đặt phòng
+  const [loading, setLoading] = useState(true); // State để quản lý trạng thái loading
 
-  useEffect(()=> {
-    getHistoryBooking()
-  }, [])
+  useEffect(() => {
+    const fetchBookings = async () => {
+      const email = localStorage.getItem("email"); // Lấy email từ localStorage
+      if (!email) {
+        console.error("Email not found in localStorage");
+        setLoading(false);
+        return;
+      }
 
-  const getHistoryBooking = async () => {
-    const email = localStorage.getItem("email")
-    try {
-      const res = await axios.get(`/api/booking/history?email=${email}`);
-      console.log(res, 'chinh123')
-    } catch (err) {
-    } finally {
-    }
-  };
-  
-  const handleViewDetails = (id: number) => {
-    alert(`Viewing details for booking ID: ${id}`);
-  };
+      try {
+        const response = await axios.get(`/api/booking/history?email=${email}`);
+        const data = response.data;
+
+        if (data.success) {
+          setBookings(data.data); // Lưu danh sách lịch đặt phòng vào state
+        } else {
+          console.error(data.message || "Failed to fetch bookings");
+        }
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      } finally {
+        setLoading(false); // Tắt trạng thái loading
+      }
+    };
+
+    fetchBookings();
+  }, []);
 
   const columns = [
     {
       title: "Room",
-      dataIndex: "roomName",
-      key: "roomName",
+      dataIndex: "room_name",
+      key: "room_name",
       render: (text: string, record: any) => (
         <div className="flex items-center gap-3">
           <Image
-            src={record.image}
-            alt={record.roomName}
+            src={record.room_image}
+            alt={record.room_name}
             width={50}
             height={50}
             className="rounded-md object-cover"
@@ -71,19 +54,27 @@ const BookHistory = () => {
       ),
     },
     {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
+      title: "Check-in",
+      dataIndex: "check_in",
+      key: "check_in",
+      render: (date: string) => new Date(date).toLocaleDateString(),
+    },
+    {
+      title: "Check-out",
+      dataIndex: "check_out",
+      key: "check_out",
+      render: (date: string) => new Date(date).toLocaleDateString(),
     },
     {
       title: "Location",
-      dataIndex: "location",
-      key: "location",
+      dataIndex: "address",
+      key: "address",
     },
     {
       title: "Price",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "total_price",
+      key: "total_price",
+      render: (price: number) => `$${price}`,
     },
     {
       title: "Status",
@@ -107,30 +98,18 @@ const BookHistory = () => {
         return <Tag color={color}>{status}</Tag>;
       },
     },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: any) => (
-        <div className="flex gap-2">
-          <button className="" 
-            onClick={() => handleViewDetails(record.id)}
-          >
-            View
-          </button>
-        </div>
-      ),
-    },
   ];
 
   return (
-    <div className="w-full px-4 lg:px-38 py-5">
-      <h1 className="text-3xl font-bold text-center mb-6">Booking History</h1>
+    <div className="w-full px-4 lg:px-38 py-3">
+      <h1 className="text-3xl font-bold text-center mb-6 py-5">Booking History</h1>
       <Table
-        dataSource={bookings}
+        dataSource={bookings} // Gắn dữ liệu từ state vào bảng
         columns={columns}
-        rowKey="id"
+        rowKey="_id" // Sử dụng `_id` từ MongoDB làm khóa
         pagination={{ pageSize: 5 }}
         bordered
+        loading={loading} // Hiển thị trạng thái loading
       />
     </div>
   );

@@ -97,6 +97,7 @@ const handleReserve = async () => {
     room_id: room.room_id,
     room_name: room.name,
     price_per_night: room.price,
+    room_image: room.image,
     address: room.address,
     check_in: toLocalISOString(selectedDates.startDate),
     check_out: toLocalISOString(selectedDates.endDate),
@@ -133,12 +134,16 @@ const handleReserve = async () => {
     if (!response.ok) {
       throw new Error("Failed to add room");
     }
-
+    
     await response.json();
     toast.success("Successful reservation!");
+    setTimeout(() => {
+      router.push("/book-history");
+    }, 2000);
   } catch (error: any) {
     toast.error(error.message || "An error occurred while reserving the room");
   }
+
 };
 
   const _renderTitle = () => {
