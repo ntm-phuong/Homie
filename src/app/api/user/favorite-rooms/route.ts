@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/src/lib/mongoose";
 import Like from "@/src/models/Like";
-import Room from "@/src/models/Room";
 import User from "@/src/models/User";
 
 export async function GET(req: Request) {
   try {
     await connectDB();
+
+    const url = new URL(req.url);
+    const search = url.searchParams.get("search")?.toLowerCase() || "";
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
@@ -26,7 +28,12 @@ export async function GET(req: Request) {
 
     const favoriteRooms = likes
       .map((like) => like.roomId)
-      .filter((room) => room);
+      .filter(
+        (room) =>
+          room &&
+          (room.name?.toLowerCase().includes(search) ||
+            room.address?.toLowerCase().includes(search))
+      );
 
     return NextResponse.json({ success: true, data: favoriteRooms });
   } catch (error) {

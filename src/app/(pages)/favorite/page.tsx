@@ -2,22 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { HeartFilled, StarFilled } from "@ant-design/icons";
+import { HeartFilled, SearchOutlined, StarFilled } from "@ant-design/icons";
 import { toast } from "react-toastify";
+import { Input } from "antd";
 
 const Favorite = () => {
   const [favoriteRooms, setFavoriteRooms] = useState([]);
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const filteredRooms = favoriteRooms.filter((room: { name: string }) =>
-    room?.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   useEffect(() => {
-    fetchFavoriteRooms();
-  }, []);
+    fetchFavoriteRooms(searchTerm);
+  }, [searchTerm]);
 
-  const fetchFavoriteRooms = async () => {
+  const fetchFavoriteRooms = async (search = "") => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -25,15 +23,18 @@ const Favorite = () => {
         return;
       }
 
-      const res = await fetch("/api/user/favorite-rooms", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `/api/user/favorite-rooms?search=${encodeURIComponent(search)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await res.json();
       setFavoriteRooms(data.data || []);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error fetching favorites:", err);
     }
   };
@@ -69,7 +70,7 @@ const Favorite = () => {
     <div
       key={room._id}
       className="flex flex-row gap-4 w-full cursor-pointer border border-gray-100 p-3 rounded-xl hover:shadow-lg transition"
-      onClick={() => router.push(`/detail-room/${room._id}`)}
+      onClick={() => router.push(`/detail-room/${room.room_id}`)}
     >
       <div className="relative min-w-[160px] max-w-[160px]">
         <img
@@ -120,21 +121,20 @@ const Favorite = () => {
   return (
     <div className="lg:px-38 px-4 w-full flex flex-col gap-8 py-6">
       <div className="flex justify-between gap-4 flex-wrap">
-
-      <h1 className="text-2xl font-semibold">Favorite Rooms</h1>
-
-      <input
-        type="text"
-        placeholder="Search by room name..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full md:w-1/2 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+        <h1 className="text-2xl font-semibold">Favorite Rooms</h1>
+        <Input
+          placeholder="Search by room name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="md:max-w-[300px] rounded-lg focus:outline-none focus:ring-2"
+          prefix={<SearchOutlined />}
+          size="large"
         />
-        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-8">
-        {filteredRooms.length > 0 ? (
-          filteredRooms.map((room) => _renderRoomItem(room))
+        {favoriteRooms.length > 0 ? (
+          favoriteRooms.map((room) => _renderRoomItem(room))
         ) : (
           <p>No rooms matched your search.</p>
         )}
