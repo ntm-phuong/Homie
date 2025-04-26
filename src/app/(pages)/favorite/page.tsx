@@ -8,6 +8,10 @@ import { toast } from "react-toastify";
 const Favorite = () => {
   const [favoriteRooms, setFavoriteRooms] = useState([]);
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredRooms = favoriteRooms.filter((room: { name: string }) =>
+    room?.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
     fetchFavoriteRooms();
@@ -64,16 +68,16 @@ const Favorite = () => {
   const _renderRoomItem = (room: any) => (
     <div
       key={room._id}
-      className="flex flex-col gap-1 md:w-[19vw] w-full cursor-pointer"
+      className="flex flex-row gap-4 w-full cursor-pointer border border-gray-100 p-3 rounded-xl hover:shadow-lg transition"
       onClick={() => router.push(`/detail-room/${room._id}`)}
     >
-      <div className="relative w-full">
+      <div className="relative min-w-[160px] max-w-[160px]">
         <img
-          className="rounded-xl md:h-[18vw] w-full object-cover"
+          className="rounded-xl h-[120px] w-full object-cover"
           src={room.image}
           alt={room.name}
         />
-        <div className="absolute top-3 right-4 cursor-pointer">
+        <div className="absolute top-2 right-2 cursor-pointer">
           <HeartFilled
             onClick={(e) => {
               e.stopPropagation();
@@ -81,7 +85,7 @@ const Favorite = () => {
             }}
             style={{
               color: "#e11d48",
-              fontSize: "23px",
+              fontSize: "20px",
               stroke: "white",
               strokeWidth: 45,
             }}
@@ -89,32 +93,50 @@ const Favorite = () => {
           />
         </div>
       </div>
-      <div className="font-[500] text-md flex flex-row justify-between items-center">
-        <span>{truncateName(room.name || "Tên phòng", 4)}</span>
-        <div className="flex items-center">
-          <StarFilled style={{ color: "#fadb14", marginRight: "2px" }} />
-          {room.rating || "N/A"}
-        </div>
-      </div>
 
-      <p className="text-gray-500 text-sm">{room.address || ""}</p>
-      <p className="text-gray-500 text-sm">
-        {room.rentalDate || "Không có ngày thuê"}
-      </p>
-      <div className="text-md font-medium text-black-600">
-        <span className="font-[500]">{room.price || "N/A"} đ</span> / đêm
+      <div className="flex flex-col justify-between w-full">
+        <div className="flex justify-between items-start">
+          <span className="font-semibold text-md">
+            {truncateName(room.name || "Tên phòng", 4)}
+          </span>
+          <div className="flex items-center text-sm">
+            <StarFilled style={{ color: "#fadb14", marginRight: "4px" }} />
+            {room.rating || "N/A"}
+          </div>
+        </div>
+
+        <p className="text-gray-500 text-sm">{room.address || ""}</p>
+        {/* <p className="text-gray-500 text-sm">
+          {room?.rentalDate || "No date"}
+        </p> */}
+
+        <div className="text-md font-medium text-black-600 mt-1">
+          <span className="font-semibold">{room.price || "N/A"}</span>
+        </div>
       </div>
     </div>
   );
 
   return (
     <div className="lg:px-38 px-4 w-full flex flex-col gap-8 py-6">
+      <div className="flex justify-between gap-4 flex-wrap">
+
       <h1 className="text-2xl font-semibold">Favorite Rooms</h1>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-8">
-        {favoriteRooms.length > 0 ? (
-          favoriteRooms.map((room) => _renderRoomItem(room))
+
+      <input
+        type="text"
+        placeholder="Search by room name..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full md:w-1/2 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+        </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-8">
+        {filteredRooms.length > 0 ? (
+          filteredRooms.map((room) => _renderRoomItem(room))
         ) : (
-          <p>No data founded.</p>
+          <p>No rooms matched your search.</p>
         )}
       </div>
     </div>
