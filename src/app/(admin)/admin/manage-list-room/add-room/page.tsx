@@ -25,12 +25,9 @@ const AddRoom = () => {
     image: null as File | null,
     name: "",
     address: "",
-    rentalDate: "",
     price: "",
     rating: "",
     description_room: "",
-    check_in: "",
-    check_out: "",
     status: "",
     bed_rooms: "",
     bath_room: "",
@@ -207,18 +204,12 @@ const AddRoom = () => {
           "number",
           <TeamOutlined />
         )}
-        <Divider className="col-span-2" />
-        <h1 className="col-span-2 text-2xl font-bold mb-2 text-gray-800 pb-6">
-          Date & Time
-        </h1>
-        {_renderInput("Check In", "check_in", "date")}
-        {_renderInput("Check Out", "check_out", "date")}
-        {_renderInput("Rental Date", "rentalDate", "date")}
-        <div className="flex gap-4 items-end h-full">
+
+        <div className="flex gap-4 items-end col-span-2 pt-4 h-full">
           <button
             type="button"
             onClick={() => router.push("/admin/manage-list-room")}
-            className="cursor-pointer w-full h-[50px] px-4 text-rose-500 font-medium rounded-md outline-none col-span-1 md:col-span-2"
+            className="border border-gray-400 cursor-pointer w-full h-[50px] px-4 text-gray-400 font-medium rounded-md outline-none col-span-1 md:col-span-2"
           >
             Cancel
           </button>
