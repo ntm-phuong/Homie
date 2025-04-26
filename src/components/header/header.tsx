@@ -106,11 +106,9 @@ const Header = () => {
   };
 
   const _renderLogo = () => (
-    <Link href="/" className="flex items-center no-underline">
-      <div className="text-rose-500 font-bold text-2xl flex items-center">
-        <span className="font-serif italic">Homie.</span>
-      </div>
-    </Link>
+    <div className="text-rose-500 font-bold text-2xl flex items-center">
+      <a href={RouterUrl.HOME} className="font-serif italic">Homie.</a>
+    </div>
   );
 
   const _renderNavigation = () => (

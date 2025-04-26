@@ -119,7 +119,6 @@ const handleReserve = async () => {
       17, // Service fee
   };
 
-  console.log("Reservation Details:", reservationDetails);
 
   try {
     const response = await fetch("/api/booking", {
@@ -136,7 +135,7 @@ const handleReserve = async () => {
     }
 
     await response.json();
-    toast.success("Đặt thành công");
+    toast.success("Successful reservation!");
   } catch (error: any) {
     toast.error(error.message || "An error occurred while reserving the room");
   }

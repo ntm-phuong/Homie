@@ -33,7 +33,7 @@ export const POST = async (req: NextRequest) => {
 
     if (isOverlapping) {
       return NextResponse.json(
-        { success: false, message: "Phòng đã được đặt trong khoảng thời gian này." },
+        { success: false, message: "The room has been placed during this time." },
         { status: 400 }
       );
     }
@@ -55,7 +55,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(
       {
         success: false,
-        message: "Lỗi khi đặt phòng",
+        message: "Error when booking!",
         error: err.message,
       },
       { status: 500 }
