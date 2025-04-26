@@ -219,14 +219,15 @@ const AddRoom = () => {
         {_renderInput("Rental Date", "rentalDate", "date")}
         <div className="flex gap-4 items-end h-full">
           <button
-            type="submit"
-            className="w-full h-[50px] px-4 text-rose-500 font-medium rounded-md focus:outline-none focus:ring-2  focus:ring-offset-2 col-span-1 md:col-span-2"
+            type="button"
+            onClick={() => router.push("/admin/manage-list-room")}
+            className="cursor-pointer w-full h-[50px] px-4 text-rose-500 font-medium rounded-md outline-none col-span-1 md:col-span-2"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="w-full h-[50px] px-4 bg-main text-white font-medium rounded-md focus:outline-none focus:ring-2  focus:ring-offset-2 col-span-1 md:col-span-2"
+            className="cursor-pointer w-full h-[50px] px-4 bg-main text-white font-medium rounded-md focus:outline-none col-span-1 md:col-span-2"
           >
             Create
           </button>
