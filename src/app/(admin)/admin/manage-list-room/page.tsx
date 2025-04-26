@@ -262,7 +262,7 @@ const RoomListPage = () => {
           rowKey="room_id"
           loading={loading}
           bordered
-          pagination={{ pageSize: 10 }}
+          pagination={{ pageSize: 5 }}
           onRow={(record) => ({
             onClick: () => {
               setSelectedRoom(record);
