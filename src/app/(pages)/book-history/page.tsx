@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button, Tag, Image } from "antd";
+import axios from "axios";
 
 const BookHistory = () => {
   const [bookings, setBookings] = useState([
@@ -33,6 +34,19 @@ const BookHistory = () => {
     },
   ]);
 
+  useEffect(()=> {
+    getHistoryBooking()
+  }, [])
+
+  const getHistoryBooking = async () => {
+    const email = localStorage.getItem("email")
+    try {
+      const res = await axios.get(`/api/booking/history?email=${email}`);
+      console.log(res, 'chinh123')
+    } catch (err) {
+    } finally {
+    }
+  };
   
   const handleViewDetails = (id: number) => {
     alert(`Viewing details for booking ID: ${id}`);
