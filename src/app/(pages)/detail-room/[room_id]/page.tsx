@@ -121,7 +121,7 @@ const handleReserve = async () => {
 
 
   try {
-    const response = await fetch("/api/booking", {
+    const response = await fetch("/api/booking/order", {
       method: "POST",
       body: JSON.stringify(reservationDetails),
       headers: {
