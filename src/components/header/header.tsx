@@ -100,7 +100,7 @@ const Header = () => {
       ...(!sessionToken ? [{ key: "1", label: "Sign Up" }] : []),
       ...(!sessionToken ? [{ key: "2", label: "Login" }] : []),
       ...(sessionToken ? [{ key: "3", label: "Profile" }] : []),
-      ...(sessionToken ? [{ key: "4", label: "Book History" }] : []),
+      ...(sessionToken ? [{ key: "4", label: "Booking" }] : []),
       ...(sessionToken ? [{ key: "7", label: "Favorite" }] : []),
       ...(sessionToken ? [{ key: "5", label: "Log out" }] : []),
       { key: "6", label: "Help" },

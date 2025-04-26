@@ -4,12 +4,12 @@ import { Table, Tag, Image } from "antd";
 import axios from "axios";
 
 const BookHistory = () => {
-  const [bookings, setBookings] = useState([]); // State để lưu danh sách lịch đặt phòng
-  const [loading, setLoading] = useState(true); // State để quản lý trạng thái loading
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const email = localStorage.getItem("email"); // Lấy email từ localStorage
+      const email = localStorage.getItem("email"); 
       if (!email) {
         console.error("Email not found in localStorage");
         setLoading(false);
@@ -21,17 +21,13 @@ const BookHistory = () => {
         const data = response.data;
 
         if (data.success) {
-          setBookings(data.data); // Lưu danh sách lịch đặt phòng vào state
-        } else {
-          console.error(data.message || "Failed to fetch bookings");
-        }
+          setBookings(data.data); 
+        } 
       } catch (error) {
-        console.error("Error fetching bookings:", error);
       } finally {
-        setLoading(false); // Tắt trạng thái loading
+        setLoading(false); 
       }
     };
-
     fetchBookings();
   }, []);
 
@@ -86,14 +82,14 @@ const BookHistory = () => {
           case "Completed":
             color = "green";
             break;
-          case "Cancelled":
-            color = "red";
-            break;
+          // case "Cancelled":
+          //   color = "red";
+          //   break;
           case "Just Booked":
             color = "blue";
             break;
           default:
-            color = "gray";
+            color = "red";
         }
         return <Tag color={color}>{status}</Tag>;
       },

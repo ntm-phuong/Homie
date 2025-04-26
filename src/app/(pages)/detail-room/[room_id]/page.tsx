@@ -139,7 +139,7 @@ const handleReserve = async () => {
     toast.success("Successful reservation!");
     setTimeout(() => {
       router.push("/book-history");
-    }, 2000);
+    }, 500);
   } catch (error: any) {
     toast.error(error.message || "An error occurred while reserving the room");
   }

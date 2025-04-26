@@ -136,7 +136,7 @@ const Home = () => {
           <p className="!w-full">No matching rooms found.</p>
         )}
       </div>
-      {/* <div className="flex justify-center !mb-4">
+      <div className="flex justify-center !mb-4">
         <Pagination
           current={page}
           total={totalPages * limit}
@@ -144,7 +144,7 @@ const Home = () => {
           onChange={(newPage) => setPage(newPage)}
           showSizeChanger={false}
         />
-      </div> */}
+      </div>
     </div>
   );
 };

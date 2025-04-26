@@ -52,7 +52,6 @@ export const POST = async (req: NextRequest) => {
       total_price,
       status: "confirmed",
     });
-    console.log(body);
     return NextResponse.json({ success: true, booking: newBooking }, { status: 201 });
   } catch (err: any) {
     return NextResponse.json(
