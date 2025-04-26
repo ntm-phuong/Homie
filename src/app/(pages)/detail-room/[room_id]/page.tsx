@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CalendarSection from "@/src/components/CalendarSection/CalendarSection";
 import {
   ShareAltOutlined,
@@ -23,6 +23,7 @@ import {
 } from "@ant-design/icons";
 import { IMAGE_URL } from "@/public";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 
 const DetailRoom = () => {
@@ -35,7 +36,11 @@ const DetailRoom = () => {
     startDate: new Date(),
     endDate: new Date(),
   });
-
+  const [disabledDates, setDisabledDates] = useState<
+  { check_in: string; check_out: string }[]
+>([]); // Thêm state cho ngày đã đặt
+  const router = useRouter();
+  console.log(room, 'chinh456')
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
@@ -49,6 +54,8 @@ const DetailRoom = () => {
         }
 
         setRoom(data.data);
+        setDisabledDates(data.bookings || []); // Lưu danh sách ngày đã đặt
+
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -74,6 +81,65 @@ const DetailRoom = () => {
       </div>
     );
   }
+
+const toLocalISOString = (date: Date) => {
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60 * 1000);
+  return localDate.toISOString().split("Z")[0] + "Z";
+};
+
+const handleReserve = async () => {
+  const email = localStorage.getItem("email") || "unknown_user";
+  const token = localStorage.getItem("token") || "unknown_user";
+
+  const reservationDetails = {
+    email,
+    room_id: room.room_id,
+    room_name: room.name,
+    price_per_night: room.price,
+    address: room.address,
+    check_in: toLocalISOString(selectedDates.startDate),
+    check_out: toLocalISOString(selectedDates.endDate),
+    total_nights: Math.max(
+      1,
+      Math.ceil(
+        (selectedDates.endDate.getTime() - selectedDates.startDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    ),
+    total_price:
+      parseInt(room.price) *
+        Math.max(
+          1,
+          Math.ceil(
+            (selectedDates.endDate.getTime() - selectedDates.startDate.getTime()) /
+              (1000 * 60 * 60 * 24)
+          )
+        ) +
+      17, // Service fee
+  };
+
+
+  try {
+    const response = await fetch("/api/booking", {
+      method: "POST",
+      body: JSON.stringify(reservationDetails),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add room");
+    }
+
+    await response.json();
+    toast.success("Successful reservation!");
+  } catch (error: any) {
+    toast.error(error.message || "An error occurred while reserving the room");
+  }
+};
 
   const _renderTitle = () => {
     return (
@@ -271,6 +337,7 @@ const DetailRoom = () => {
                 backgroundImage:
                   "radial-gradient(circle, #ff385c 0%, #e61e4d 27.5%, #e31c5f 40%, #d70466 57.5%)",
               }}
+              onClick={handleReserve}
             >
               Reserve
             </button>
@@ -330,6 +397,7 @@ const DetailRoom = () => {
               selectedDates={selectedDates}
               setSelectedDates={setSelectedDates}
               location={room.address}
+              disabledDates={disabledDates}
             />
           </div>
         </div>

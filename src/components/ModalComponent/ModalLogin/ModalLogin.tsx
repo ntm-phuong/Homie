@@ -51,6 +51,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
       }
       if (response.ok) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("email", data.user.email);
         setIsToken(true);
         setIsShowLogin(false);
         toast.success(data.message || "Login successful!", {

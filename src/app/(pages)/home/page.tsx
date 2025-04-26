@@ -109,9 +109,6 @@ const Home = () => {
       </div>
 
       <p className="text-gray-500 text-sm">{room.address || ""}</p>
-      <p className="text-gray-500 text-sm">
-        {room.rentalDate || "Không có ngày thuê"}
-      </p>
       <div className="text-md font-medium text-black-600">
         <span className="font-[500]">{room.price || "N/A"} đ</span> / đêm
       </div>
