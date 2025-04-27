@@ -184,7 +184,8 @@ const RoomListPage = () => {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: (price: number) => `$${price.toLocaleString()}`,
+      render: (price: number) =>
+        `$${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
       sorter: (a: ParamsRoom, b: ParamsRoom) => a.price - b.price,
     },
     {
@@ -223,7 +224,9 @@ const RoomListPage = () => {
   return (
     <div>
       <div className="bg-white p-6 rounded-xl shadow-md flex flex-col gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Manage Rooms</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+          Manage Rooms
+        </h1>
 
         <div className="flex justify-between">
           <div className="flex flex-row gap-4 items-center">

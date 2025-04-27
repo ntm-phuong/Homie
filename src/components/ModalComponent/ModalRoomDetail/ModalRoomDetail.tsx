@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, Select } from "antd";
+import { Modal, Input, Select, InputNumber } from "antd";
 import { ParamsRoom } from "@/src/app/(admin)/admin/manage-list-room/page";
 import { toast } from "react-toastify";
 import {
@@ -112,19 +112,48 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
     name: keyof typeof formData,
     type: string,
     icon?: React.ReactNode
-  ) => (
-    <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-gray-700">{label}</label>
-      <Input
-        type={type}
-        prefix={icon}
-        name={name}
-        value={formData[name] as string}
-        onChange={handleChange}
-        className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 h-[50px]"
-      />
-    </div>
-  );
+  ) => {
+    const isPrice = name === "price";
+
+    return (
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700">{label}</label>
+        {isPrice ? (
+          <InputNumber<number>
+            name={name}
+            value={formData[name] ? Number(formData[name]) : undefined}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                [name]: value !== null ? value.toString() : "",
+              })
+            }
+            formatter={(value) =>
+              value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : ""
+            }
+            parser={(value) =>
+              parseInt(
+                (value || "").replace(/\./g, "").replace(/[^\d]/g, ""),
+                10
+              )
+            }
+            style={{ width: "100%", height: "50px" }}
+            prefix={icon}
+          />
+        ) : (
+          <Input
+            placeholder={label}
+            type={type}
+            name={name}
+            value={formData[name] as string}
+            onChange={handleChange}
+            prefix={icon}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 h-[50px]"
+          />
+        )}
+      </div>
+    );
+  };
 
   const _renderInputImage = () => (
     <div className="flex flex-col gap-2">

@@ -1,5 +1,5 @@
 "use client";
-import { Input, Button, Select } from "antd";
+import { Input, Button, Select, InputNumber } from "antd";
 import React, { useState } from "react";
 import {
   HomeOutlined,
@@ -99,18 +99,44 @@ const AddRoom = () => {
     type: string,
     icon?: React.ReactNode
   ) => {
+    const isPrice = name === "price";
+
     return (
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700">{label}</label>
-        <Input
-          placeholder={label}
-          type={type}
-          name={name}
-          value={formData[name] as string}
-          onChange={handleChange}
-          prefix={icon}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 h-[50px]"
-        />
+        {isPrice ? (
+          <InputNumber<number>
+            name={name}
+            value={formData[name] ? Number(formData[name]) : undefined}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                [name]: value !== null ? value.toString() : "",
+              })
+            }
+            formatter={(value) =>
+              value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : ""
+            }
+            parser={(value) =>
+              parseInt(
+                (value || "").replace(/\./g, "").replace(/[^\d]/g, ""),
+                10
+              )
+            }
+            style={{ width: "100%", height: "50px" }}
+            prefix={icon}
+          />
+        ) : (
+          <Input
+            placeholder={label}
+            type={type}
+            name={name}
+            value={formData[name] as string}
+            onChange={handleChange}
+            prefix={icon}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 h-[50px]"
+          />
+        )}
       </div>
     );
   };
