@@ -1,5 +1,6 @@
 import { connectDB } from "@/src/lib/mongoose";
 import Booking from "@/src/models/Booking";
+
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
@@ -12,6 +13,7 @@ export const POST = async (req: NextRequest) => {
       email,
       room_id,
       room_name,
+      room_image,
       address,
       price_per_night,
       check_in,
@@ -41,6 +43,7 @@ export const POST = async (req: NextRequest) => {
       email,
       room_id,
       room_name,
+      room_image,
       address,
       price_per_night,
       check_in: checkInDate,
@@ -49,7 +52,6 @@ export const POST = async (req: NextRequest) => {
       total_price,
       status: "confirmed",
     });
-
     return NextResponse.json({ success: true, booking: newBooking }, { status: 201 });
   } catch (err: any) {
     return NextResponse.json(

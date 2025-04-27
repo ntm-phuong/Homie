@@ -96,7 +96,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
       <div className="text-center pb-4">
         <h2 className="text-2xl font-bold">Welcome to Homie</h2>
         <p className="text-gray-500 text-lg">
-          Please login to continue con cac
+          Please login to continue!
         </p>
       </div>
 

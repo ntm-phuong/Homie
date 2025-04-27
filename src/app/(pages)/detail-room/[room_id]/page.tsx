@@ -24,6 +24,7 @@ import {
 import { IMAGE_URL } from "@/public";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import CommentSection from "./comment";
 
 
 const DetailRoom = () => {
@@ -38,7 +39,7 @@ const DetailRoom = () => {
   });
   const [disabledDates, setDisabledDates] = useState<
   { check_in: string; check_out: string }[]
->([]); // Thêm state cho ngày đã đặt
+>([]);
   const router = useRouter();
   console.log(room, 'chinh456')
   useEffect(() => {
@@ -54,7 +55,7 @@ const DetailRoom = () => {
         }
 
         setRoom(data.data);
-        setDisabledDates(data.bookings || []); // Lưu danh sách ngày đã đặt
+        setDisabledDates(data.bookings || []);
 
       } catch (err: any) {
         setError(err.message);
@@ -97,6 +98,7 @@ const handleReserve = async () => {
     room_id: room.room_id,
     room_name: room.name,
     price_per_night: room.price,
+    room_image: room.image,
     address: room.address,
     check_in: toLocalISOString(selectedDates.startDate),
     check_out: toLocalISOString(selectedDates.endDate),
@@ -121,7 +123,7 @@ const handleReserve = async () => {
 
 
   try {
-    const response = await fetch("/api/booking", {
+    const response = await fetch("/api/booking/order", {
       method: "POST",
       body: JSON.stringify(reservationDetails),
       headers: {
@@ -133,12 +135,16 @@ const handleReserve = async () => {
     if (!response.ok) {
       throw new Error("Failed to add room");
     }
-
+    
     await response.json();
     toast.success("Successful reservation!");
+    setTimeout(() => {
+      router.push("/book-history");
+    }, 500);
   } catch (error: any) {
     toast.error(error.message || "An error occurred while reserving the room");
   }
+
 };
 
   const _renderTitle = () => {
@@ -189,7 +195,6 @@ const handleReserve = async () => {
           {room.bed_rooms} bed rooms · {room.bath_room} bath room ·{" "}
         </p>
         <div className="flex items-center text-base text-gray-800 mt-1">
-          <span className="font-semibold">★ {room.rating}</span>
           <span className="mx-1 text-gray-400">·</span>
           <span className="underline cursor-pointer font-semibold pl-3">
             6 reviews
@@ -403,6 +408,7 @@ const handleReserve = async () => {
         </div>
 
         {_renderPriceBox({ selectedDates })}
+        <CommentSection roomId={Array.isArray(roomId) ? roomId[0] : roomId || ""} />
       </div>
     </div>
   );

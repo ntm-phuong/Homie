@@ -31,6 +31,7 @@ const Header = () => {
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [isToken, setIsToken] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -40,6 +41,10 @@ const Header = () => {
       }
     }
   }, [isToken]);
+
+  useEffect(() => {
+    getInfoUser();
+  }, []);
 
   useEffect(() => {
     const verifyAdmin = async () => {
@@ -67,6 +72,27 @@ const Header = () => {
     verifyAdmin();
   }, [sessionToken]);
 
+  const getInfoUser = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const res = await fetch("/api/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setUser(data.user);
+      } 
+    } catch (error) {
+      console.error("API call error:", error);
+    }
+  };
+
   const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
     if (key === "1") {
       setIsShowRegister(true);
@@ -89,7 +115,7 @@ const Header = () => {
       ...(!sessionToken ? [{ key: "1", label: "Sign Up" }] : []),
       ...(!sessionToken ? [{ key: "2", label: "Login" }] : []),
       ...(sessionToken ? [{ key: "3", label: "Profile" }] : []),
-      ...(sessionToken ? [{ key: "4", label: "Book History" }] : []),
+      ...(sessionToken ? [{ key: "4", label: "Booking" }] : []),
       ...(sessionToken ? [{ key: "7", label: "Favorite" }] : []),
       ...(sessionToken ? [{ key: "5", label: "Log out" }] : []),
       { key: "6", label: "Help" },
@@ -99,7 +125,9 @@ const Header = () => {
 
   const _renderLogo = () => (
     <div className="text-rose-500 font-bold text-2xl flex items-center">
-      <a href={RouterUrl.HOME} className="font-serif italic">Homie.</a>
+      <a href={RouterUrl.HOME} className="font-serif italic">
+        Homie.
+      </a>
     </div>
   );
 
@@ -108,14 +136,11 @@ const Header = () => {
       <Dropdown menu={userItems} placement="bottomRight" trigger={["click"]}>
         <button className="rounded-full border border-gray-300 flex gap-2 items-center px-4 py-2 hover:shadow-lg transition-shadow duration-300 cursor-pointer">
           <Image src={IMAGE_URL.MENU} alt="Menu" width={20} height={20} />
-          <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
-            <Image
-              src={IMAGE_URL.USER}
+            <img
+              src={user && user.avatar ? user.avatar : IMAGE_URL.USER}
               alt="User profile"
-              width={45}
-              height={45}
+              className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center"
             />
-          </div>
         </button>
       </Dropdown>
     </div>

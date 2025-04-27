@@ -32,7 +32,7 @@ const Footer = () => {
 
   const _renderItemsFooter = () => {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10 md:flex md:justify-between lg:px-28">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10 text-center md:text-left">
         {FOOTER_SECTIONS.map((section) => (
           <div key={section.title}>
             <h3 className="text-base font-semibold text-black-900 mb-4 pb-4">
