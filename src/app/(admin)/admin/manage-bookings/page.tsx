@@ -30,6 +30,10 @@ const ManageBookingsPage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
+  useEffect(() => {
+    fetchBookings();
+  }, [page, pageSize]);
+
   const fetchBookings = async () => {
     setLoading(true);
     try {
@@ -46,10 +50,6 @@ const ManageBookingsPage = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchBookings();
-  }, [page, pageSize]);
 
   const columns = [
     {
