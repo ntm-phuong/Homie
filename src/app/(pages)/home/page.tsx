@@ -38,7 +38,7 @@ const Home = () => {
       console.error(error);
     }
   };
-
+  
   const toggleLike = async (roomId: string, isLiked: boolean) => {
     try {
       const token = localStorage.getItem("token");

@@ -50,6 +50,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
         return;
       }
       if (response.ok) {
+        console.log(data, "chinh18");
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", data.user.email);
         setIsToken(true);
