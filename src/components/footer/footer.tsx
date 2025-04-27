@@ -32,7 +32,7 @@ const Footer = () => {
 
   const _renderItemsFooter = () => {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10 text-center md:text-left">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10 text-center">
         {FOOTER_SECTIONS.map((section) => (
           <div key={section.title}>
             <h3 className="text-base font-semibold text-black-900 mb-4 pb-4">
@@ -55,7 +55,7 @@ const Footer = () => {
 
   const _renderBottomSection = () => {
     return (
-      <div className="border-t border-gray-200 pt-7 md:px-28 text-center">
+      <div className="border-t border-gray-200 pt-7 md:px-28 text-center ">
         <div className="flex flex-col justify-center items-center">
           <div className="flex flex-wrap gap-2 justify-center mb-4">
             <span className="text-base text-black-600">© 2025 Homie, Inc.</span>
