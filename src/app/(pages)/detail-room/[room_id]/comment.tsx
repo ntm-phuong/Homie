@@ -14,7 +14,6 @@ const CommentSection = ({ roomId }: { roomId: string }) => {
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
-  console.log(reviews, "chinh123");
 
   useEffect(() => {
     getInfoUser();
@@ -32,55 +31,37 @@ const CommentSection = ({ roomId }: { roomId: string }) => {
       });
 
       const data = await res.json();
-
       if (res.ok) {
         setUser(data.user);
-      } else {
-        console.error(data.message || "Unable to fetch user information");
-      }
-    } catch (error) {
-      console.error("API call error:", error);
-    }
+      } 
+    } catch (error) {}
   };
 
-  // Fetch reviews
   useEffect(() => {
-
-
     fetchReviews();
   }, [roomId]);
 
   const fetchReviews = async () => {
     try {
-      // Kiểm tra và chuyển đổi roomId
       const numericRoomId = Number(roomId);
       if (isNaN(numericRoomId)) {
-        console.error("Invalid roomId:", roomId);
         return;
       }
-
       const res = await fetch(`/api/comment/${numericRoomId}`);
       const data = await res.json();
       if (data.success) {
         setReviews(data.comments);
-      } else {
-        console.error("Failed to fetch reviews:", data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    }
+      } 
+    } catch (error) {}
   };
 
-  // Handle new comment submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     const token = localStorage.getItem("token");
     try {
-      // Kiểm tra và chuyển đổi roomId
       const numericRoomId = Number(roomId);
       if (isNaN(numericRoomId)) {
-        console.error("Invalid roomId:", roomId);
         setLoading(false);
         return;
       }
@@ -107,13 +88,8 @@ const CommentSection = ({ roomId }: { roomId: string }) => {
         );
         setNewComment("");
         await fetchReviews();
-
-      } else {
-        console.error("Failed to post review:", data.message);
-      }
-    } catch (error) {
-      console.error("Error posting review:", error);
-    } finally {
+      } 
+    } catch (error) {} finally {
       setLoading(false);
     }
   };
