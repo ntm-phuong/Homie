@@ -18,7 +18,6 @@ export interface ParamsRoom {
   image: string;
   rating: number;
   description_room: string;
-  check_in: string;
   check_out: string;
   status: string;
   bed_rooms: number;
@@ -82,12 +81,9 @@ const RoomListPage = () => {
       formData.append("room_id", updatedRoom.room_id.toString());
       formData.append("name", updatedRoom.name);
       formData.append("address", updatedRoom.address);
-      formData.append("rentalDate", updatedRoom.rental_date);
       formData.append("price", updatedRoom.price.toString());
       formData.append("rating", updatedRoom.rating.toString());
       formData.append("description_room", updatedRoom.description_room);
-      formData.append("check_in", updatedRoom.check_in);
-      formData.append("check_out", updatedRoom.check_out);
       formData.append("status", updatedRoom.status);
       formData.append("bed_rooms", updatedRoom.bed_rooms.toString());
       formData.append("bath_room", updatedRoom.bath_room.toString());

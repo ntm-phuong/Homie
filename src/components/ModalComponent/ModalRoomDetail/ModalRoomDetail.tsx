@@ -39,12 +39,9 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
     image: null as File | null,
     name: "",
     address: "",
-    rentalDate: "",
     price: "",
     rating: "",
     description_room: "",
-    check_in: "",
-    check_out: "",
     status: "",
     bed_rooms: "",
     bath_room: "",
@@ -60,12 +57,9 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
         image: null,
         name: selectedRoom.name,
         address: selectedRoom.address,
-        rentalDate: selectedRoom.rental_date,
         price: selectedRoom.price.toString(),
         rating: selectedRoom.rating.toString(),
         description_room: selectedRoom.description_room,
-        check_in: selectedRoom.check_in,
-        check_out: selectedRoom.check_out,
         status: selectedRoom.status,
         bed_rooms: selectedRoom.bed_rooms.toString(),
         bath_room: selectedRoom.bath_room.toString(),
@@ -219,12 +213,7 @@ const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
           <TeamOutlined />
         )}
         <Divider className="col-span-2" />
-        <h1 className="col-span-2 text-2xl font-bold mb-2 text-gray-800 pb-6">
-          Date & Time
-        </h1>
-        {_renderInput("Check In", "check_in", "date")}
-        {_renderInput("Check Out", "check_out", "date")}
-        {_renderInput("Rental Date", "rentalDate", "date")}
+        
         <div className="col-span-2 flex justify-end gap-4 mt-4">
           <button
             type="button"
