@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import Review from '@/src/models/Review'; 
 import { connectDB } from '@/src/lib/mongoose';
 
 export async function POST(req: Request) {
