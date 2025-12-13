@@ -38,6 +38,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Successful registration! Please check your email to receive OTP." }, { status: 200 });
   } catch (error: any) {
     console.error("Error in register API:", error);
-    return NextResponse.json({ message: "Server errorerror" }, { status: 500 });
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
