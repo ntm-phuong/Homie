@@ -175,19 +175,22 @@ const handleReserve = async () => {
 
   const _renderPhotoGallery = () => {
     return (
-      <div className="mb-8">
+      // Cho ảnh full width trên mobile, giới hạn trên màn hình lớn
+      <div className="w-full lg:w-[60%] mb-4 lg:mb-8">
         <img
           src={room.image}
-          alt="Host avatar"
-          className="object-cover w-full lg:w-[600px] h-[400px] rounded-lg shadow-lg"
+          alt="Room image"
+          // Chỉnh lại height trên mobile cho đỡ dài (250px), máy tính thì 400px
+          className="object-cover w-full h-[250px] md:h-[400px] rounded-2xl shadow-lg" 
         />
       </div>
     );
   };
 
   const _renderRoomFeatures = () => (
-    <div className="pb-6 mb-6 border-b border-gray-200 leading-loose w-full pl-3">
-      <div className="border-b border-gray-200 pb-6 mb-6 pt-6">
+    // Bỏ pl-3, thêm w-full lg:w-[40%] để chia tỷ lệ với cục ảnh bên cạnh
+    <div className="pb-6 mb-6 border-b lg:border-none border-gray-200 leading-loose w-full lg:w-[40%]">
+      <div className="border-b border-gray-200 pb-6 mb-6 pt-2 lg:pt-0">
         <h2 className="text-2xl font-semibold">
           {room.name || "Room Name"}, {room.address}
         </h2>
@@ -196,7 +199,7 @@ const handleReserve = async () => {
         </p>
         <div className="flex items-center text-base text-gray-800 mt-1">
           <span className="mx-1 text-gray-400">·</span>
-          <span className="underline cursor-pointer font-semibold pl-3">
+          <span className="underline cursor-pointer font-semibold pl-1">
             6 reviews
           </span>
         </div>
@@ -219,8 +222,8 @@ const handleReserve = async () => {
             "This area is easy to get around.",
           ],
         ].map(([icon, title, desc], i) => (
-          <div className="flex items-center gap-4 !mb-4" key={i}>
-            <span>{icon}</span>
+          <div className="flex items-start gap-4 !mb-4" key={i}>
+            <span className="pt-1">{icon}</span>
             <div>
               <p className="font-semibold text-lg leading-relaxed">{title}</p>
               <p className="text-base text-gray-600 leading-normal">{desc}</p>
@@ -228,7 +231,6 @@ const handleReserve = async () => {
           </div>
         ))}
       </div>
-
     </div>
   );
 
@@ -373,16 +375,21 @@ const handleReserve = async () => {
   };
 
   return (
-    <div className="lg:px-38 py-8">
+    // Đã thêm px-4 cho mobile, px-10 cho tablet, max-w để chống vỡ khung trên màn quá to
+    <div className="px-4 md:px-10 lg:px-40 py-8 max-w-[1600px] mx-auto">
       {_renderTitle()}
-      <div className="flex flex-row gap-4 items-center">
+      
+      {/* Đổi flex-row cứng thành flex-col lg:flex-row, đổi items-center thành items-start */}
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start w-full border-b border-gray-200 pb-8 mb-8">
         {_renderPhotoGallery()}
         {_renderRoomFeatures()}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-10 relative items-start md:items-center pb-6 mb-6">
-        <div>
+
+      {/* Đổi md: thành lg: cho grid vì PriceBox rộng 400px sẽ làm tablet dọc bị ép nghẹt */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-10 relative items-start pb-10 border-b border-gray-200">
+        <div className="w-full overflow-hidden">
           {/* Host info */}
-          <div className="flex items-center gap-4 border-b border-gray-300 pb-6 pt-6">
+          <div className="flex items-center gap-4 border-b border-gray-300 pb-6 pt-2">
             <div className="w-12 h-12 rounded-full overflow-hidden relative">
               <img
                 src={room.image}
@@ -407,7 +414,14 @@ const handleReserve = async () => {
           </div>
         </div>
 
-        {_renderPriceBox({ selectedDates })}
+        {/* Khung giá bên phải (sẽ rớt xuống dưới cùng trên mobile) */}
+        <div className="w-full">
+            {_renderPriceBox({ selectedDates })}
+        </div>
+      </div>
+
+      {/* Đưa CommentSection ra hẳn ngoài cùng để chiếm trọn 100% width */}
+      <div className="w-full pt-6">
         <CommentSection roomId={Array.isArray(roomId) ? roomId[0] : roomId || ""} />
       </div>
     </div>
