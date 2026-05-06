@@ -1,7 +1,7 @@
 import { connectDB } from "@/src/lib/mongoose";
 import Comment from "@/src/models/Comment";
 import { NextRequest, NextResponse } from "next/server";
-export const GET = async (req: NextRequest, context: { params: { room_id: string } }) => {
+export const GET = async (req: NextRequest, context: any) => {
   try {
     await connectDB();
     const { room_id } = await context.params;
