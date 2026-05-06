@@ -98,18 +98,26 @@ const BookHistory = () => {
   ];
 
   return (
-    <div className="w-full px-4 lg:px-38 py-3">
-      <h1 className="text-3xl font-bold text-center mb-6 py-5">
+    // Sửa lg:px-38 thành lg:px-40 (chuẩn Tailwind), thêm max-w để màn hình to không bị bè ra quá
+    <div className="w-full px-4 md:px-10 lg:px-40 py-8 max-w-[1600px] mx-auto">
+      <h1 className="text-2xl md:text-3xl font-bold text-center mb-6 py-5 text-gray-800">
         Booking History
       </h1>
-      <Table
-        dataSource={bookings} // Gắn dữ liệu từ state vào bảng
-        columns={columns}
-        rowKey="_id" // Sử dụng `_id` từ MongoDB làm khóa
-        pagination={{ pageSize: 5 }}
-        bordered
-        loading={loading} // Hiển thị trạng thái loading
-      />
+      
+      {/* Bao bọc Table bằng một div có shadow cho giao diện hiện đại hơn */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <Table
+          dataSource={bookings} 
+          columns={columns}
+          rowKey="_id" 
+          pagination={{ pageSize: 5 }}
+          bordered
+          loading={loading} 
+          // 💡 ĐÂY LÀ DÒNG CHÌA KHÓA ĐỂ RESPONSIVE BẢNG:
+          // Bắt buộc bảng phải rộng đủ nội dung, nếu màn hình nhỏ hơn nội dung thì sinh ra thanh cuộn ngang
+          scroll={{ x: 'max-content' }} 
+        />
+      </div>
     </div>
   );
 };

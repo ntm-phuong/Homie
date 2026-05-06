@@ -1,6 +1,5 @@
 'use client';
-import { IMAGE_URL } from "@/public";
-import { DatePicker, Image } from "antd";
+import { DatePicker } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { Dayjs } from "dayjs";
 import { useRef, useState } from "react";
@@ -41,12 +40,13 @@ const LocationSearch = ({ onSearchLocation }: { onSearchLocation: (val: string) 
     onSearchLocation(searchKeyword);
   };
 
-
   const _renderLocationSearch = () => (
-    <div className="flex flex-col items-center justify-center p-1">
+    // Thêm w-1/2 để chia đôi tỷ lệ với cục Schedule
+    <div className="flex flex-col items-center justify-center p-1 w-1/2">
       <div className="font-medium text-base text-center w-full">Location</div>
       <input
-        className="text-sm text-gray-600 outline-none text-center w-full"
+        // Thêm truncate và bg-transparent để input không phá vỡ khung trên mobile
+        className="text-sm text-gray-600 outline-none text-center w-full truncate bg-transparent"
         placeholder="Search destinations"
         value={searchKeyword}
         onChange={(e) => setSearchKeyword(e.target.value)}
@@ -57,7 +57,8 @@ const LocationSearch = ({ onSearchLocation }: { onSearchLocation: (val: string) 
   const _renderDatePickerPopup = () => (
     <div
       ref={datePickerRef}
-      className="absolute top-[110%] left-1/3 right-0 mt-2 p-4 bg-white rounded-xl shadow-lg z-50"
+      // Sửa left-1/3 thành left-0 right-0 trên mobile để popup không bị tràn ra ngoài viền điện thoại
+      className="absolute top-[110%] left-0 right-0 md:left-1/3 mt-2 p-4 bg-white rounded-xl shadow-lg z-50 w-full md:w-auto"
     >
       <RangePicker
         className="w-full"
@@ -83,11 +84,14 @@ const LocationSearch = ({ onSearchLocation }: { onSearchLocation: (val: string) 
   );
 
   const _renderDatePickerComponent = () => (
-    <div className="flex items-center justify-between border-l border-gray-300 pl-2 p-1">
-      <div className="flex-1">
+    // Thêm w-1/2
+    <div className="flex items-center justify-between border-l border-gray-300 pl-2 p-1 w-1/2">
+      {/* Thêm overflow-hidden để kết hợp với truncate bên dưới */}
+      <div className="flex-1 overflow-hidden pr-1">
         <div className="font-medium text-base text-center w-full">Schedule</div>
         <div
-          className="flex justify-center items-center text-sm text-gray-600 cursor-pointer"
+          // Thêm truncate để text ngày tháng bị dài sẽ biến thành "..."
+          className="flex justify-center items-center text-sm text-gray-600 cursor-pointer truncate w-full"
           onClick={() => setShowDatePicker(!showDatePicker)}
         >
           {formatSelectedDates()}
@@ -96,18 +100,21 @@ const LocationSearch = ({ onSearchLocation }: { onSearchLocation: (val: string) 
       <button
         type="button"
         onClick={handleSearch}
-        className="w-[45px] h-[45px] rounded-full bg-[#ff2e63] flex items-center justify-center shadow-md hover:opacity-80 transition cursor-pointer"
+        // Thêm shrink-0 để nút không bị ép méo. Resize nút trên mobile nhỏ xuống một xíu (36px).
+        className="shrink-0 w-[36px] h-[36px] md:w-[45px] md:h-[45px] rounded-full bg-[#ff2e63] flex items-center justify-center shadow-md hover:opacity-80 transition cursor-pointer"
       >
-        <SearchOutlined style={{ color: 'white', fontSize: '20px' }} />
+        <SearchOutlined style={{ color: 'white' }} className="text-[16px] md:text-[20px]" />
       </button>
       {showDatePicker && _renderDatePickerPopup()}
     </div>
   );
 
   return (
-    <div className="w-full flex justify-center items-center">
-      <div className="relative flex justify-center items-center border border-gray-200 rounded-full shadow-sm p-2 min-w-xl">
-        <div className="grid grid-cols-2 w-full">
+    <div className="w-full flex justify-center items-center px-2">
+      {/* Thay class min-w-xl (có thể gây lỗi cuộn ngang) bằng w-full max-w-2xl */}
+      <div className="relative flex justify-center items-center border border-gray-200 rounded-full shadow-sm p-1 md:p-2 w-full max-w-2xl bg-white">
+        {/* Đổi từ grid sang flex flex-row để chia tỷ lệ dễ hơn mà không bị vỡ */}
+        <div className="flex flex-row w-full items-center">
           {_renderLocationSearch()}
           {_renderDatePickerComponent()}
         </div>
@@ -116,4 +123,4 @@ const LocationSearch = ({ onSearchLocation }: { onSearchLocation: (val: string) 
   );
 }
 
-export default LocationSearch
+export default LocationSearch;

@@ -81,7 +81,8 @@ const Home = () => {
     >
       <div className="relative w-full">
         <img
-          className="rounded-xl md:h-[18vw] w-full object-cover"
+  
+          className="rounded-xl w-full aspect-[4/3] md:aspect-auto md:h-[18vw] object-cover"
           src={room.image}
           alt={room.name}
         />
